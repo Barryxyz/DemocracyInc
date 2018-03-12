@@ -19,8 +19,8 @@ from django.contrib import admin
 
 
 urlpatterns = [
-    url('^home/', views.home, name='home'),
-    url(r'^admin/', admin.site.urls),
+    url(r'^$', views.home, name='home'),
+    #url(r'^admin/', admin.site.urls),
     url(r'^login/', views.login, name='login'),
-
+    url(r'^vote/', views.vote, name='vote')
 ]

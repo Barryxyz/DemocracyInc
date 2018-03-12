@@ -9,11 +9,13 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
     <link rel="stylesheet" href="{% static "css/main.css" %}">
 
     <title>DemocracyInc</title>
   </head>
   <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">DemocracyInc</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,13 +24,9 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">About Us<span class="sr-only">(current)</span></a>
-          </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Vote Count</a>
           </li>
-
           <li class="nav-item">
             <a class="nav-link" href="#">Check In</a>
           </li>
@@ -78,18 +76,45 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
-    <div class="card" style="width: 18rem;">
-      <div>
-        <button type="button" class="btn btn-default btn-lg">
-          <span class="glyphicon glyphicon-star"></span>
-        </button>
-      </div>      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+
+    <section class="features-icons bg-light text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex" style="padding-left:100px">
+                <i class="fas fa-tags fa-6x fa-fw"></i>
+              </div>
+              <h3>Voting</h3>
+              <p class="lead mb-0">TODO: Decide on What Text To Add Here!</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex" style="padding-left:100px">
+                <i class="fas fa-users fa-6x"></i>
+              </div>
+
+              <h3>For Everyone</h3>
+              <p class="lead mb-0">TODO: Decide on What Text To Add Here!</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+              <div class="features-icons-icon d-flex" style="padding-left:119px">
+                <i class="fas fa-lock fa-6x"></i>
+              </div>
+              <h3>Securely</h3>
+              <p class="lead mb-0">TODO: Decide on What Text To Add Here!</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
     <h1>DemocracyInc</h1>
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

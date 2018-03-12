@@ -43,42 +43,42 @@ class VoteForm(forms.Form):
     governor = forms.MultipleChoiceField(
         label="GOVERNOR",
         choices=GOVERNOR,
-        widget=forms.RadioSelect
+        widget=forms.RadioSelect(attrs={'class' : 'funkyradio-default'})
     )
 
-    lieutenant_gov = forms.MultipleChoiceField(
-        label="LIEUTENANT GOVERNOR",
-        choices=LIEUTENANT_GOVERNOR,
-        widget=forms.RadioSelect
-    )
-
-    attorney_gen = forms.MultipleChoiceField(
-        label="ATTORNEY GENERAL",
-        choices=ATTORNEY_GENERAL,
-        widget=forms.RadioSelect
-    )
-
-    house_of_delegates = forms.ChoiceField(
-        label="HOUSE OF DELEGATES",
-        choices=HOUSE_OF_DELEGATES,
-        widget=forms.RadioSelect
-    )
-
-    commonwealth_att = forms.MultipleChoiceField(
-        label="COMMONWEALTH ATTORNEY",
-        choices=COMMONWEALTH_ATTORNEY,
-        widget=forms.RadioSelect
-    )
-
-    sheriff = forms.MultipleChoiceField(
-        label="SHERIFF",
-        choices=SHERIFF,
-        widget=forms.RadioSelect
-    )
-
-    treasurer = forms.MultipleChoiceField(
-        label="TREASURER",
-        choices=TREASURER,
-        widget=forms.RadioSelect
-    )
+    # lieutenant_gov = forms.MultipleChoiceField(
+    #     label="LIEUTENANT GOVERNOR",
+    #     choices=LIEUTENANT_GOVERNOR,
+    #     widget=forms.RadioSelect
+    # )
+    #
+    # attorney_gen = forms.MultipleChoiceField(
+    #     label="ATTORNEY GENERAL",
+    #     choices=ATTORNEY_GENERAL,
+    #     widget=forms.RadioSelect
+    # )
+    #
+    # house_of_delegates = forms.ChoiceField(
+    #     label="HOUSE OF DELEGATES",
+    #     choices=HOUSE_OF_DELEGATES,
+    #     widget=forms.RadioSelect
+    # )
+    #
+    # commonwealth_att = forms.MultipleChoiceField(
+    #     label="COMMONWEALTH ATTORNEY",
+    #     choices=COMMONWEALTH_ATTORNEY,
+    #     widget=forms.RadioSelect
+    # )
+    #
+    # sheriff = forms.MultipleChoiceField(
+    #     label="SHERIFF",
+    #     choices=SHERIFF,
+    #     widget=forms.RadioSelect
+    # )
+    #
+    # treasurer = forms.MultipleChoiceField(
+    #     label="TREASURER",
+    #     choices=TREASURER,
+    #     widget=forms.RadioSelect
+    # )
 

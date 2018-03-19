@@ -1,0 +1,116 @@
+{% load staticfiles %}
+
+{#<!doctype html>#}
+{#<html lang="en">#}
+{#  <head>#}
+{#    <!-- Required meta tags -->#}
+{#    <meta charset="utf-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">#}
+
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<link rel="stylesheet" href="{% static "css/vote.css" %}">
+
+<body style ="background:url(http://moziru.com/images/american-flag-clipart-faded-18.jpg); background-repeat: no-repeat; background-size:100% 100%"></body>
+
+<label class = "centered">
+<h2>Sample Ballot</h2>
+
+<h4>Presidential Election</h4>
+{#    <form target="http://www.google.com" method="POST">#}
+        {% csrf_token %}
+
+<label class="container">Hillary Clinton (D)
+  <input type="radio"  name="radio" >
+  <span class="checkmark"></span>
+
+</label>
+<label class="container">Donald Trump (R)
+  <input type="radio" name="radio">
+  <span class="checkmark"></span>
+</label>
+<label class="container">Gary Johnson (L)
+  <input type="radio" name="radio">
+  <span class="checkmark"></span>
+</label>
+<br>
+
+</br>
+    <input type="submit" name = Ballot value="Submit Ballot" style="margin:0px auto; display:block;" />
+            </label>
+
+
+
+
+{#<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">#}
+{#<link rel="stylesheet" href="{% static "css/vote.css" %}">#}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Submit Ballot</button>
+</form>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{#{% load staticfiles %}#}
+{#{% load widget_tweaks %}#}
+{##}
+{#<div class="container">#}
+{#<div class="checkmark">#}
+{#   <div class="col-md-6">#}
+{#      {% render_field forms.president class="form-control"  %}#}
+{#   </div>#}
+{#   <div class="col-md-6">#}
+{#      {% render_field form.field2 class="form-control" %}#}
+{#   </div>#}
+{#</div>#}
+{#</div>#}
+
+
+{#</style>#}
+{#<body style ="background:url(http://moziru.com/images/american-flag-clipart-faded-18.jpg); background-repeat: no-repeat; background-size:100% 100%"></body>#}
+{##}
+{#<label class = "centered">#}
+{#<h1> Democracy Inc. </h1>#}
+{#<h2>Sample Ballot</h2>#}
+{##}
+{#<h4>Presidential Election</h4>#}
+{#need action = "" to send results to a place#}
+{#    <form target="http://www.google.com" method="POST">#}
+{#        {% csrf_token %}#}
+{##}
+{#<label class="container">Hillary Clinton (D)#}
+{#  <input type="radio"  name="radio" >#}
+{#  <span class="checkmark"></span>#}
+{##}
+{#</label>#}
+{#<label class="container">Donald Trump (R)#}
+{#  <input type="radio" name="radio">#}
+{#  <span class="checkmark"></span>#}
+{#</label>#}
+{#<label class="container">Gary Johnson (L)#}
+{#  <input type="radio" name="radio">#}
+{#  <span class="checkmark"></span>#}
+{#</label>#}
+{#<br>#}
+{##}
+{#</br>#}
+{#                    <input type="submit" name = Ballot value="Submit Ballot" />#}
+{#        </a>#}
+{##}
+{#</form>#}
+{#            </label>#}
+{#</style>#}

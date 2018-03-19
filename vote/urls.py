@@ -22,6 +22,7 @@ from django.conf.urls import url, include
 urlpatterns = [
     url('^home/', views.home, name='home'),
     url(r'^login/', views.login, name='login'),
+    url('^ballot/', views.ballot, name='ballot'),
 
 
 ]

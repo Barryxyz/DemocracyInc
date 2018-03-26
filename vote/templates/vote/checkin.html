@@ -1,8 +1,6 @@
 {% load staticfiles %}
 
-<!doctype html>
-<html lang="en">
-  <head>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,18 +8,14 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-    <link rel="stylesheet" href="{% static "css/checkin.css" %}"> 
-	<link rel="stylesheet" href="{% static "css/main.css" %}">
-    <link rel="stylesheet" href="{% static "css/footer.css" %}">
-    <link rel="stylesheet" href="{% static "css/ionicons.min.css" %}">
+    <link rel="stylesheet" href={% static "css/checkin.css" %}>
+	<link rel="stylesheet" href={% static "css/main.css" %}>
+    <link rel="stylesheet" href={% static "css/footer.css" %}>
+    <link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
     <!-- <link rel="stylesheet" type="text/css" href="C:\Users\seant_000\Desktop\DemocracyInc-str8ht\vote\static\css\signup.css"> -->
 
-    <title>Check In</title>
-	
-	<style> 
-</style>
-  </head>
-  <body>
+<title>Check In</title>
+{% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="/home">DemocracyInc</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,11 +49,12 @@
           <a class="nav-link disabled" href="#">Register</a>
       </div>
     </nav>
-	<h1 style="color:black;">CHECK IN</h1>
-	
+	<h1 style="color:black;" align="center">CHECK IN</h1>
+
 <div id="padder">
 	<div id="formContainer">
 		<form id="login" action="send_info.php" method="POST">
+            {% csrf_token %}
 			<ul>
 				<li><label id="firNameLabel">First Name*<label>
 				<li><input type="name" size="17" name="firstname" id="first" required="true" title="Must be text only." pattern="[a-zA-Z|-]+"></li>
@@ -76,148 +71,148 @@
 							<option value="General">General Election VA</option>
 							<option value="ConAmend">Constitutional Amendment  </option>
 							<option value="Special">Special Election</option>
-				<li></select>
+				</select>
 			</ul>
-			<ul>			
-				<li><label id="localityLabel">Locality*</label>			
+			<ul>
+				<li><label id="localityLabel">Locality*</label>
 				<li><select type="locality" name="locality" id="locality" required="true">
-							<option value="51001">Accomack</option>	
-							<option value="51003">Albemarle</option>	
-							<option value="51005">Alleghany</option>	
-							<option value="51007">Amelia</option>	
-							<option value="51009">Amherst</option>	
-							<option value="51011">Appomattox</option>	
-							<option value="51013">Arlington</option>	
-							<option value="51015">Augusta</option>	
+							<option value="51001">Accomack</option>
+							<option value="51003">Albemarle</option>
+							<option value="51005">Alleghany</option>
+							<option value="51007">Amelia</option>
+							<option value="51009">Amherst</option>
+							<option value="51011">Appomattox</option>
+							<option value="51013">Arlington</option>
+							<option value="51015">Augusta</option>
 							<option value="51017">Bath</option>
-							<option value="51019">Bedford</option>	
-							<option value="51021">Bland</option>	
-							<option value="51023">Botetourt</option>	
+							<option value="51019">Bedford</option>
+							<option value="51021">Bland</option>
+							<option value="51023">Botetourt</option>
 							<option value="51025">Brunswick</option>
-							<option value="51027">Buchanan</option>	
-							<option value="51029">Buckingham</option>	
-							<option value="51031">Campbell</option>	
-							<option value="51033">Caroline</option>	
-							<option value="51035">Carroll</option>	
-							<option value="51036">Charles City</option>	
+							<option value="51027">Buchanan</option>
+							<option value="51029">Buckingham</option>
+							<option value="51031">Campbell</option>
+							<option value="51033">Caroline</option>
+							<option value="51035">Carroll</option>
+							<option value="51036">Charles City</option>
 							<option value="51037">Charlotte</option>
-							<option value="51041">Chesterfield</option>	
-							<option value="51043">Clarke</option>	
+							<option value="51041">Chesterfield</option>
+							<option value="51043">Clarke</option>
 							<option value="51045">Craig</option>
-							<option value="51047">Culpeper</option>	
-							<option value="51049">Cumberland</option>	
+							<option value="51047">Culpeper</option>
+							<option value="51049">Cumberland</option>
 							<option value="51051">Dickenson</option>
-							<option value="51053">Dinwiddie</option>	
+							<option value="51053">Dinwiddie</option>
 							<option value="51057">Essex</option>
-							<option value="51059">Fairfax</option>	
-							<option value="51061">Fauquier</option>	
+							<option value="51059">Fairfax</option>
+							<option value="51061">Fauquier</option>
 							<option value="51063">Floyd</option>
-							<option value="51065">Flunna</option>	
-							<option value="51067">Franklin</option>	
+							<option value="51065">Flunna</option>
+							<option value="51067">Franklin</option>
 							<option value="51069">Frederick</option>
 							<option value="51071">Giles</option>
-							<option value="51073">Gloucester</option>	
+							<option value="51073">Gloucester</option>
 							<option value="51075">Goochland</option>
-							<option value="51077">Grayson</option>	
-							<option value="51079">Greene</option>	
-							<option value="51081">Greensville</option>	
-							<option value="51083">Halifax</option>	
-							<option value="51085">Hanover</option>	
-							<option value="51087">Henrico</option>	
-							<option value="51089">Henry</option>	
-							<option value="51091">Highland</option>	
-							<option value="51093">Isle of Wight</option>	
-							<option value="51095">James City</option>	
-							<option value="51097">King and Queen</option>	
-							<option value="51099">King George</option>	
-							<option value="51101">King William</option>	
-							<option value="51103">Lancaster</option>	
-							<option value="51105">Lee</option>	
-							<option value="51107">Loudoun</option>	
-							<option value="51109">Louisa</option>	
-							<option value="51111">Lunenburg</option>	
-							<option value="51113">Madison</option>	
-							<option value="51115">Mathews</option>	
-							<option value="51117">Mecklenburg</option>	
+							<option value="51077">Grayson</option>
+							<option value="51079">Greene</option>
+							<option value="51081">Greensville</option>
+							<option value="51083">Halifax</option>
+							<option value="51085">Hanover</option>
+							<option value="51087">Henrico</option>
+							<option value="51089">Henry</option>
+							<option value="51091">Highland</option>
+							<option value="51093">Isle of Wight</option>
+							<option value="51095">James City</option>
+							<option value="51097">King and Queen</option>
+							<option value="51099">King George</option>
+							<option value="51101">King William</option>
+							<option value="51103">Lancaster</option>
+							<option value="51105">Lee</option>
+							<option value="51107">Loudoun</option>
+							<option value="51109">Louisa</option>
+							<option value="51111">Lunenburg</option>
+							<option value="51113">Madison</option>
+							<option value="51115">Mathews</option>
+							<option value="51117">Mecklenburg</option>
 							<option value="51119">Middlesex</option>
-							<option value="51121">Montgomery</option>	
-							<option value="51125">Nelson</option>	
-							<option value="51127">New Kent</option>	
-							<option value="51131">Northampton</option>	
-							<option value="51133">Northumberland</option>	
-							<option value="51135">Nottoway</option>	
-							<option value="51137">Orange</option>	
+							<option value="51121">Montgomery</option>
+							<option value="51125">Nelson</option>
+							<option value="51127">New Kent</option>
+							<option value="51131">Northampton</option>
+							<option value="51133">Northumberland</option>
+							<option value="51135">Nottoway</option>
+							<option value="51137">Orange</option>
 							<option value="51139">Page</option>
-							<option value="51141">Patrick</option>	
-							<option value="51143">Pittsylnia</option>	
-							<option value="51145">Powhatan</option>	
-							<option value="51147">Prince Edward</option>	
-							<option value="51149">Prince George</option>	
-							<option value="51153">Prince William</option>	
-							<option value="51155">Pulaski</option>	
-							<option value="51157">Rappahannock</option>	
-							<option value="51159">Richmond</option>	
-							<option value="51161">Roanoke</option>	
-							<option value="51163">Rockbridge</option>	
+							<option value="51141">Patrick</option>
+							<option value="51143">Pittsylnia</option>
+							<option value="51145">Powhatan</option>
+							<option value="51147">Prince Edward</option>
+							<option value="51149">Prince George</option>
+							<option value="51153">Prince William</option>
+							<option value="51155">Pulaski</option>
+							<option value="51157">Rappahannock</option>
+							<option value="51159">Richmond</option>
+							<option value="51161">Roanoke</option>
+							<option value="51163">Rockbridge</option>
 							<option value="51165">Rockingham</option>
-							<option value="51167">Russell</option>	
+							<option value="51167">Russell</option>
 							<option value="51169">Scott</option>
-							<option value="51171">Shenandoah</option>	
-							<option value="51173">Smyth</option>	
+							<option value="51171">Shenandoah</option>
+							<option value="51173">Smyth</option>
 							<option value="51175">Southampton</option>
-							<option value="51177">Spotsylnia</option>	
-							<option value="51179">Stafford</option>	
+							<option value="51177">Spotsylnia</option>
+							<option value="51179">Stafford</option>
 							<option value="51181">Surry</option>
-							<option value="51183">Sussex</option>	
-							<option value="51185">Tazewell</option>	
-							<option value="51187">Warren</option>	
-							<option value="51191">Washington</option>	
-							<option value="51193">Westmoreland</option>	
+							<option value="51183">Sussex</option>
+							<option value="51185">Tazewell</option>
+							<option value="51187">Warren</option>
+							<option value="51191">Washington</option>
+							<option value="51193">Westmoreland</option>
 							<option value="51195">Wise</option>
-							<option value="51197">Wythe</option>	
-							<option value="51199">York</option>	
-							<option value="51510">Alexandria City</option>	
+							<option value="51197">Wythe</option>
+							<option value="51199">York</option>
+							<option value="51510">Alexandria City</option>
 							<option value="51515">Bedford City</option>
 							<option value="51520">Bristol City</option>
 							<option value="51530">Buena Vista City</option>
-							<option value="51540">Charlottesville City</option>	
-							<option value="51550">Chesapeake City</option>	
-							<option value="51560">Clifton Forge City</option>	
-							<option value="51570">Colonial Heights City</option>	
-							<option value="51580">Covington City</option>	
-							<option value="51590">Danville City</option>	
-							<option value="51595">Emporia City</option>	
+							<option value="51540">Charlottesville City</option>
+							<option value="51550">Chesapeake City</option>
+							<option value="51560">Clifton Forge City</option>
+							<option value="51570">Colonial Heights City</option>
+							<option value="51580">Covington City</option>
+							<option value="51590">Danville City</option>
+							<option value="51595">Emporia City</option>
 							<option value="51600">Fairfax City</option>
-							<option value="51610">Falls Church City</option>	
-							<option value="51620">Franklin City</option>	
-							<option value="51630">Fredericksburg City</option>	
-							<option value="51640">Galax City</option>	
-							<option value="51650">Hampton City</option>	
-							<option value="51660">Harrisonburg City</option>	
+							<option value="51610">Falls Church City</option>
+							<option value="51620">Franklin City</option>
+							<option value="51630">Fredericksburg City</option>
+							<option value="51640">Galax City</option>
+							<option value="51650">Hampton City</option>
+							<option value="51660">Harrisonburg City</option>
 							<option value="51670">Hopewell City</option>
-							<option value="51678">Lexington City</option>	
-							<option value="51680">Lynchburg City</option>	
-							<option value="51683">Manassas City</option>	
-							<option value="51685">Manassas Park City</option>	
-							<option value="51690">Martinsville City</option>	
-							<option value="51700">Newport News City</option>	
-							<option value="51710">Norfolk City</option>	
-							<option value="51720">Norton City</option>	
-							<option value="51730">Petersburg City</option>	
-							<option value="51735">Poquoson City</option>	
-							<option value="51740">Portsmouth City</option>	
+							<option value="51678">Lexington City</option>
+							<option value="51680">Lynchburg City</option>
+							<option value="51683">Manassas City</option>
+							<option value="51685">Manassas Park City</option>
+							<option value="51690">Martinsville City</option>
+							<option value="51700">Newport News City</option>
+							<option value="51710">Norfolk City</option>
+							<option value="51720">Norton City</option>
+							<option value="51730">Petersburg City</option>
+							<option value="51735">Poquoson City</option>
+							<option value="51740">Portsmouth City</option>
 							<option value="51750">Radford City</option>
 							<option value="51760">Richmond City</option>
-							<option value="51770">Roanoke City</option>	
+							<option value="51770">Roanoke City</option>
 							<option value="51775">Salem City</option>
-							<option value="51780">South Boston City</option>	
-							<option value="51790">Staunton City</option>	
-							<option value="51800">Suffolk City</option>	
+							<option value="51780">South Boston City</option>
+							<option value="51790">Staunton City</option>
+							<option value="51800">Suffolk City</option>
 							<option value="51810">Virginia Beach City</option>
 							<option value="51820">Waynesboro City</option>
-							<option value="51830">Williamsburg City</option>	
-							<option value="51840">Winchester City</option>	
-				<li></select>
+							<option value="51830">Williamsburg City</option>
+							<option value="51840">Winchester City</option>
+				</select>
 			</ul>
 			<ul>
 				<li><label id="photoidLabel">Valid Form of Photo ID*</label>
@@ -232,7 +227,7 @@
 							<option value="MilitaryID">US Military ID</option>
 							<option value="NursingHomeID">Nursing Home Resident ID</option>
 							<option value="CreditCard">Credit Card Displaying Photograph</option>
-				<li></select>
+				</select>
 			</ul>
 			<div id="inner_content">
 				<ul>
@@ -241,10 +236,11 @@
 					<li><input type="checkbox" name="terms" id="terms" value = "true" required></li>
 				</ul>
 			</div>
-			<input type="submit" name="submit" value="Check In" />			
+			<input type="submit" name="submit" value="Check In" />
+            </ul>
 		</form>
 	</div>
-	
+
 <div class="footer-dark">
        <footer>
            <div class="container">
@@ -287,6 +283,7 @@
            </div>
        </footer>
    </div>
+</div>
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
 
@@ -296,6 +293,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+{% endblock %}
 
-  </body>
-</html>

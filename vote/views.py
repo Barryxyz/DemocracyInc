@@ -16,4 +16,6 @@ def login(request):
 
 def checkin(request):
     return render(request, 'vote/checkin.html', {})
-	
+
+def notregistered(request):
+    return render(request, 'vote/notregistered.html', {})

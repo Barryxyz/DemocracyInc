@@ -19,4 +19,4 @@ def checkin(request):
 
 def notregistered(request):
     return render(request, 'vote/notregistered.html', {})
-
+	

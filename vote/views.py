@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from .forms import VoteForm
+from django.views.generic import TemplateView
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -12,6 +12,9 @@ def home(request):
 
 def login(request):
     return render(request, 'vote/login.html', {})
+
+def checkin(request):
+    return render(request, 'vote/checkin.html', {})
 
 def vote(request):
     # if this is a POST request we need to process the form data

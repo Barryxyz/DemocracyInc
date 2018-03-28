@@ -1,6 +1,9 @@
+.navbar-default {
+  background: none;
+}
 h1 {
   font-weight: bold;
-  color: #fff;
+  color: #fff; 
   font-size: 65px;
 }
 
@@ -26,6 +29,16 @@ h1 {
 i {
   padding-left: 30px;
 }
+
+.text_over_image {
+  font-size: 2em;
+   line-height: 2em;
+   height: 5em;
+   display: table;
+   vertical-align: middle
+   margin:auto;
+}
+
 
 body {
   font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -146,9 +159,4 @@ header.masthead h1 {
   top: 0;
   left: 0;
   opacity: 0.3;
-}
-
-footer.footer {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
 }

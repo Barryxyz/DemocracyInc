@@ -24,5 +24,4 @@ urlpatterns = [
     url(r'^login/', views.login, name='login'),
     url(r'^checkin.html/', views.checkin, name='checkin'),
     url(r'^notregistered.html/', views.notregistered, name='notregistered'),
-    url('^ballot/', views.ballot, name='ballot')
 ]

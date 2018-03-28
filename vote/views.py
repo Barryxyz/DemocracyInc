@@ -34,3 +34,6 @@ def vote(request):
         form = VoteForm()
 
     return render(request, 'vote/vote.html', {'form': form})
+def notregistered(request):
+    return render(request, 'vote/notregistered.html', {})
+

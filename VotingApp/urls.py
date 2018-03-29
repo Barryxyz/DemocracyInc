@@ -18,12 +18,11 @@ from vote import views
 from django.contrib import admin
 from django.conf.urls import url, include
 
-
 urlpatterns = [
-    # url('^home/', views.home, name='home'),
-    url(r'^admin/', admin.site.urls),
-    # url(r'^login/', views.login, name='login'),
-    url(r'^', include('vote.urls'))
-
-
+    url('^home/', views.home, name='home'),
+    #url(r'^admin/', admin.site.urls),
+    url(r'^login/', views.login, name='login'),
+    url(r'^checkin/', views.checkin, name='checkin'),
+    url(r'^vote/', views.vote, name='vote')
+    # url('^ballot/', views.ballot, name='ballot'),
 ]

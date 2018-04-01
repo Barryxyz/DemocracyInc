@@ -1,19 +1,17 @@
 from django import forms
+from .models import Registered,VoteRecord
 
 
-President = (
-    ('d', 'Hillary Clinton - (D)'),
-    ('r', 'Donald Trump - (R)'),
-    ('l', 'Gary Johnson - (L)')
-)
+class VoteForm(forms.ModelForm):
+    class Meta:
+        model = VoteRecord
+        fields = ['president']
 
-class VoteForm(forms.Form):
-    my_field = forms.MultipleChoiceField(
-        label = "Presidential Candidates",
-        choices = President,
-        widget=forms.RadioSelect(),
-        required = True
-    )
+
+class RegisteredForm(forms.ModelForm):
+    class Meta:
+        model = Registered
+        fields = ['first_name', 'last_name', 'date_of_birth', 'address']
 
 class CheckInForm(forms.Form):
     first_name = forms.CharField(label='First name', max_length=100)

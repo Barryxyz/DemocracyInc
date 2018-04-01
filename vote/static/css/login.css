@@ -24,7 +24,11 @@ div.well{
 }
 
 .form-group{
+<<<<<<< HEAD
   color: ##337ab7
+=======
+  color: #337ab7
+>>>>>>> origin/master
 }
 
 #logo-container{

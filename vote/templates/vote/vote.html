@@ -55,9 +55,9 @@
 
 <div id="padder" align="center">
 	<div id="formContainer">
+    {% csrf_token %}
         <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_ul }}
+          Vote ID: <input type="text" name="VoteID"><br>  
         <button type="submit">Submit</button>
     </form>
 </div>

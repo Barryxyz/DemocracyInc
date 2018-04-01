@@ -15,14 +15,20 @@
             <hr>
             <h2 align="center"><strong>Voter Confirmation Number: </strong>{{ booth }}</h2>
             <hr>
-            <h2 align="center"><strong>Voter Precinct:</strong></h2>
-            <hr>
+            <h2 align="center"><strong>Locality: </strong></h2>
+            <hr>  
             <h2 align="center"><strong>Status: </strong>Active</h2>
             <hr>
-            <h2 align="center"><strong>Date of Status: </strong></h2>
+            <h2 align="center"><strong>Date of Status: </strong><h3 id="demo"></h3>
+            <script>
+                var d = new Date();
+                document.getElementById("demo").innerHTML = d;
+            </script>
+            </h2>
             <hr>
-            <h2 align="center"><strong>Locality: </strong></h2>
-            <hr>        
+            {% load static %}
+            <img src="{% static "img/Logo_small.png" %}" alt="logo"/>
+            <hr>
             <a href="{% url 'vote' %}">  <button type="button" class="btn btn-default">Go to Voting Booth</button> </a>
         </div>
 {% endblock %}

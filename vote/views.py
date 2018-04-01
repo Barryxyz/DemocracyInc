@@ -16,18 +16,18 @@ def home(request):
 def login(request):
     return render(request, 'vote/login.html', {})
 
-def checkin(request):
-    if request.method == 'POST': # if the form is submitted
-        print("working!")
-
-        form = CheckInForm(request.POST) # Needs to be changed to check-in form?
-
-        if form.is_valid():
-            return HttpResponseRedirect('/home') #return true that the user exists in voter registration DB
-        else:
-            return render(request, 'vote/notregistered.html', {})
-
-    return render(request, 'vote/checkin.html', {})
+# def checkin(request):
+#     if request.method == 'POST': # if the form is submitted
+#         print("working!")
+#
+#         form = CheckInForm(request.POST) # Needs to be changed to check-in form?
+#
+#         if form.is_valid():
+#             return HttpResponseRedirect('/home') #return true that the user exists in voter registration DB
+#         else:
+#             return render(request, 'vote/notregistered.html', {})
+#
+#     return render(request, 'vote/checkin.html', {})
 
 def django_checkin(request):
     # if this is a POST request we need to process the form data
@@ -37,11 +37,15 @@ def django_checkin(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            user = Registered(first_name=form.first_name, last_name=form.last_name, date_of_birth=form.date_of_birth, address=form.address)
-            if user in Registered.objects:
+            voter_registered = Registered.objects.filter(first_name=form.cleaned_data['first_name'],
+                                                      last_name=form.cleaned_data['last_name'],
+                                                      date_of_birth=form.cleaned_data['date_of_birth'],
+                                                      address=form.cleaned_data['address']).exists()
+            if voter_registered:
                 return HttpResponseRedirect('/booth')
             else:
                 return HttpResponseRedirect('/notregistered')
+
             # redirect to a new URL:
             # return HttpResponseRedirect('/booth')
 

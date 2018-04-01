@@ -14,3 +14,11 @@ class PollPlaces(models.Model):
     precinct = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     poll_booths = models.IntegerField()
+
+class VoteRecord(models.Model):
+    President = (
+        ('Hillary Clinton', 'Hillary Clinton - (D)'),
+        ('Donald Trump', 'Donald Trump - (R)'),
+        ('Gary Johnson', 'Gary Johnson - (L)')
+    )
+    president = models.CharField(max_length=50, choices=President)

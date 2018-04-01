@@ -22,3 +22,4 @@ class VoteRecord(models.Model):
         ('Gary Johnson', 'Gary Johnson - (L)')
     )
     president = models.CharField(max_length=50, choices=President)
+

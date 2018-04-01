@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from .forms import VoteForm,RegisteredForm
 import random
 import string
+from .forms import VoteForm
+from .forms import CheckInForm
 
 # Create your views here.
 
@@ -19,6 +21,17 @@ def login(request):
 #     return render(request, 'vote/checkin.html', {})
 
 def checkin(request):
+    if request.method == 'POST': # if the form is submitted
+        print("working!")
+
+        form = CheckInForm(request.POST) # Needs to be changed to check-in form?
+
+        if form.is_valid():
+            return HttpResponseRedirect('/home') #return true that the user exists in voter registration DB
+        else:
+            return render(request, 'vote/notregistered.html', {})
+
+    return render(request, 'vote/checkin.html', {})
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:

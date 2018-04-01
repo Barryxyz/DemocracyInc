@@ -3,11 +3,10 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .forms import VoteForm,RegisteredForm
-import random
-import string
-from .forms import VoteForm
-from .forms import CheckInForm
+from .forms import VoteForm,RegisteredForm,CheckInForm
+from .models import Registered
+import random, string
+
 
 # Create your views here.
 
@@ -38,9 +37,13 @@ def django_checkin(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            form.save()
+            user = Registered(first_name=form.first_name, last_name=form.last_name, date_of_birth=form.date_of_birth, address=form.address)
+            if user in Registered.objects:
+                return HttpResponseRedirect('/booth')
+            else:
+                return HttpResponseRedirect('/notregistered')
             # redirect to a new URL:
-            return HttpResponseRedirect('/booth')
+            # return HttpResponseRedirect('/booth')
 
     # if a GET (or any other method) we'll create a blank form
     else:

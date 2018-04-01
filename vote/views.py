@@ -17,9 +17,6 @@ def home(request):
 def login(request):
     return render(request, 'vote/login.html', {})
 
-# def checkin(request):
-#     return render(request, 'vote/checkin.html', {})
-
 def checkin(request):
     if request.method == 'POST': # if the form is submitted
         print("working!")
@@ -32,6 +29,8 @@ def checkin(request):
             return render(request, 'vote/notregistered.html', {})
 
     return render(request, 'vote/checkin.html', {})
+
+def django_checkin(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:

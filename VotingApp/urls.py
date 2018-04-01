@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls, name='admin'),
     url(r'^login/', views.login, name='login'),
     url(r'^checkin/', views.checkin, name='checkin'),
+    url(r'^django_checkin/', views.django_checkin, name='django_checkin'),
     url(r'^vote/', views.vote, name='vote'),
     url(r'^booth/', views.booth_assignment, name='booth')
 ]

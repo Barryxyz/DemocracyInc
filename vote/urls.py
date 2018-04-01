@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^login/', views.login, name='login'),
     url(r'^vote/', views.vote, name='vote'),
     url(r'^checkin/', views.checkin, name='checkin'),
+    url(r'^django_checkin/', views.django_checkin, name='django_checkin'),
     url(r'^notregistered/', views.notregistered, name='notregistered'),
     url(r'^booth/', views.booth_assignment, name='booth')
 ]

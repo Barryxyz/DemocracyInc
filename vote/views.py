@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .forms import VoteForm,RegisteredForm,CheckInForm
+from .forms import VoteForm,RegisteredForm,VoteIdCheckForm
 from .models import Registered
 import random, string
 
@@ -16,19 +16,6 @@ def home(request):
 def login(request):
     return render(request, 'vote/login.html', {})
 
-# def checkin(request):
-#     if request.method == 'POST': # if the form is submitted
-#         print("working!")
-#
-#         form = CheckInForm(request.POST) # Needs to be changed to check-in form?
-#
-#         if form.is_valid():
-#             return HttpResponseRedirect('/home') #return true that the user exists in voter registration DB
-#         else:
-#             return render(request, 'vote/notregistered.html', {})
-#
-#     return render(request, 'vote/checkin.html', {})
-
 def django_checkin(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -40,14 +27,15 @@ def django_checkin(request):
             voter_registered = Registered.objects.filter(first_name=form.cleaned_data['first_name'],
                                                       last_name=form.cleaned_data['last_name'],
                                                       date_of_birth=form.cleaned_data['date_of_birth'],
-                                                      address=form.cleaned_data['address']).exists()
+                                                      address=form.cleaned_data['address'],
+                                                      locality=form.cleaned_data['locality']).exists()
             if voter_registered:
                 return HttpResponseRedirect('/booth')
             else:
                 return HttpResponseRedirect('/notregistered')
 
             # redirect to a new URL:
-            # return HttpResponseRedirect('/booth')
+            return HttpResponseRedirect('/booth')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -71,6 +59,27 @@ def vote(request):
         form = VoteForm()
     return render(request, 'vote/vote.html', {'form': form})
 
+def vote_id_check(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = VoteIdCheckForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            if form.cleaned_data['vote_id'] == 'WAHOOWA':
+                # redirect to a new URL:
+                return HttpResponseRedirect('/vote')
+            else:
+                return HttpResponseRedirect('/vote_id_check')
+        else:
+            return HttpResponseRedirect('/home')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = VoteIdCheckForm()
+    return render(request, 'vote/vote_id_check.html', {'form': form})
+
 def booth_assignment(request):
     boothkeys = ['rFKeel', 'tOLpZV', 'pldygS']
 
@@ -79,6 +88,7 @@ def booth_assignment(request):
         if not key in boothkeys:
             break
 
+    key = 'WAHOOWA' # hardcode a key for demo purposes
     return render(request, 'vote/booth_assignment.html', {'booth': key})
 
 

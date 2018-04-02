@@ -147,7 +147,7 @@ class Registered(models.Model):
     last_name = models.CharField(max_length=30)
     date_of_birth = models.DateField()
     address = models.CharField(max_length=100)
-    locality = models.CharField(max_length=50, choices=Locality)
+    locality = models.CharField(max_length=5, choices=Locality)
 	
 	
 class PollPlaces(models.Model):

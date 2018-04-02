@@ -12,7 +12,5 @@ class RegisteredForm(forms.ModelForm):
         model = Registered
         fields = ['first_name', 'last_name', 'date_of_birth', 'address', 'locality']
 		
-class CheckInForm(forms.Form):
-    first_name = forms.CharField(label='First name', max_length=100)
-    last_name = forms.CharField(label='Last name', max_length=100)
-    date_of_birth = forms.CharField(label='Date of birth', max_length=100)
+class VoteIdCheckForm(forms.Form):
+    vote_id = forms.CharField(max_length=20, label='Enter confirmation number')

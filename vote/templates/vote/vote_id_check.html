@@ -12,6 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 <link rel="stylesheet" href={% static "css/checkin.css" %}>
+{#  NEED TO CHANGE CSS FILE AS STYLE CHANGES  #}
 <link rel="stylesheet" href={% static "css/main.css" %}>
 <link rel="stylesheet" href={% static "css/footer.css" %}>
 <link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
@@ -28,14 +29,14 @@
             <a class="nav-link" href="#">Vote Count</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">Check In</a>
+            <a class="nav-link" href="{% url 'django_checkin' %}">Check In</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Voting Portal
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'vote' %}">Go to Voting Booth</a>
+              <a class="dropdown-item">Go to Voting Booth</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">View Available Elections</a>
               <div class="dropdown-divider"></div>
@@ -49,44 +50,17 @@
           <a class="nav-link disabled" href="#">Register</a>
       </div>
     </nav>
-	<br>
-<h1 style="color:black;" align="center">CHECK IN</h1>
-	<br>
+<h1 style="color:black;" align="center">CONFIRMATION NUMBER</h1>
+
 
 <div id="padder" align="center">
 	<div id="formContainer">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-		<!--
-			<ul>
-				<li><label id="photoidLabel">Valid Form of Photo ID*</label>
-				<li><select type="photoid" name="photoid" id="photoid" required="true">
-							<option value="DL">Virginia Driver's License</option>
-							<option value="VetCard">DMV Issued Veteran's ID Card</option>
-							<option value="USPass">United States Passport</option>
-							<option value="OtherGov">Other Government-Issued Photo ID Card</option>
-							<option value="StudentID">College or University Student ID Card</option>
-							<option value="TribalID">Tribal Enrollment or Tribal ID Card</option>
-							<option value="EmployeeID">Employee Photo ID Card</option>
-							<option value="MilitaryID">US Military ID</option>
-							<option value="NursingHomeID">Nursing Home Resident ID</option>
-							<option value="CreditCard">Credit Card Displaying Photograph</option>
-				</select>
-			</ul> -->
-			<br><br><br><br><br><br><br>
-			<div id="inner_content">
-				<ul>
-					<li><label id="term">I certify and affirm that I am expressly authorized by the voter to access voter registration information. I understand that it is unlawful to access the record of any other voter, punishable as computer fraud under Va. Code &sect 18.2-152.3.*</label></li>
-						<span style="display:inline-block; width: 20px;"></span>
-					<li><input type="checkbox" name="terms" id="terms" value = "true" required></li>
-				</ul>
-			</div>
-			<div align="center">
-				<button id="submit" type="submit">Submit</button>	
-			</div>
-		</form>
-	</div>
+        <form action="{% url 'vote_id_check' %}" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+        <button type="submit">Submit</button>
+        </form>
+    </div>
 </div>
 
 <div class="footer-dark">

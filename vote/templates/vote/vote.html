@@ -50,14 +50,14 @@
           <a class="nav-link disabled" href="#">Register</a>
       </div>
     </nav>
-<h1 style="color:black;" align="center">CHECK IN</h1>
+<h1 style="color:black;" align="center">VOTING BOOTH</h1>
 
 
 <div id="padder" align="center">
 	<div id="formContainer">
-    {% csrf_token %}
         <form action="" method="post">
-          Vote ID: <input type="text" name="VoteID"><br>  
+            {% csrf_token %}
+            {{ form }}
         <button type="submit">Submit</button>
     </form>
 </div>

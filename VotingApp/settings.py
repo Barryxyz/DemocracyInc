@@ -24,7 +24,7 @@ SECRET_KEY = '!un@_!zh2jyqv4y@k2-24(*)u#%zb#w6e-4_g^%56#pm365qj%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','localhost']
+ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1']
 
 
 # Application definition
@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'VotingApp.urls'
+ROOT_URLCONF = 'vote.urls'
 
 TEMPLATES = [
     {
@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'VotingApp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'sandbox'),
     }
 }
 

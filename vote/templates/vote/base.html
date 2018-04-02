@@ -29,14 +29,14 @@
             <a class="nav-link" href="#">Vote Count</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
+            <a class="nav-link" href="{% url 'django_checkin' %}">Check In</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Voting Portal
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="votingbooth.html">Go to Voting Booth</a>
+              <a class="dropdown-item" href="{% url 'vote' %}">Go to Voting Booth</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">View Available Elections</a>
               <div class="dropdown-divider"></div>

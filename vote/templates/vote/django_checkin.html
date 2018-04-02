@@ -1,27 +1,21 @@
 {% load staticfiles %}
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{#{% block title %}Checkin Form{% endblock %}#}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-    <link rel="stylesheet" href="{% static "css/checkin.css" %}">
-  <link rel="stylesheet" href="{% static "css/main.css" %}">
-    <link rel="stylesheet" href="{% static "css/footer.css" %}">
-    <link rel="stylesheet" href="{% static "css/ionicons.min.css" %}">
-    <!-- <link rel="stylesheet" type="text/css" href="C:\Users\seant_000\Desktop\DemocracyInc-str8ht\vote\static\css\signup.css"> -->
+{% block content %}
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Not Registered</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<link rel="stylesheet" href={% static "css/checkin.css" %}>
+<link rel="stylesheet" href={% static "css/main.css" %}>
+<link rel="stylesheet" href={% static "css/footer.css" %}>
+<link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
 
-  <style>
-</style>
-  </head>
-  <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="/home">DemocracyInc</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +28,7 @@
             <a class="nav-link" href="#">Vote Count</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'django_checkin' %}">Check In</a>
+            <a class="nav-link">Check In</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,18 +49,45 @@
           <a class="nav-link disabled" href="#">Register</a>
       </div>
     </nav>
-  <h1 style="color:black;" align="center">NOT REGISTERED</h1>
+	<br>
+<h1 style="color:black;" align="center">CHECK IN</h1>
+	<br>
 
-<!-- Need to relate back to database and check to see if voter exist, then return this page-->
-<div id="padder">
-        <ul>
-            <li><label id="term">Your profile was not found in the record of registered voters. </label></li>
-            <li><label id="term">Are you registered to vote?</label></li>
-            <li><label id="term">If yes please enter you information again, else please register to vote, and then you will be able to vote in the next election cycle</label></li>
-            <span style="display:inline-block; width: 20px;"></span>
-            <a href="{% url 'django_checkin' %}">Try again</a>&nbsp;
-        </ul>
-  </div>
+<div id="padder" align="center">
+	<div id="formContainer">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+		<!--
+			<ul>
+				<li><label id="photoidLabel">Valid Form of Photo ID*</label>
+				<li><select type="photoid" name="photoid" id="photoid" required="true">
+							<option value="DL">Virginia Driver's License</option>
+							<option value="VetCard">DMV Issued Veteran's ID Card</option>
+							<option value="USPass">United States Passport</option>
+							<option value="OtherGov">Other Government-Issued Photo ID Card</option>
+							<option value="StudentID">College or University Student ID Card</option>
+							<option value="TribalID">Tribal Enrollment or Tribal ID Card</option>
+							<option value="EmployeeID">Employee Photo ID Card</option>
+							<option value="MilitaryID">US Military ID</option>
+							<option value="NursingHomeID">Nursing Home Resident ID</option>
+							<option value="CreditCard">Credit Card Displaying Photograph</option>
+				</select>
+			</ul> -->
+			<br><br><br><br><br><br><br>
+			<div id="inner_content">
+				<ul>
+					<li><label id="term">I certify and affirm that I am expressly authorized by the voter to access voter registration information. I understand that it is unlawful to access the record of any other voter, punishable as computer fraud under Va. Code &sect 18.2-152.3.*</label></li>
+						<span style="display:inline-block; width: 20px;"></span>
+					<li><input type="checkbox" name="terms" id="terms" value = "true" required></li>
+				</ul>
+			</div>
+			<div align="center">
+				<button id="submit" type="submit">Submit</button>	
+			</div>
+		</form>
+	</div>
+</div>
 
 <div class="footer-dark">
        <footer>
@@ -110,15 +131,5 @@
            </div>
        </footer>
    </div>
-    <script src="{% static "js/jquery.min.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-
-
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-
-  </body>
-</html>
+</div>
+{% endblock %}

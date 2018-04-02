@@ -10,6 +10,8 @@ import random, string
 
 # Create your views here.
 
+cache = {}
+
 def home(request):
     return render(request, 'vote/base.html', {})
 
@@ -42,7 +44,11 @@ def django_checkin(request):
                                                       date_of_birth=form.cleaned_data['date_of_birth'],
                                                       address=form.cleaned_data['address']).exists()
             if voter_registered:
+                cache['full_name'] = form.cleaned_data['last_name'] + ", " + form.cleaned_data['first_name']
+                cache['date_of_birth'] = form.cleaned_data['date_of_birth']
+                cache['Locality'] = form.cleaned_data['locality']
                 return HttpResponseRedirect('/booth')
+				
             else:
                 return HttpResponseRedirect('/notregistered')
 
@@ -78,8 +84,10 @@ def booth_assignment(request):
         key = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=6))
         if not key in boothkeys:
             break
+    #print(most_recent_data[0])
+    cache['booth'] = key
 
-    return render(request, 'vote/booth_assignment.html', {'booth': key})
+    return render(request, 'vote/booth_assignment.html', cache)
 
 
 def notregistered(request):

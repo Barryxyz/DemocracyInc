@@ -1,27 +1,22 @@
 {% load staticfiles %}
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{#{% block title %}Checkin Form{% endblock %}#}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-    <link rel="stylesheet" href="{% static "css/checkin.css" %}">
-  <link rel="stylesheet" href="{% static "css/main.css" %}">
-    <link rel="stylesheet" href="{% static "css/footer.css" %}">
-    <link rel="stylesheet" href="{% static "css/ionicons.min.css" %}">
-    <!-- <link rel="stylesheet" type="text/css" href="C:\Users\seant_000\Desktop\DemocracyInc-str8ht\vote\static\css\signup.css"> -->
+{% block content %}
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Not Registered</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<link rel="stylesheet" href={% static "css/checkin.css" %}>
+{#  NEED TO CHANGE CSS FILE AS STYLE CHANGES  #}
+<link rel="stylesheet" href={% static "css/main.css" %}>
+<link rel="stylesheet" href={% static "css/footer.css" %}>
+<link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
 
-  <style>
-</style>
-  </head>
-  <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="/home">DemocracyInc</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +36,7 @@
               Voting Portal
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'vote' %}">Go to Voting Booth</a>
+              <a class="dropdown-item">Go to Voting Booth</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">View Available Elections</a>
               <div class="dropdown-divider"></div>
@@ -55,18 +50,17 @@
           <a class="nav-link disabled" href="#">Register</a>
       </div>
     </nav>
-  <h1 style="color:black;" align="center">NOT REGISTERED</h1>
+<h1 style="color:black;" align="center">CHECK IN</h1>
 
-<!-- Need to relate back to database and check to see if voter exist, then return this page-->
-<div id="padder">
-        <ul>
-            <li><label id="term">Your profile was not found in the record of registered voters. </label></li>
-            <li><label id="term">Are you registered to vote?</label></li>
-            <li><label id="term">If yes please enter you information again, else please register to vote, and then you will be able to vote in the next election cycle</label></li>
-            <span style="display:inline-block; width: 20px;"></span>
-            <a href="http://127.0.0.1:8000/checkin.html/">Try again</a>&nbsp;
-        </ul>
-  </div>
+
+<div id="padder" align="center">
+	<div id="formContainer">
+    {% csrf_token %}
+        <form action="" method="post">
+          Vote ID: <input type="text" name="VoteID"><br>  
+        <button type="submit">Submit</button>
+    </form>
+</div>
 
 <div class="footer-dark">
        <footer>
@@ -110,15 +104,5 @@
            </div>
        </footer>
    </div>
-    <script src="{% static "js/jquery.min.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-
-
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-
-  </body>
-</html>
+</div>
+{% endblock %}

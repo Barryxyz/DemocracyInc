@@ -55,8 +55,9 @@
           <a class="nav-link disabled" href="#">Register</a>
       </div>
     </nav>
+	<br><br>
   <h1 style="color:black;" align="center">NOT REGISTERED</h1>
-
+	<hr>
 <!-- Need to relate back to database and check to see if voter exist, then return this page-->
 <div id="padder">
         <ul>
@@ -66,7 +67,14 @@
             <span style="display:inline-block; width: 20px;"></span>
             <a href="{% url 'django_checkin' %}">Try again</a>&nbsp;
         </ul>
-  </div>
+</div>
+<div align="center">
+<br>
+{% load static %}
+<img align="center" src="{% static "img/Logo_small.png" %}" alt="logo"/>
+</div>
+<br>
+<br>
 
 <div class="footer-dark">
        <footer>

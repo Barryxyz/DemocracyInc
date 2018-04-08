@@ -71,3 +71,11 @@ body {
 	border-radius: 50%;
 	background: white;
 }
+
+ul {
+  list-style: none;
+}
+
+/*li {*/
+  /*padding: 10px 0;*/
+/*}*/

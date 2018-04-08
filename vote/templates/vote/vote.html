@@ -19,11 +19,12 @@
 <h4>Presidential Election</h4>
     <form>
         {% csrf_token %}
-        {% for field in form %}
-            <label class="container">
-                 {{ field }}
-            </label>
-        {% endfor %}
+        {{ form }}
+{#        {% for field in form %}#}
+{#            <label class="container">#}
+{#                 {{ field }}#}
+{#            </label>#}
+{#        {% endfor %}#}
     </form>
 
 </label>

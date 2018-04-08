@@ -1,11 +1,14 @@
 from django import forms
-from .models import Registered,VoteRecord
+from .models import Registered #,VoteRecord
 
 
-class VoteForm(forms.ModelForm):
-    class Meta:
-        model = VoteRecord
-        fields = ['president']
+class VoteForm(forms.Form):
+    President = (
+        ('Hillary Clinton', 'Hillary Clinton - (D)'),
+        ('Donald Trump', 'Donald Trump - (R)'),
+        ('Gary Johnson', 'Gary Johnson - (L)')
+    )
+    president = forms.ChoiceField(choices=President, widget=forms.RadioSelect())
 
 class RegisteredForm(forms.ModelForm):
     class Meta:

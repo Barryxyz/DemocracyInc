@@ -20,15 +20,11 @@ from django.conf.urls import url, include
 
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
     url(r'^home/', views.home, name='home'),
     url(r'^checkin/', views.checkin, name="checkin"),
     url(r'^confirmation/', views.generator, name="generator"),
     url(r'^login/', views.login, name="login"),
-
-
     # url(r'^vote/', views.vote, name='vote'),
-    # # url(r'^checkin/', views.checkin, name='checkin'),
     # url(r'^notregistered/', views.notregistered, name='notregistered'),
     # url(r'^booth/', views.booth_assignment, name='booth')
 ]

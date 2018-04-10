@@ -11,8 +11,9 @@ class Voter(models.Model):
     date_of_birth = models.DateField(max_length=8, default=datetime.date.today)
     election_type = models.CharField(max_length=50, default='')
     locality = models.CharField(max_length=20, default = '')
-    photo_id = models.CharField(max_length=20, default = '')
+    # photo_id = models.CharField(max_length=20, default = '')
     confirmation = models.CharField(max_length=6)
+    voter_id = models.CharField(max_length=6)
 
     # USERNAME_FIELD = 'email'
     # REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -21,6 +22,7 @@ class Voter(models.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'confirmation': self.confirmation,
+            'voter_id': self.voter_id,
             'id': self.id,
         }
 

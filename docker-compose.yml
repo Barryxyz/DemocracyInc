@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 mysql:
     image: mysql:5.7.14
     container_name: mysql
@@ -9,6 +10,8 @@ mysql:
     volumes:
       - ./db:/var/lib/mysql
 
+=======
+>>>>>>> 79ea98fc936d22bd02128d6fad2de26aaf2ef202
 web:
     image: tp33/django
     external_links:

@@ -78,8 +78,13 @@ DATABASES = {
           'default': {
           'ENGINE': 'django.db.backends.mysql',
           'NAME': 'cs3240',
+<<<<<<< HEAD
           'USER': 'electionadmin',
           'PASSWORD': 'meme12345',
+=======
+          'USER': 'www',
+          'PASSWORD': '$3cureUS',
+>>>>>>> 79ea98fc936d22bd02128d6fad2de26aaf2ef202
           'HOST': 'db',
           }
       }

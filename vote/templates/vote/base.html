@@ -36,7 +36,7 @@
               Voting Portal
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'vote_id_check' %}">Go to Voting Booth</a>
+              <a class="dropdown-item" href="{% url 'vote' %}">Go to Voting Booth</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">View Available Elections</a>
               <div class="dropdown-divider"></div>
@@ -45,7 +45,7 @@
           </li>
         </ul>
 
-          <a class="nav-link disabled" href="#">Login</a>
+          <a class="nav-link disabled" href="{% url 'login' %}">Login</a>
           <a class="nav-link disabled" href="#">Register</a>
       </div>
     </nav>

@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 /db/
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -151,4 +149,3 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 .idea/DemocracyInc.iml
->>>>>>> 79ea98fc936d22bd02128d6fad2de26aaf2ef202

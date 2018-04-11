@@ -1,10 +1,12 @@
 from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.views.generic import View, TemplateView
+from django.views.generic import View
 from .forms import CheckinForm, LoginForm
-from .models import Voter
+from django.views.generic import TemplateView
+from django.http import HttpResponseRedirect
 import random, sys
+
 
 # Create your views here.
 
@@ -16,14 +18,8 @@ def login(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            voter = Voter.objects.get(first_name=task.first_name, last_name=task.last_name)
-            if (task.confirmation == voter.confirmation):
-                voter_id = generator()
-                voter.voter_id = voter_id
-                voter.save()
-                return render(request, 'vote/confirmation.html', {'key': voter_id})
-            else:
-                return render(request, 'vote/notregistered.html', {})
+            task.save()  # does nothing, just trigger the validation
+            return render(request, 'vote/confirmation.html', {'key': generator()})
     else:
         form = LoginForm()
     return render(request, 'vote/login.html', {'form': form})
@@ -33,10 +29,8 @@ def checkin(request):
         form = CheckinForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            confirmation_number = generator()
-            task.confirmation = confirmation_number
             task.save()  # does nothing, just trigger the validation
-            return render(request, 'vote/confirmation.html', {'key': confirmation_number})
+            return render(request, 'vote/confirmation.html', {'key': generator()})
 
     else:
         form = CheckinForm()

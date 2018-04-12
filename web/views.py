@@ -28,9 +28,11 @@ def checkin(request):
     if request.method == 'POST':
         form = CheckinForm(request.POST)
         if form.is_valid():
+            confirmation = generator()
             task = form.save(commit=False)
+            task.confirmation = confirmation
             task.save()  # does nothing, just trigger the validation
-            return render(request, 'vote/confirmation.html', {'key': generator()})
+            return render(request, 'vote/confirmation.html', {'key': confirmation})
 
     else:
         form = CheckinForm()

@@ -32,29 +32,32 @@ class Voter(models.Model):
 class Candidate(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    position = models.ForeignKey('Position', on_delete=models.CASCADE)
+    party = models.CharField(max_length=50)
 
     def to_json(self):
         return {
             'first_name': self.first_name,
             'last_name': self.last_name,
+            'party': self.party,
             'id': self.id,
         }
 
 class Vote(models.Model):
-    time_stamp = models.DateTimeField(auto_now_add=True)
+    #time_stamp = models.DateTimeField(auto_now_add=True)
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE)
-    candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
+    position = models.ForeignKey('Position', on_delete=models.CASCADE)
 
     def to_json(self):
         return {
-            'time_stamp': self.time_stamp,
+#            'time_stamp': self.time_stamp,
             'voter': self.voter,
+            'position': self.position,
             'id': self.id,
         }
 
 class Position(models.Model):
     name = models.CharField(max_length=50)
+    candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
 
     def to_json(self):
         return {

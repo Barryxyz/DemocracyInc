@@ -76,15 +76,11 @@ WSGI_APPLICATION = 'vote.wsgi.application'
 
 # Heroku PostgreSQL DB
 DATABASES = {
-          'default': {
-              'ENGINE': 'django.db.backends.mysql',
-              'NAME': 'cs3240',
-              'USER': 'electionadmin',
-              'PASSWORD': 'meme12345',
-              'HOST': 'db',
-          }
-      }
-
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'sandbox'),
+    }
+}
 
 
 # Password validation

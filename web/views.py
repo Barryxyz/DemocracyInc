@@ -27,10 +27,8 @@ def login(request):
             if voter:
                 return render(request, 'vote/home.html', {'voter': voter})
             else:
-                return render(request, 'vote/notregistered.html', {})
-
+                return render(request, 'vote/notregistered.html')
             task.save()  # does nothing, just trigger the validation
-            return render(request, 'vote/confirmation.html', {'key': generator()})
     else:
         form = LoginForm()
     return render(request, 'vote/login.html', {'form': form})

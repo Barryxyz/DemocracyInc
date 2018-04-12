@@ -1,10 +1,14 @@
 from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.views.generic import View, TemplateView
+from django.views.generic import View
 from .forms import CheckinForm, LoginForm
-from .models import Voter
+from django.views.generic import TemplateView
+from django.http import HttpResponseRedirect
 import random, sys
+from .models import Voter, Candidate, Vote, Position
+
+
 
 # Create your views here.
 
@@ -16,14 +20,15 @@ def login(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            voter = Voter.objects.get(first_name=task.first_name, last_name=task.last_name)
-            if (task.confirmation == voter.confirmation):
-                voter_id = generator()
-                voter.voter_id = voter_id
-                voter.save()
-                return render(request, 'vote/confirmation.html', {'key': voter_id})
+            firstName = form.cleaned_data.get('first_name')
+            lastName = form.cleaned_data.get('last_name')
+            conf = form.cleaned_data.get('confirmation')
+            voter = Voter.objects.filter(first_name=firstName, last_name=lastName, confirmation=conf)
+            if voter:
+                return render(request, 'vote/home.html', {'voter': voter})
             else:
-                return render(request, 'vote/notregistered.html', {})
+                return render(request, 'vote/notregistered.html')
+            task.save()  # does nothing, just trigger the validation
     else:
         form = LoginForm()
     return render(request, 'vote/login.html', {'form': form})
@@ -32,11 +37,11 @@ def checkin(request):
     if request.method == 'POST':
         form = CheckinForm(request.POST)
         if form.is_valid():
+            confirmation = generator()
             task = form.save(commit=False)
-            confirmation_number = generator()
-            task.confirmation = confirmation_number
+            task.confirmation = confirmation
             task.save()  # does nothing, just trigger the validation
-            return render(request, 'vote/confirmation.html', {'key': confirmation_number})
+            return render(request, 'vote/confirmation.html', {'key': confirmation})
 
     else:
         form = CheckinForm()

@@ -6,6 +6,8 @@ from .forms import CheckinForm, LoginForm
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 import random, sys
+from .models import Voter, Candidate, Vote, Position
+
 
 
 # Create your views here.
@@ -18,6 +20,15 @@ def login(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
+            firstName = form.cleaned_data.get('first_name')
+            lastName = form.cleaned_data.get('last_name')
+            conf = form.cleaned_data.get('confirmation')
+            voter = Voter.objects.filter(first_name=firstName, last_name=lastName, confirmation=conf)
+            if voter:
+                return render(request, 'vote/home.html', {'voter': voter})
+            else:
+                return render(request, 'vote/notregistered.html', {})
+
             task.save()  # does nothing, just trigger the validation
             return render(request, 'vote/confirmation.html', {'key': generator()})
     else:

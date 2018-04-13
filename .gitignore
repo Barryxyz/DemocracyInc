@@ -1,5 +1,8 @@
+<<<<<<< 184450efc803efb19ac89e9f2aed4f238c4ce7f5
 /db/
 __pycache__/
+=======
+>>>>>>> Migrated changes over from previous version
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

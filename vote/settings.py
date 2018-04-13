@@ -73,24 +73,15 @@ WSGI_APPLICATION = 'vote.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-# Docker MySQL container
-# DATABASES = {
-#           'default': {
-#           'ENGINE': 'django.db.backends.mysql',
-#           'NAME': 'democracyinc',
-#           'USER': 'www',
-#           'PASSWORD': '$3cureUS',
-#           'HOST': 'db',
-#           }
-#       }
 
-# SQLite file
+# Heroku PostgreSQL DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'sandbox'),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -129,7 +120,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'web')
 STATICFILES_DIRS = [
     'web/static/',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'

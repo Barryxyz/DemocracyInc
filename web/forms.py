@@ -10,3 +10,8 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = Voter
         fields = ["first_name", "last_name", "confirmation"]
+
+class BallotForm(forms.ModelForm):
+    class Meta:
+        model = Vote
+        fields = ['president']

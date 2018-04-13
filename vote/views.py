@@ -13,10 +13,10 @@ import random, string
 cache = {}
 
 def home(request):
-    return render(request, 'vote/base.html', {})
+    return render(request, 'base.html', {})
 
 def login(request):
-    return render(request, 'vote/login.html', {})
+    return render(request, 'login.html', {})
 
 def checkin(request):
     # if this is a POST request we need to process the form data
@@ -46,7 +46,7 @@ def checkin(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RegisteredForm()
-    return render(request, 'vote/checkin.html', {'form': form})
+    return render(request, 'checkin.html', {'form': form})
 
 def vote(request):
     # if this is a POST request we need to process the form data
@@ -63,7 +63,7 @@ def vote(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = VoteForm()
-    return render(request, 'vote/vote.html', {'form': form})
+    return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
     # if this is a POST request we need to process the form data
@@ -84,7 +84,7 @@ def vote_id_check(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = VoteIdCheckForm()
-    return render(request, 'vote/vote_id_check.html', {'form': form})
+    return render(request, 'vote_id_check.html', {'form': form})
 
 def booth_assignment(request):
     boothkeys = ['rFKeel', 'tOLpZV', 'pldygS']
@@ -98,7 +98,7 @@ def booth_assignment(request):
     cache['booth'] = key
 
     #key = 'WAHOOWA' # hardcode a key for demo purposes
-    return render(request, 'vote/booth_assignment.html', cache)
+    return render(request, 'booth_assignment.html', cache)
 
 def generator():
     seq = "ABCDFGHJIKLMNOPQRSTUVWXYZ1234567890"
@@ -109,5 +109,5 @@ def generator():
     return key
 
 def notregistered(request):
-    return render(request, 'vote/notregistered.html', {})
+    return render(request, 'notregistered.html', {})
 

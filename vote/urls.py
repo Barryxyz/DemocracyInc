@@ -29,3 +29,8 @@ urlpatterns = [
     url(r'^notregistered/', views.notregistered, name='notregistered'),
     url(r'^checkin_success/', views.booth_assignment, name='success')
 ]
+
+#Add Django site authentication urls (for login, logout, password management)
+urlpatterns += [
+    url(r'accounts/', include('django.contrib.auth.urls')),
+]

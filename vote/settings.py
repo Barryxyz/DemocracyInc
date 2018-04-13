@@ -76,15 +76,11 @@ WSGI_APPLICATION = 'vote.wsgi.application'
 
 # Heroku PostgreSQL DB
 DATABASES = {
-          'default': {
-              'ENGINE': 'django.db.backends.mysql',
-              'NAME': 'cs3240',
-              'USER': 'electionadmin',
-              'PASSWORD': 'meme12345',
-              'HOST': 'db',
-          }
-      }
-
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'sandbox'),
+    }
+}
 
 
 # Password validation
@@ -124,7 +120,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'web')
 STATICFILES_DIRS = [
     'web/static/',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'

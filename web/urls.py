@@ -20,7 +20,7 @@ from django.conf.urls import url, include
 
 
 urlpatterns = [
-    url(r'^/', views.home, name='base'),
+    # url(r'^/', views.home, name='base'),
     url(r'^home/', views.home, name='home'),
     url(r'^checkin/', views.checkin, name="checkin"),
     url(r'^confirmation/', views.generator, name="generator"),

@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^checkin/', views.checkin, name="checkin"),
     url(r'^confirmation/', views.generator, name="generator"),
     url(r'^login/', views.login, name="login"),
+    url(r'^ballot/', views.ballot, name = "ballot"),
     # url(r'^vote/', views.vote, name='vote'),
     # url(r'^notregistered/', views.notregistered, name='notregistered'),
     # url(r'^booth/', views.booth_assignment, name='booth')

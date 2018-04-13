@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic import View
-from .forms import CheckinForm, LoginForm
+from .forms import CheckinForm, LoginForm,BallotForm
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 import random, sys
@@ -25,7 +25,7 @@ def login(request):
             conf = form.cleaned_data.get('confirmation')
             voter = Voter.objects.filter(first_name=firstName, last_name=lastName, confirmation=conf)
             if voter:
-                return render(request, 'vote/home.html', {'voter': voter})
+                HttpResponseRedirect('/ballot')
             else:
                 return render(request, 'vote/notregistered.html')
             task.save()  # does nothing, just trigger the validation
@@ -54,3 +54,15 @@ def generator():
     for i in range(6):
         key+=(''.join(''.join(random.choice(seq))))
     return key
+
+def ballot(request):
+    if request.method == 'POST':
+        form = BallotForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.save()
+            return render(request, 'vote/vote.html', {'form': form})
+
+            #have a redirect here- new html page needed
+        # else:
+        return render(request, 'vote/vote.html', {'form': form})

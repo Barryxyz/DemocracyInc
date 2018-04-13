@@ -11,7 +11,7 @@ class LoginForm(forms.ModelForm):
         model = Voter
         fields = ["first_name", "last_name", "confirmation"]
 
-#class BallotForm(forms.ModelForm):
- #   class Meta:
-  #      model = Vote
-  #      people = forms.
+class BallotForm(forms.ModelForm):
+    class Meta:
+        model = Vote
+        fields = ['president']

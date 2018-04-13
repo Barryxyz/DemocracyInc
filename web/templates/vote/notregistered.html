@@ -1,0 +1,20 @@
+{% extends "vote/base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+  <h1 style="color:black;" align="center">NOT REGISTERED</h1>
+
+<!-- Need to relate back to database and check to see if voter exist, then return this page-->
+<div id="padder">
+        <ul>
+            <li><label id="term">Your profile was not found in the record of registered voters. </label></li>
+            <li><label id="term">Are you registered to vote?</label></li>
+            <li><label id="term">If yes please enter you information again, else please register to vote, and then you will be able to vote in the next election cycle</label></li>
+            <span style="display:inline-block; width: 20px;"></span>
+            <a href="{% url "web:login" %}">Try again</a>&nbsp;
+        </ul>
+  </div>
+
+{% endblock %}

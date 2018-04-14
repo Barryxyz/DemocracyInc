@@ -63,6 +63,10 @@
 <h1 style="color:black;" align="center">CONFIRMATION NUMBER</h1>
 <br>
 
+{% if isNotCheckedIn == True %}
+<p align="center" style="color:red">Confirmation Number not found. Please try again or ask for help.</p>
+{% endif %}
+<br>
 <div id="padder" align="center">
 	<div id="formContainer">
         <form action="{% url 'vote_id_check' %}" method="POST">

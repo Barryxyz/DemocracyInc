@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .forms import VoteForm,RegisteredForm,VoteIdCheckForm
 from .models import Registered
+from .models import CheckedIn
+from django.contrib.auth.decorators import login_required
 import random, string
 
 
@@ -12,6 +14,7 @@ import random, string
 
 cache = {}
 
+#@login_required
 def home(request):
     return render(request, 'base.html', {})
 
@@ -21,6 +24,12 @@ def login(request):
 def logout_page(request):
     return render(request, 'registration/logout_success.html', {})
 
+@login_required	
+def view_voters(request):
+	query_results = Registered.objects.all()
+	return render(request, 'view_voters.html', {'query_results': query_results})
+
+@login_required
 def checkin(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -35,7 +44,11 @@ def checkin(request):
                                                       address=form.cleaned_data['address'],
                                                       locality=form.cleaned_data['locality']).exists()
             if voter_registered:
+                #cache = {}
                 cache['full_name'] = form.cleaned_data['last_name'] + ", " + form.cleaned_data['first_name']
+                cache['first_name'] = form.cleaned_data['first_name']
+                cache['last_name'] = form.cleaned_data['last_name']
+                cache['address'] = form.cleaned_data['address']
                 cache['date_of_birth'] = form.cleaned_data['date_of_birth']
                 cache['Locality'] = form.cleaned_data['locality']
                 return HttpResponseRedirect('/checkin_success')
@@ -89,16 +102,29 @@ def vote_id_check(request):
         form = VoteIdCheckForm()
     return render(request, 'vote_id_check.html', {'form': form})
 
+@login_required
 def booth_assignment(request):
     boothkeys = ['rFKeel', 'tOLpZV', 'pldygS']
 
-    #while True:
-    #    key = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=6))
-    #    if not key in boothkeys:
-     #       break
-    #print(most_recent_data[0])
     key = generator()
     cache['booth'] = key
+	
+    check = CheckedIn.objects.filter(first_name=cache['first_name'],
+        last_name=cache['last_name'],
+        date_of_birth=cache['date_of_birth'],
+		address=cache['address'],
+        locality=cache['Locality'])
+
+    if check.exists():
+	    check.update(confirm_key=key)
+		
+    else :	
+        foo_instance = CheckedIn.objects.create(first_name=cache['first_name'],
+        last_name=cache['last_name'],
+        date_of_birth=cache['date_of_birth'],
+		address=cache['address'],
+        locality=cache['Locality'],
+		confirm_key=key)
 
     #key = 'WAHOOWA' # hardcode a key for demo purposes
     return render(request, 'booth_assignment.html', cache)
@@ -111,6 +137,7 @@ def generator():
         key+=(''.join(''.join(random.choice(seq))))
     return key
 
+@login_required
 def notregistered(request):
     return render(request, 'notregistered.html', {})
 

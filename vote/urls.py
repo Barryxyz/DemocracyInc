@@ -28,7 +28,8 @@ urlpatterns = [
     url(r'^vote_id_check/', views.vote_id_check, name='vote_id_check'),
     url(r'^checkin/', views.checkin, name='checkin'),
     url(r'^notregistered/', views.notregistered, name='notregistered'),
-    url(r'^checkin_success/', views.booth_assignment, name='success')
+    url(r'^checkin_success/', views.booth_assignment, name='success'),
+	url(r'^view_voters/', views.view_voters, name='view_voters')
 ]
 
 #Add Django site authentication urls (for login, logout, password management)

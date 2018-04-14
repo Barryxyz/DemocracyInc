@@ -17,6 +17,9 @@ def home(request):
 
 def login(request):
     return render(request, 'login.html', {})
+	
+def logout_page(request):
+    return render(request, 'registration/logout_success.html', {})
 
 def checkin(request):
     # if this is a POST request we need to process the form data

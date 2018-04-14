@@ -1,15 +1,9 @@
-<<<<<<< 184450efc803efb19ac89e9f2aed4f238c4ce7f5
-<<<<<<< HEAD
-=======
->>>>>>> Migrated changes over from previous version
 version: '3'
 
 services:
   web:
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
-<<<<<<< 184450efc803efb19ac89e9f2aed4f238c4ce7f5
-=======
 #mysql:
 #    image: mysql:5.7.14
 #    container_name: mysql
@@ -25,19 +19,12 @@ web:
     image: tp33/django
     external_links:
       -  mysql:db
->>>>>>> 2469942e2a687345054ed7dfa84568004eb8c129
     volumes:
       - .:/code
     ports:
-<<<<<<< HEAD
-      - "8000:8000"
-=======
       - "8000:8000"
     command: bash -c "python /app/manage.py makemigrations && python /app/manage.py migrate && mod_wsgi-express start-server --working-directory /app/ --reload-on-changes /app/vote/wsgi.py"
->>>>>>> 2469942e2a687345054ed7dfa84568004eb8c129
-=======
     volumes:
       - .:/code
     ports:
       - "8000:8000"
->>>>>>> Migrated changes over from previous version

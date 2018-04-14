@@ -1,8 +1,3 @@
-<<<<<<< 184450efc803efb19ac89e9f2aed4f238c4ce7f5
 Django==1.9.8
 gunicorn==19.6.0
 whitenoise
-=======
-Django>=1.8,<2.0
-psycopg2
->>>>>>> Migrated changes over from previous version

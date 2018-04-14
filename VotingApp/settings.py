@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'vote'
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,3 +118,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGOUT_REDIRECT_URL = 'logout_page'
+LOGIN_REDIRECT_URL = 'checkin'

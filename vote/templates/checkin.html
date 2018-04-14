@@ -44,10 +44,19 @@
             </div>
           </li>
         </ul>
-          <!-- <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Login</button>
-          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Register</button> -->
-          <a class="nav-link disabled" href="#">Login</a>
-          <a class="nav-link disabled" href="#">Register</a>
+		{% if user.is_authenticated %}
+			<li class="nav navbar-nav navbar-right">
+              <h6 style="color:white">Logged in as: {{ user.username }}</h6>
+            </li>
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <!-- alignment members -->
+		    <li class="nav navbar-nav navbar-right">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+		{% else %}
+		<li class="nav navbar-nav navbar-right">
+		    <a class="nav-link" href="{% url 'login' %}">Login</a>
+		</li>
+		{% endif %}
       </div>
     </nav>
 	<br>

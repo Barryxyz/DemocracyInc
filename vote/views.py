@@ -69,9 +69,12 @@ def checkin(request):
             if voter_registered:
                 task = form.save(commit=False)
                 key = generator()
+                full_name = task.first_name + " " + task.last_name
+                locality = task.locality
                 task.confirmation = key
                 task.save()
-                return render(request, 'booth_assignment.html', key)
+                return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
+
             else:
                 return render(request, 'notregistered.html', {})
     # if a GET (or any other method) we'll create a blank form

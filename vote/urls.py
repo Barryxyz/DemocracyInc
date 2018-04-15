@@ -25,11 +25,11 @@ urlpatterns = [
     url(r'^login/', views.login, name='login'),
 	url(r'^logout_page/', views.logout_page, name='logout_page'),
 	url(r'^password_reset/$',views.reset, name='reset_pass'),
-    url(r'^vote/', views.vote, name='vote'),
-    url(r'^vote_id_check/', views.vote_id_check, name='vote_id_check'),
+    # url(r'^vote/', views.vote, name='vote'),
+    # url(r'^vote_id_check/', views.vote_id_check, name='vote_id_check'),
     url(r'^checkin/', views.checkin, name='checkin'),
     url(r'^notregistered/', views.notregistered, name='notregistered'),
-    url(r'^checkin_success/', views.booth_assignment, name='success'),
+    # url(r'^checkin_success/', views.booth_assignment, name='success'),
 	url(r'^view_voters/', views.view_voters, name='view_voters')
 ]
 

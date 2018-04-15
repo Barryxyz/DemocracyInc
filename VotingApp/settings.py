@@ -54,7 +54,7 @@ ROOT_URLCONF = 'vote.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['./templates',],
+        'DIRS': ['../vote/templates', ],  # used to be './templates'
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +79,17 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'sandbox.db'),
     }
 }
+
+# Docker MySQL container
+# DATABASES = {
+#           'default': {
+#               'ENGINE': 'django.db.backends.mysql',
+#               'NAME': 'cs3240',
+#               'USER': 'electionadmin',
+#               'PASSWORD': 'meme12345',
+#               'HOST': 'db',
+#           }
+#       }
 
 
 # Password validation

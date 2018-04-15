@@ -4,14 +4,13 @@
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %}
-{% endif %}
+{#{% if next %}#}
+{#{% if user.is_authenticated %}#}
+{#    <p>WELCOME</p>#}
+{#    {% else %}#}
+{#    <p>ERROR</p>#}
+{#{% endif %}#}
+{#{% endif %}#}
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static "css/login.css" %}">
@@ -21,7 +20,7 @@
   <div class="row">
     <div class="Absolute-Center is-Responsive">
       <div class="col-sm-12 col-md-10 col-md-offset-1">
-        <form method="post" action="{% url 'login' %}" id="loginForm">
+        <form method="post" action="" id="loginForm">
 			{% csrf_token %}
           <div class="form-group input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -38,7 +37,7 @@
           <div>
 			<input type="submit" value="Login" class="btn btn-primary"/>
 			<input type="hidden" name="next" value="{{ next }}" />
-          </div class="col-md-4 text-center">
+          </div class= "col-md-4 text-center">
           <div class="form-group text-center">
             <a href="{% url 'password_reset' %}">Forgot Password</a>&nbsp;|&nbsp;<a href="{% url 'home' %}">Home</a>
           </div>

@@ -15,6 +15,7 @@ Including another URLconf
 
 from django.conf.urls import url
 from vote import views
+from VotingApp import settings
 from django.contrib import admin
 from django.conf.urls import url, include
 
@@ -32,6 +33,7 @@ urlpatterns = [
     # url(r'^checkin_success/', views.booth_assignment, name='success'),
 	url(r'^view_voters/', views.view_voters, name='view_voters')
 ]
+
 
 #Add Django site authentication urls (for login, logout, password management)
 urlpatterns += [

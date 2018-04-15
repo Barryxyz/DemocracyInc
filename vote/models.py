@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+import datetime
+
 Locality = (
     ('001', 'Accomack'),
     ('003', 'Albemarle'),
@@ -186,25 +188,32 @@ Treasurer = (
 )
 
 # Create your models here.
-class Registered(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    date_of_birth = models.DateField(max_length=8, default='dd/mm/yyyy')
+class Voter(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
-    locality = models.CharField(max_length=5, choices=Locality)
+    date_of_birth = models.DateField(max_length=8, default=datetime.date.today)
+    # election_type = models.CharField(max_length=50, default='')
+    locality = models.CharField(max_length=20, default='')
+    confirmation = models.CharField(max_length=6)
+    voter_id = models.CharField(max_length=6)
+
+    def to_json(self):
+        return {
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'confirmation': self.confirmation,
+            'voter_id': self.voter_id,
+            'id': self.id,
+        }
+
+    def __str__(self):
+        return self.first_name
 
 class PollPlaces(models.Model):
     precinct = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     poll_booths = models.IntegerField()
-
-class CheckedIn(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    date_of_birth = models.DateField(max_length=8, default='dd/mm/yyyy')
-    address = models.CharField(max_length=100)
-    locality = models.CharField(max_length=5, choices=Locality)
-    confirm_key = models.CharField(max_length=6)
 
 class VoteRecord(models.Model):
     president = models.CharField(max_length=50, choices=President)
@@ -215,4 +224,5 @@ class VoteRecord(models.Model):
     commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
     sheriff = models.CharField(max_length=50, choices=Sheriff)
     treasurer = models.CharField(max_length=50, choices=Treasurer)
-    #writein =  models.CharField(max_length=8, default='(optional) Write-In')
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE)
+    time_stamp = models.DateTimeField(auto_now_add=True)

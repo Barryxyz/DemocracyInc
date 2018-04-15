@@ -77,9 +77,12 @@ def checkin(request):
             if voter_registered:
                 task = form.save(commit=False)
                 key = generator()
+                full_name = task.first_name + " " + task.last_name
+                locality = task.locality
                 task.confirmation = key
                 task.save()
-                return render(request, 'booth_assignment.html', key)
+                return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
+
             else:
                 return render(request, 'notregistered.html', {})
     # if a GET (or any other method) we'll create a blank form
@@ -94,7 +97,7 @@ def vote(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            voter = Voter.objects.get(confirm_key=request.session['input_key'])
+            voter = Voter.objects.get(confirmation=request.session['input_key'])
             task = form.save(commit=False)
             task.voter = voter
             task.save()
@@ -112,7 +115,7 @@ def vote_id_check(request):
         # check whether it's valid:
         if form.is_valid():
             input_key = form.cleaned_data['vote_id']
-            valid_key = Voter.objects.filter(confirm_key=input_key).exists()
+            valid_key = Voter.objects.filter(confirmation=input_key).exists()
             if valid_key:
                 request.session['input_key'] = input_key
                 return redirect(reverse('vote'))

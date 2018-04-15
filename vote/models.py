@@ -197,7 +197,7 @@ class Voter(models.Model):
     # election_type = models.CharField(max_length=50, default='')
     locality = models.CharField(max_length=20, default='')
     confirmation = models.CharField(max_length=6)
-    voter_id = models.CharField(max_length=6)
+    # voter_id = models.CharField(max_length=6)
 
     def to_json(self):
         return {

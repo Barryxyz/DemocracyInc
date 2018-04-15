@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from .forms import VoteForm,RegisteredForm,VoteIdCheckForm
-from .models import Registered, CheckedIn
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-import random, string
-
+from django.urls import reverse
+from .forms import VoteForm,VoteIdCheckForm,RegisteredForm
+from .models import Voter
+import random
 
 # Create your views here.
-
-cache = {}
 
 def home(request):
     return render(request, 'base.html', {})
@@ -27,7 +24,7 @@ def reset(request):
 
 @login_required	
 def view_voters(request):
-	query_results = Registered.objects.all()
+	query_results = Voter.objects.all()
 	return render(request, 'view_voters.html', {'query_results': query_results})
 
 @login_required
@@ -38,97 +35,67 @@ def checkin(request):
         form = RegisteredForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            voter_registered = Registered.objects.filter(first_name=form.cleaned_data['first_name'],
-                                                      last_name=form.cleaned_data['last_name'],
-                                                      date_of_birth=form.cleaned_data['date_of_birth'],
-                                                      address=form.cleaned_data['address'],
-                                                      locality=form.cleaned_data['locality']).exists()
-            if voter_registered:
-                # cache['full_name'] = form.cleaned_data['last_name'] + ", " + form.cleaned_data['first_name']
-                # cache['first_name'] = form.cleaned_data['first_name']
-                # cache['last_name'] = form.cleaned_data['last_name']
-                # cache['address'] = form.cleaned_data['address']
-                # cache['date_of_birth'] = form.cleaned_data['date_of_birth']
-                # cache['Locality'] = form.cleaned_data['locality']
-                form.save()
-                return HttpResponseRedirect('/checkin_success')
-            else:
-                return HttpResponseRedirect('/notregistered')
 
+            # process the data in form.cleaned_data as required
+            voter_registered = Voter.objects.filter(
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                date_of_birth=form.cleaned_data['date_of_birth'],
+                address=form.cleaned_data['address'],
+                locality=form.cleaned_data['locality']
+            ).exists()
+
+            if voter_registered:
+                task = form.save(commit=False)
+                key = generator()
+                task.confirmation = key
+                task.save()
+                return render(request, 'booth_assignment.html', key)
+            else:
+                return render(request, 'notregistered.html', {})
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
 
 def vote(request):
-    voter_info = CheckedIn.objects.filter(confirm_key=cache['in_key'])
+    voter = Voter.objects.get(confirm_key=request.session['input_key'])
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = VoteForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            form.save()
+            task = form.save(commit=False)
+            task.voter = voter
+            task.save()
             # redirect to a new URL:
-            return HttpResponseRedirect('/home')
-
+            return redirect(reverse('home'))
     # if a GET (or any other method) we'll create a blank form
     else:
         form = VoteForm()
-    return render(request, 'vote.html', {'form': form,'voter_info': voter_info})
+    return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
-
-    isNotCheckedIn = False
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = VoteIdCheckForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-
             input_key = form.cleaned_data['vote_id']
-            check = CheckedIn.objects.filter(confirm_key=input_key)
-            if check.exists():
-                cache['in_key'] = input_key
-                return HttpResponseRedirect('/vote')
+            valid_key = Voter.objects.filter(confirm_key=input_key).exists()
+            if valid_key:
+                request.session['input_key'] = input_key
+                return redirect(reverse('vote'))
             else:
-                isNotCheckedIn = True
-                return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
+                return render(request, 'vote_id_check.html', {'form': form}) # need an error page?
         else:
-            return HttpResponseRedirect('/home')
+            return redirect(reverse('home'))
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = VoteIdCheckForm()
-    return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
-
-@login_required
-def booth_assignment(request):
-    boothkeys = ['rFKeel', 'tOLpZV', 'pldygS']
-
-    key = generator()
-    cache['booth'] = key
-
-    check = CheckedIn.objects.filter(first_name=cache['first_name'],
-        last_name=cache['last_name'],
-        date_of_birth=cache['date_of_birth'],
-		address=cache['address'],
-        locality=cache['Locality'])
-
-    if check.exists():
-        check.update(confirm_key=key)
-
-    else :
-        foo_instance = CheckedIn.objects.create(first_name=cache['first_name'],
-        last_name=cache['last_name'],
-        date_of_birth=cache['date_of_birth'],
-		address=cache['address'],
-        locality=cache['Locality'],
-		confirm_key=key)
-
-    #key = 'WAHOOWA' # hardcode a key for demo purposes
-    return render(request, 'booth_assignment.html', cache)
+    return render(request, 'vote_id_check.html', {'form': form})
 
 def generator():
     seq = "ABCDFGHJIKLMNOPQRSTUVWXYZ1234567890"
@@ -138,7 +105,4 @@ def generator():
         key+=(''.join(''.join(random.choice(seq))))
     return key
 
-@login_required
-def notregistered(request):
-    return render(request, 'notregistered.html', {})
 

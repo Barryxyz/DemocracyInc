@@ -218,7 +218,7 @@ class Voter(models.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'confirmation': self.confirmation,
-            'voter_id': self.voter_id,
+            'voter_number': self.voter_id,
             'id': self.id,
         }
 

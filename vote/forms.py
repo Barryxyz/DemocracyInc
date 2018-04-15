@@ -5,7 +5,8 @@ from .models import Registered,VoteRecord
 class VoteForm(forms.ModelForm):
     class Meta:
         model = VoteRecord
-        fields = ['president']
+        # fields = ['president']
+        fields = ['president','governor','lieutenant_Governor','attorney_General','delegate','commonwealth_Attorney','sheriff','treasurer']
 
 class RegisteredForm(forms.ModelForm):
     class Meta:

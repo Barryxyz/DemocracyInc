@@ -307,5 +307,51 @@ class VoteRecord(models.Model):
         ('Donald Trump', 'Donald Trump - (R)'),
         ('Gary Johnson', 'Gary Johnson - (L)')
     )
-    president = models.CharField(max_length=50, choices=President)
 
+    Governor = (
+        ('Matthew Ray', 'Matthew Ray - (D)'),
+        ('Marisha Miller', 'Marisha Miller - (R)'),
+        ('Travis Bailey', 'Travis Bailey - (L)')
+    )
+
+    LieuGov =(
+        ('Laura Willingham', 'Laura Willingham - (D)'),
+        ('Samuel Brien', 'Samuel Brien - (R)')
+    )
+
+    AttGen = (
+        ('Liam Riegel', 'Liam Riegel - (D)'),
+        ('Allison Haffe', 'Allison Haffe - (R)')
+    )
+
+    Delegate = (
+        ('Brian W. Johnson','Brian W. Johnson - (D)'),
+        ('Joe Hardwick','Joe Hardwick - (R)')
+    )
+
+    CommAtt = (
+        ('Ashley Foster','Ashley Foster'),
+        ('Chris Manganiello','Chris Manganiello')
+    )
+
+    Sheriff = (
+        ('Mary Friedle', 'Mary Friedle'),
+        ('Will McGlynn', 'Will McGlynn'),
+        ('Wil Day', 'Wil Day')
+    )
+
+    Treasurer = (
+        ('Felicia Wheaton', 'Felicia Wheaton'),
+        ('Patrick Charles', 'Patrick Charles'),
+        ('Jason Rothfuss', 'Jason Rothfuss')
+    )
+
+    president = models.CharField(max_length=50, choices=President)
+    governor = models.CharField(max_length=50, choices=Governor)
+    lieutenant_Governor = models.CharField(max_length=50, choices=LieuGov)
+    attorney_General = models.CharField(max_length=50, choices=AttGen)
+    delegate = models.CharField(max_length=50, choices=Delegate)
+    commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
+    sheriff = models.CharField(max_length=50, choices=Sheriff)
+    treasurer = models.CharField(max_length=50, choices=Treasurer)
+    #writein =  models.CharField(max_length=8, default='(optional) Write-In')

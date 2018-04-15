@@ -189,7 +189,7 @@ Treasurer = (
 )
 
 class Election(models.Model):
-    id = models.CharField(max_length=50)
+    election_id = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
 
     def to_json(self):

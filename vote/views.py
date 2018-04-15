@@ -2,11 +2,15 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from .forms import VoteForm,VoteIdCheckForm,RegisteredForm
+
 from .models import Voter, VoteRecord
 from django.db.models import Count
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
+
 import random
 
 # Create your views here.
@@ -15,7 +19,27 @@ def home(request):
     return render(request, 'base.html', {})
 
 def login(request):
-    return render(request, 'login.html', {})
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = LoginForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            valid_pollworker = User.objects.filter(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password']
+            ).exists()
+
+            if valid_pollworker:
+                return redirect(reverse('vote_id_check'))
+            else:
+                return redirect(reverse('home'))
+            # process the data in form.cleaned_data as required
+            # redirect to a new URL:
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = LoginForm()
+    return render(request, './registration/login.html', {'form': form})
 
 def logout_page(request):
     return render(request, 'registration/logout_success.html', {})
@@ -60,13 +84,13 @@ def checkin(request):
     return render(request, 'checkin.html', {'form': form})
 
 def vote(request):
-    voter = Voter.objects.get(confirm_key=request.session['input_key'])
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = VoteForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
+            voter = Voter.objects.get(confirm_key=request.session['input_key'])
             task = form.save(commit=False)
             task.voter = voter
             task.save()

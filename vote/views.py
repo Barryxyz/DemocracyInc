@@ -80,13 +80,13 @@ def checkin(request):
     return render(request, 'checkin.html', {'form': form})
 
 def vote(request):
-    voter = Voter.objects.get(confirm_key=request.session['input_key'])
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = VoteForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
+            voter = Voter.objects.get(confirm_key=request.session['input_key'])
             task = form.save(commit=False)
             task.voter = voter
             task.save()

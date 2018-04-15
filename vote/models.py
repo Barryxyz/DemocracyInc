@@ -211,14 +211,14 @@ class Voter(models.Model):
     # election_type = models.CharField(max_length=50, default='')
     locality = models.CharField(max_length=20, default='')
     confirmation = models.CharField(max_length=6)
-    voter_id = models.CharField(max_length=6)
+    #voter_id = models.CharField(max_length=6)
 
     def to_json(self):
         return {
             'first_name': self.first_name,
             'last_name': self.last_name,
             'confirmation': self.confirmation,
-            'voter_number': self.voter_id,
+            #'voter_id': self.voter_id,
             'id': self.id,
         }
 

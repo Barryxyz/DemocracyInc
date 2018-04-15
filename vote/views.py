@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from .forms import VoteForm,VoteIdCheckForm,RegisteredForm
-from .models import Voter
+from .models import Voter, VoteRecord
+from django.db.models import Count
 import random
 
 # Create your views here.
@@ -106,3 +107,12 @@ def generator():
     return key
 
 
+def vote_results(request):
+    if request.method == 'POST':
+        #VoteRecord.objects.filter()
+        #VoteRecord.objects.filter(president="Hillary Clinton")
+        presidents = VoteRecord.objects.annotate(Count('president'))
+
+        print(presidents)
+
+    return render(request, 'vote_count.html', {})

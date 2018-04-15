@@ -188,6 +188,20 @@ Treasurer = (
     ('Jason Rothfuss', 'Jason Rothfuss')
 )
 
+class Election(models.Model):
+    id = models.CharField(max_length=50)
+    type = models.CharField(max_length=50)
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'type': self.type
+        }
+
+
+    def __str__(self):
+        return self.type
+
 # Create your models here.
 class Voter(models.Model):
     first_name = models.CharField(max_length=50)

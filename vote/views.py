@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
-from .models import Voter
+from .models import Voter, Election
 import random
 
 # Create your views here.
@@ -42,6 +42,10 @@ def logout_page(request):
 
 def reset(request):
 	return render(request, 'registration/password_reset_form.html', {})
+
+def view_elections(request):
+	query_results = Election.objects.all()
+	return render(request, 'view_elections.html', {'query_results': query_results})
 
 @login_required	
 def view_voters(request):

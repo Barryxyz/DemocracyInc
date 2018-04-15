@@ -93,7 +93,7 @@ def vote(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            voter = Voter.objects.get(confirm_key=request.session['input_key'])
+            voter = Voter.objects.get(confirmation=request.session['input_key'])
             task = form.save(commit=False)
             task.voter = voter
             task.save()
@@ -111,7 +111,7 @@ def vote_id_check(request):
         # check whether it's valid:
         if form.is_valid():
             input_key = form.cleaned_data['vote_id']
-            valid_key = Voter.objects.filter(confirm_key=input_key).exists()
+            valid_key = Voter.objects.filter(confirmation=input_key).exists()
             if valid_key:
                 request.session['input_key'] = input_key
                 return redirect(reverse('vote'))

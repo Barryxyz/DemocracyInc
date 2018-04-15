@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .forms import VoteForm,RegisteredForm,VoteIdCheckForm
-from .models import Registered
+from .models import Registered, CheckedIn
 from django.contrib.auth.decorators import login_required
 import random, string
 
@@ -13,7 +13,6 @@ import random, string
 
 cache = {}
 
-#@login_required
 def home(request):
     return render(request, 'base.html', {})
 
@@ -62,74 +61,74 @@ def checkin(request):
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
 
-# def vote(request):
-#     voter_info = CheckedIn.objects.filter(confirm_key=cache['in_key'])
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = VoteForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             # process the data in form.cleaned_data as required
-#             form.save()
-#             # redirect to a new URL:
-#             return HttpResponseRedirect('/home')
-#
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = VoteForm()
-#     return render(request, 'vote.html', {'form': form,'voter_info': voter_info})
-#
-# def vote_id_check(request):
-#
-#     isNotCheckedIn = False
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = VoteIdCheckForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#
-#             input_key = form.cleaned_data['vote_id']
-#             check = CheckedIn.objects.filter(confirm_key=input_key)
-#             if check.exists():
-#                 cache['in_key'] = input_key
-#                 return HttpResponseRedirect('/vote')
-#             else:
-#                 isNotCheckedIn = True
-#                 return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
-#         else:
-#             return HttpResponseRedirect('/home')
-#
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = VoteIdCheckForm()
-#     return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
+def vote(request):
+    voter_info = CheckedIn.objects.filter(confirm_key=cache['in_key'])
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = VoteForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect('/home')
 
-# @login_required
-# def booth_assignment(request):
-#     boothkeys = ['rFKeel', 'tOLpZV', 'pldygS']
-#
-#     key = generator()
-#     cache['booth'] = key
-#
-#     check = CheckedIn.objects.filter(first_name=cache['first_name'],
-#         last_name=cache['last_name'],
-#         date_of_birth=cache['date_of_birth'],
-# 		address=cache['address'],
-#         locality=cache['Locality'])
-#
-#     if check.exists():
-#         check.update(confirm_key=key)
-#
-#     else :
-#         foo_instance = CheckedIn.objects.create(first_name=cache['first_name'],
-#         last_name=cache['last_name'],
-#         date_of_birth=cache['date_of_birth'],
-# 		address=cache['address'],
-#         locality=cache['Locality'],
-# 		confirm_key=key)
-#
-#     #key = 'WAHOOWA' # hardcode a key for demo purposes
-#     return render(request, 'booth_assignment.html', cache)
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = VoteForm()
+    return render(request, 'vote.html', {'form': form,'voter_info': voter_info})
+
+def vote_id_check(request):
+
+    isNotCheckedIn = False
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = VoteIdCheckForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+
+            input_key = form.cleaned_data['vote_id']
+            check = CheckedIn.objects.filter(confirm_key=input_key)
+            if check.exists():
+                cache['in_key'] = input_key
+                return HttpResponseRedirect('/vote')
+            else:
+                isNotCheckedIn = True
+                return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
+        else:
+            return HttpResponseRedirect('/home')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = VoteIdCheckForm()
+    return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
+
+@login_required
+def booth_assignment(request):
+    boothkeys = ['rFKeel', 'tOLpZV', 'pldygS']
+
+    key = generator()
+    cache['booth'] = key
+
+    check = CheckedIn.objects.filter(first_name=cache['first_name'],
+        last_name=cache['last_name'],
+        date_of_birth=cache['date_of_birth'],
+		address=cache['address'],
+        locality=cache['Locality'])
+
+    if check.exists():
+        check.update(confirm_key=key)
+
+    else :
+        foo_instance = CheckedIn.objects.create(first_name=cache['first_name'],
+        last_name=cache['last_name'],
+        date_of_birth=cache['date_of_birth'],
+		address=cache['address'],
+        locality=cache['Locality'],
+		confirm_key=key)
+
+    #key = 'WAHOOWA' # hardcode a key for demo purposes
+    return render(request, 'booth_assignment.html', cache)
 
 def generator():
     seq = "ABCDFGHJIKLMNOPQRSTUVWXYZ1234567890"

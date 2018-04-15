@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -69,18 +70,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'VotingApp.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# Heroku Postgres
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'sandbox.db'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7755mavv81fhh',
+        'USER': 'kasqvvutvecaxc',
+        'PASSWORD': 'c9e6316e7404a09635a421de8354735ab5e873091a85e1da28878548ed8393f5',
+        'HOST': 'ec2-54-243-213-188.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
-# Docker MySQL container
+# # Sqlite sandbox
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'sandbox.db'),
+#     }
+# }
+
+# # Docker MySQL container
 # DATABASES = {
 #           'default': {
 #               'ENGINE': 'django.db.backends.mysql',
@@ -135,3 +148,6 @@ LOGIN_REDIRECT_URL = 'checkin'
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registered,VoteRecord
+from .models import Registered,VoteRecord,CheckedIn
 
 
 class VoteForm(forms.ModelForm):
@@ -12,6 +12,13 @@ class RegisteredForm(forms.ModelForm):
     class Meta:
         model = Registered
         fields = ['first_name', 'last_name', 'date_of_birth', 'address', 'locality']
-		
+
+
+class CheckInForm(forms.ModelForm):
+    class Meta:
+        model = CheckedIn
+        fields = ['first_name', 'last_name', 'date_of_birth', 'address', 'locality']
+
+
 class VoteIdCheckForm(forms.Form):
     vote_id = forms.CharField(max_length=20, label='Enter confirmation number')

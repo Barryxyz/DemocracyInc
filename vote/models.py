@@ -189,6 +189,14 @@ Treasurer = (
 )
 
 # Create your models here.
+
+
+class VoteCount(models.Model):
+    name = models.CharField(max_length=50)
+    position = models.CharField(max_length=50)
+    count = models.CharField(max_length=50)
+
+
 class Voter(models.Model):
     # voter_number = models.IntegerField(max_length=12)
     # voter_status = models.CharField(max_length=20)

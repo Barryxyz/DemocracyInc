@@ -157,3 +157,4 @@ fabric.properties
 
 */migrations/*.py
 */migrations/*.pyc
+vote/migrations/

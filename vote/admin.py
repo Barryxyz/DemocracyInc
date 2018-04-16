@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from .models import Registered,PollPlaces
+from .models import Voter
 
 class RegisteredPeople(admin.ModelAdmin):
-        model = Registered
+        model = Voter
 
-admin.site.register(Registered, RegisteredPeople)
+admin.site.register(Voter, RegisteredPeople)

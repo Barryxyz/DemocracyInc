@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +25,11 @@ SECRET_KEY = '!un@_!zh2jyqv4y@k2-24(*)u#%zb#w6e-4_g^%56#pm365qj%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1']
+=======
+ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','democracyinc.herokuapp.com']
+>>>>>>> master
 
 
 # Application definition
@@ -54,7 +59,7 @@ ROOT_URLCONF = 'vote.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['../vote/templates', ],  # used to be './templates'
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,16 +74,39 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'VotingApp.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# Heroku Postgres
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'sandbox'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7755mavv81fhh',
+        'USER': 'kasqvvutvecaxc',
+        'PASSWORD': 'c9e6316e7404a09635a421de8354735ab5e873091a85e1da28878548ed8393f5',
+        'HOST': 'ec2-54-243-213-188.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
+
+# # Sqlite sandbox
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'sandbox.db'),
+#     }
+# }
+
+# # Docker MySQL container
+# DATABASES = {
+#           'default': {
+#               'ENGINE': 'django.db.backends.mysql',
+#               'NAME': 'cs3240',
+#               'USER': 'electionadmin',
+#               'PASSWORD': 'meme12345',
+#               'HOST': 'db',
+#           }
+#       }
 
 
 # Password validation
@@ -118,3 +146,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+
+LOGOUT_REDIRECT_URL = 'logout_page'
+LOGIN_REDIRECT_URL = 'checkin'
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())

@@ -24,13 +24,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # url('^home/', views.home, name='home'),
     url(r'^login/', views.login, name='login'),
-<<<<<<< HEAD
-    url(r'^vote/', views.vote, name='vote'),
-    url(r'^vote_id_check/', views.vote_id_check, name='vote_id_check'),
-    url(r'^django_checkin/', views.django_checkin, name='django_checkin'),
-    url(r'^notregistered/', views.notregistered, name='notregistered'),
-    url(r'^booth/', views.booth_assignment, name='booth')
-=======
 	url(r'^logout_page/', views.logout_page, name='logout_page'),
 	url(r'^password_reset/$',views.reset, name='reset_pass'),
     url(r'^vote/', views.vote, name='vote'),
@@ -39,7 +32,6 @@ urlpatterns = [
     # url(r'^notregistered/', views.notregistered, name='notregistered'),
     # url(r'^checkin_success/', views.booth_assignment, name='success'),
 	url(r'^view_voters/', views.view_voters, name='view_voters')
->>>>>>> master
 ]
 
 

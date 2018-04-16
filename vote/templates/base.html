@@ -29,11 +29,7 @@
             <a class="nav-link" href="#">Vote Count</a>
           </li>
           <li class="nav-item">
-<<<<<<< HEAD:vote/templates/vote/base.html
-            <a class="nav-link" href="{% url 'django_checkin' %}">Check In</a>
-=======
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
->>>>>>> master:vote/templates/base.html
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -47,7 +43,7 @@
                 <a class="dropdown-item" href="{% url 'view_voters' %}">View Registered Voters</a>
             </div>
           </li>
-		</ul>		  
+		</ul>
 		{% if user.is_authenticated %}
 			<li class="nav navbar-nav navbar-right">
               <h6 style="color:white">Logged in as: {{ user.username }}</h6>

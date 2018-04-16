@@ -51,12 +51,12 @@ def reset(request):
 
 @login_required
 def view_voters(request):
-	# query_results = Voter.objects.all()
-	# return render(request, 'view_voters.html', {'query_results': query_results})
-    results = requests.get('http://cs3240votingproject.org/voters/?key={API_KEY}')
-    content = results.text
+	query_results = Voter.objects.all()
+	return render(request, 'view_voters.html', {'query_results': query_results})
+    # results = requests.get('http://cs3240votingproject.org/voters/?key={API_KEY}')
+    # content = results.text
     # return HttpResponse(content)
-    return render(request, 'view_voters.html', {'results': results})
+    # return render(request, 'view_voters.html', {'results': results})
 
 @login_required
 def checkin(request):

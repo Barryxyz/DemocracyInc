@@ -152,6 +152,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 .idea/DemocracyInc.iml
+<<<<<<< HEAD
+=======
 
 */migrations/*.py
 */migrations/*.pyc

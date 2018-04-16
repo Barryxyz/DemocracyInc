@@ -202,6 +202,14 @@ class Election(models.Model):
     def __str__(self):
         return self.type
 
+
+
+class VoteCount(models.Model):
+    name = models.CharField(max_length=50)
+    position = models.CharField(max_length=50)
+    count = models.CharField(max_length=50)
+
+
 # Create your models here.
 class Voter(models.Model):
     first_name = models.CharField(max_length=50)

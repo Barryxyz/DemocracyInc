@@ -51,7 +51,7 @@ function myFunction() {
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Vote Count</a>
+            <a class="nav-link" href="{% url 'vote_count' %}">Vote Count</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
@@ -63,7 +63,7 @@ function myFunction() {
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{% url 'vote_id_check' %}">Go to Voting Booth</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">View Available Elections</a>
+              <a class="dropdown-item" href="{% url 'view_elections' %}">View Available Elections</a>
               <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'view_voters' %}">View Registered Voters</a>
             </div>
@@ -85,7 +85,7 @@ function myFunction() {
       </div>
     </nav>
 	<br>
-<h1 style="color:black;" align="center">View Registered Voters</h1>
+<h1 style="color:black;" align="center">Registered Voters</h1>
 	<br>
 
 <div id="padder" align="center">

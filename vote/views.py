@@ -3,8 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
-from .models import Voter, VoteRecord, VoteCount
+from .models import Voter, VoteRecord, Election, VoteCount
 from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
@@ -49,7 +48,16 @@ def logout_page(request):
 def reset(request):
 	return render(request, 'registration/password_reset_form.html', {})
 
+
 @login_required
+def view_elections(request):
+	# query_results = Election.objects.all()
+    query_results = []
+    query_results.append(Election(type='primary', id='ljsadlkfj'))
+    query_results.append(Election(type='presidential', id='ljsadlkfj'))
+    return render(request, 'view_elections.html', {'query_results': query_results})
+
+@login_required	
 def view_voters(request):
 	query_results = Voter.objects.all()
 	return render(request, 'view_voters.html', {'query_results': query_results})
@@ -68,21 +76,23 @@ def checkin(request):
         if form.is_valid():
 
             # process the data in form.cleaned_data as required
-            voter_registered = Voter.objects.filter(
+            registered_voter = Voter.objects.get(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 date_of_birth=form.cleaned_data['date_of_birth'],
                 address=form.cleaned_data['address'],
                 locality=form.cleaned_data['locality']
-            ).exists()
+            )
 
-            if voter_registered:
+            if registered_voter:
                 task = form.save(commit=False)
                 key = generator()
                 full_name = task.first_name + " " + task.last_name
                 locality = task.locality
-                task.confirmation = key
-                task.save()
+                registered_voter.confirmation = key
+                registered_voter.save()
+                # task.confirmation = key
+                # task.save(update_fields=['confirmation'])
                 return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
@@ -138,7 +148,6 @@ def generator():
     for i in range(6):
         key+=(''.join(''.join(random.choice(seq))))
     return key
-
 
 # def vote_results(request):
 #     if request.method == 'POST':
@@ -234,3 +243,4 @@ def vote_count(request):
             results.append(VoteCount.objects.create(name=name, position=position))
 
     return render(request, 'vote_count.html', {'query_results': results})
+

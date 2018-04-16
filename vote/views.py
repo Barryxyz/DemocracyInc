@@ -12,8 +12,8 @@ from django.contrib.auth.models import User
 from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
 
 import random
-from graphos.sources.simple import ModelDataSource
-from graphos.renderers.gchart import BarChart
+from graphos.sources.simple import SimpleDataSource
+from graphos.renderers import morris
 
 
 # Create your views here.

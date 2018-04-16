@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
 from .models import Voter, VoteRecord, Election, VoteCount
 from django.db.models import Count
 
@@ -11,7 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
 
-import random
+from django.shortcuts import render, HttpResponse
+import random, json, requests
+
 
 # Create your views here.
 
@@ -47,18 +48,23 @@ def logout_page(request):
 def reset(request):
 	return render(request, 'registration/password_reset_form.html', {})
 
+
+@login_required
 def view_elections(request):
 	# query_results = Election.objects.all()
     query_results = []
     query_results.append(Election(type='primary', id='ljsadlkfj'))
     query_results.append(Election(type='presidential', id='ljsadlkfj'))
-
     return render(request, 'view_elections.html', {'query_results': query_results})
 
 @login_required	
 def view_voters(request):
 	query_results = Voter.objects.all()
 	return render(request, 'view_voters.html', {'query_results': query_results})
+    # results = requests.get('http://cs3240votingproject.org/voters/?key={API_KEY}')
+    # content = results.text
+    # return HttpResponse(content)
+    # return render(request, 'view_voters.html', {'results': results})
 
 @login_required
 def checkin(request):
@@ -143,6 +149,16 @@ def generator():
         key+=(''.join(''.join(random.choice(seq))))
     return key
 
+# def vote_results(request):
+#     if request.method == 'POST':
+#         #VoteRecord.objects.filter()
+#         #VoteRecord.objects.filter(president="Hillary Clinton")
+#         presidents = VoteRecord.objects.annotate(Count('president'))
+#
+#         print(presidents)
+#
+#     return render(request, 'vote_count.html', {})
+
 @login_required
 def vote_count(request):
     records = VoteRecord.objects.all()
@@ -224,7 +240,7 @@ def vote_count(request):
     results = []
     for name in votes.keys():
         for position in positions[name]:
-            results.append(VoteCount(name=name, position=position, count=str(votes[name])))
+            results.append(VoteCount.objects.create(name=name, position=position))
 
     return render(request, 'vote_count.html', {'query_results': results})
 

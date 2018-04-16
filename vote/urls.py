@@ -34,7 +34,6 @@ urlpatterns = [
 	url(r'^view_voters/', views.view_voters, name='view_voters'),
     url(r'^view_elections/', views.view_elections, name='view_elections'),
     url(r'^vote_count/', views.vote_count, name='vote_count')
-
 ]
 
 

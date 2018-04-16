@@ -34,10 +34,10 @@
 			&nbsp; {{ form.password.label_tag }}
 			{{ form.password }}
           </div>
-          <div>
+          <div class= "col-md-4 text-center">
 			<input type="submit" value="Login" class="btn btn-primary"/>
 			<input type="hidden" name="next" value="{{ next }}" />
-          </div class= "col-md-4 text-center">
+          </div>
           <div class="form-group text-center">
             <a href="{% url 'password_reset' %}">Forgot Password</a>&nbsp;|&nbsp;<a href="{% url 'home' %}">Home</a>
           </div>

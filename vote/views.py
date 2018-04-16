@@ -48,8 +48,12 @@ def reset(request):
 	return render(request, 'registration/password_reset_form.html', {})
 
 def view_elections(request):
-	query_results = Election.objects.all()
-	return render(request, 'view_elections.html', {'query_results': query_results})
+	# query_results = Election.objects.all()
+    query_results = []
+    query_results.append(Election(type='primary', id='ljsadlkfj'))
+    query_results.append(Election(type='presidential', id='ljsadlkfj'))
+
+    return render(request, 'view_elections.html', {'query_results': query_results})
 
 @login_required	
 def view_voters(request):

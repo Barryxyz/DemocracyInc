@@ -3,20 +3,15 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
-from .models import Voter, VoteRecord
+from .models import Voter, VoteRecord, Election, VoteCount
 from django.db.models import Count
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
-
 import random
-import json
-
 from graphos.sources.model import SimpleDataSource
-from graphos.renderers import morris
-
+from graphos.renderers import gchart
+from graphos.renderers.gchart import BarChart
 
 
 # Create your views here.
@@ -56,6 +51,9 @@ def logout_page(request):
 def reset(request):
     return render(request, 'registration/password_reset_form.html', {})
 
+def view_elections(request):
+	query_results = Election.objects.all()
+	return render(request, 'view_elections.html', {'query_results': query_results})
 
 @login_required
 def view_voters(request):
@@ -148,39 +146,119 @@ def generator():
         key += (''.join(''.join(random.choice(seq))))
     return key
 
-
-# def results():
-#     queryset = VoteRecord.objects.all()
-#     data_source = ModelDataSource(queryset,
-#                                   fields=['president', 'governor','lieutenant_Governor','attorney_General','delegate','commonwealth_Attorney','sheriff','treasurer'])
-#     chart = graphos.renderers.flot.BarChart(data_source, options={'title': "Election Results", 'xaxis': {'mode': "Count"}})
-#     return django.shortcuts.render(request,template_name='results_display.html', context= {'chart': chart})
-#
-#
-#
+@login_required
 def vote_count(request):
-    # VoteRecord.objects.filter()
-    # VoteRecord.objects.filter(president="Hillary Clinton")
-    # presidents = VoteRecord.objects.annotate(Count('president'))
+    records = VoteRecord.objects.all()
+    votes = dict()
+    positions = dict()
+    for vr in records:
+        key = vr.president
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('president')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('president')
+
+        key = vr.governor
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('governor')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('governor')
+
+        key = vr.lieutenant_Governor
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('lieutenant_Governor')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('lieutenant_Governor')
+
+        key = vr.attorney_General
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('attorney_General')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('attorney_General')
+
+        key = vr.delegate
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('delegate')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('delegate')
+
+        key = vr.commonwealth_Attorney
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('votes')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('votes')
+
+        key = vr.sheriff
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('sheriff')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('sheriff')
+
+        key = vr.treasurer
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('treasurer')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('treasurer')
+
+    results = []
+    for name in votes.keys():
+        for position in positions[name]:
+            results.append(VoteCount(name=name, position=position, count=str(votes[name])))
+
+    return render(request, 'vote_count.html', {'query_results': results})
+
+@login_required
+def results(request):
     prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
     prez_count2 = VoteRecord.objects.filter(president='Donald Trump').count()
-    # data = [
-    #     ['President','Count'],
-    #     ['Gary Johnson', prez_count],
-    #     ['Donald Trump', prez_count2]
-    # ]
-    data = [
-        ['Year', 'Sales'],
-        [2004, 1000],
-        [2005, 1170],
-        [2006, 660],
-        [2007, 1030]
+    president_data = [
+        ['Candidates','Count'],
+        ['Gary Johnson', prez_count],
+        ['Donald Trump', prez_count2]
     ]
-    # # queryset = VoteRecord.objects.all()
-    # # data_source = ModelDataSource(queryset, fields=['president', 'count'])  # x-axis = presidet, y-axis = count
-    # # chart = gchart.BarChart(data_source, options={'title': "Election Results", 'xaxis': {'mode': "Count"}})
-    data_source = SimpleDataSource(data=data)
-    chart = morris.LineChart(data_source, options={'title': "Line Chart"},html_id='gchart_div')
-    return render(request,'vote_count.html', {'chart': chart})
+    gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
+    gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
+    gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
+
+    governor_data = [
+        ['Candidates', 'Count'],
+        ['Matthew Ray', gov_count],
+        ['Travis Bailey', gov_count2],
+        ['Marisha Miller', gov_count3]
+    ]
+
+    prez_data_source = SimpleDataSource(data=president_data)
+    gov_data_source = SimpleDataSource(data=governor_data)
+    prez_chart = BarChart(prez_data_source, options={'title': "President",'xaxis':'Count'})
+    gov_chart = gchart.PieChart(gov_data_source, options={'title': "Governor"})
+    context = {
+        "prez_chart": prez_chart,
+        "gov_chart": gov_chart,
+    }
+    return render(request, 'results.html', context)
 
 

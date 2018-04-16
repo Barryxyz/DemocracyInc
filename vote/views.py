@@ -12,6 +12,9 @@ from django.contrib.auth.models import User
 from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
 
 import random
+from graphos.sources.simple import ModelDataSource
+from graphos.renderers.gchart import BarChart
+
 
 # Create your views here.
 
@@ -132,6 +135,13 @@ def generator():
     for i in range(6):
         key+=(''.join(''.join(random.choice(seq))))
     return key
+
+def results():
+    queryset = VoteRecord.objects.all()
+    data_source = ModelDataSource(queryset,
+                                  fields=['president', 'governor','lieutenant_Governor','attorney_General','delegate','commonwealth_Attorney','sheriff','treasurer'])
+    chart = graphos.renderers.flot.BarChart(data_source, options={'title': "Election Results", 'xaxis': {'mode': "Count"}})
+    return django.shortcuts.render(request,template_name='results_display.html', context= {'chart': chart})
 
 
 def vote_results(request):

@@ -66,21 +66,23 @@ def checkin(request):
         if form.is_valid():
 
             # process the data in form.cleaned_data as required
-            voter_registered = Voter.objects.filter(
+            registered_voter = Voter.objects.get(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 date_of_birth=form.cleaned_data['date_of_birth'],
                 address=form.cleaned_data['address'],
                 locality=form.cleaned_data['locality']
-            ).exists()
+            )
 
-            if voter_registered:
+            if registered_voter:
                 task = form.save(commit=False)
                 key = generator()
                 full_name = task.first_name + " " + task.last_name
                 locality = task.locality
-                task.confirmation = key
-                task.save()
+                registered_voter.confirmation = key
+                registered_voter.save()
+                # task.confirmation = key
+                # task.save(update_fields=['confirmation'])
                 return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:

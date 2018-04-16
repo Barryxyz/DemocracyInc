@@ -85,7 +85,7 @@ function myFunction() {
       </div>
     </nav>
 	<br>
-<h1 style="color:black;" align="center">View Registered Voters</h1>
+<h1 style="color:black;" align="center">View Available Elections</h1>
 	<br>
 
 <div id="padder" align="center">
@@ -93,19 +93,12 @@ function myFunction() {
 
 <table id="myTable">
   <tr class="header">
-    <th style="width:20%;">First Name</th>
-    <th style="width:20%;">Last Name</th>
-	<th style="width:20%;">Date of Birth</th>
-    <th style="width:20%;">Address</th>
-    <th style="width:20%;">Locality</th>
+    <th style="width:20%;">Election</th>
+
   </tr>
   {% for item in query_results %}
   <tr>
-    <td>{{ item.first_name }}</td>
-    <td>{{ item.last_name }}</td>
-	<td>{{ item.date_of_birth }}</td>
-	<td>{{ item.address }}</td>
-	<td>{{ item.locality }}</td>
+    <td>{{ item.type }}</td>
   </tr>
   {% endfor %}
 </table>

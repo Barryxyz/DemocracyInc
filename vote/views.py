@@ -136,20 +136,28 @@ def generator():
         key+=(''.join(''.join(random.choice(seq))))
     return key
 
-def results():
-    queryset = VoteRecord.objects.all()
-    data_source = ModelDataSource(queryset,
-                                  fields=['president', 'governor','lieutenant_Governor','attorney_General','delegate','commonwealth_Attorney','sheriff','treasurer'])
-    chart = graphos.renderers.flot.BarChart(data_source, options={'title': "Election Results", 'xaxis': {'mode': "Count"}})
-    return django.shortcuts.render(request,template_name='results_display.html', context= {'chart': chart})
 
-
-def vote_results(request):
-    if request.method == 'POST':
-        #VoteRecord.objects.filter()
-        #VoteRecord.objects.filter(president="Hillary Clinton")
-        presidents = VoteRecord.objects.annotate(Count('president'))
-
-        print(presidents)
-
-    return render(request, 'vote_count.html', {})
+def vote_count(request):
+    # VoteRecord.objects.filter()
+    # VoteRecord.objects.filter(president="Hillary Clinton")
+    # presidents = VoteRecord.objects.annotate(Count('president'))
+    prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
+    prez_count2 = VoteRecord.objects.filter(president='Donald Trump').count()
+    # data = [
+    #     ['President','Count'],
+    #     ['Gary Johnson', prez_count],
+    #     ['Donald Trump', prez_count2]
+    # ]
+    data = [
+        ['Year', 'Sales'],
+        [2004, 1000],
+        [2005, 1170],
+        [2006, 660],
+        [2007, 1030]
+    ]
+    # queryset = VoteRecord.objects.all()
+    # data_source = ModelDataSource(queryset, fields=['president', 'count'])  # x-axis = presidet, y-axis = count
+    # chart = gchart.BarChart(data_source, options={'title': "Election Results", 'xaxis': {'mode': "Count"}})
+    data_source = SimpleDataSource(data=data)
+    chart = morris.LineChart(data_source, options={'title': "Line Chart"},html_id='gchart_div')
+    return render(request,'vote_count.html', {'chart': chart})

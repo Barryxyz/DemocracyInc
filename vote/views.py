@@ -11,7 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
 
-import random
+from django.shortcuts import render, HttpResponse
+import random, json, requests
+
 
 # Create your views here.
 
@@ -49,8 +51,12 @@ def reset(request):
 
 @login_required
 def view_voters(request):
-	query_results = Voter.objects.all()
-	return render(request, 'view_voters.html', {'query_results': query_results})
+	# query_results = Voter.objects.all()
+	# return render(request, 'view_voters.html', {'query_results': query_results})
+    results = requests.get('http://cs3240votingproject.org/voters/?key={API_KEY}')
+    content = results.text
+    # return HttpResponse(content)
+    return render(request, 'view_voters.html', {'results': results})
 
 @login_required
 def checkin(request):

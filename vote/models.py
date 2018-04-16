@@ -190,12 +190,20 @@ Treasurer = (
 
 # Create your models here.
 class Voter(models.Model):
+    voter_number = models.IntegerField(max_length=12)
+    voter_status = models.CharField(max_length=20)
+    date_registered = models.DateField(max_length=8, default=datetime.date.today)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     date_of_birth = models.DateField(max_length=8, default=datetime.date.today)
+    # might not even be included with api json... ^^
     # election_type = models.CharField(max_length=50, default='')
+    state = models.CharField(max_length=2)
+    zip = models.IntegerField(max_length=5)
     locality = models.CharField(max_length=20, default='')
+    precinct = models.CharField(max_length=20, default='')
+    precinct_id = models.IntegerField(max_length=10)
     confirmation = models.CharField(max_length=6)
     #voter_id = models.CharField(max_length=6)
 

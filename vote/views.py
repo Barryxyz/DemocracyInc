@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import Voter, VoteRecord
+from .models import Voter, VoteRecord, Election, VoteCount
 from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
@@ -46,6 +46,10 @@ def logout_page(request):
 
 def reset(request):
 	return render(request, 'registration/password_reset_form.html', {})
+
+def view_elections(request):
+	query_results = Election.objects.all()
+	return render(request, 'view_elections.html', {'query_results': query_results})
 
 @login_required	
 def view_voters(request):
@@ -133,13 +137,88 @@ def generator():
         key+=(''.join(''.join(random.choice(seq))))
     return key
 
+@login_required
+def vote_count(request):
+    records = VoteRecord.objects.all()
+    votes = dict()
+    positions = dict()
+    for vr in records:
+        key = vr.president
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('president')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('president')
 
-def vote_results(request):
-    if request.method == 'POST':
-        #VoteRecord.objects.filter()
-        #VoteRecord.objects.filter(president="Hillary Clinton")
-        presidents = VoteRecord.objects.annotate(Count('president'))
+        key = vr.governor
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('governor')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('governor')
 
-        print(presidents)
+        key = vr.lieutenant_Governor
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('lieutenant_Governor')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('lieutenant_Governor')
 
-    return render(request, 'vote_count.html', {})
+        key = vr.attorney_General
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('attorney_General')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('attorney_General')
+
+        key = vr.delegate
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('delegate')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('delegate')
+
+        key = vr.commonwealth_Attorney
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('votes')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('votes')
+
+        key = vr.sheriff
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('sheriff')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('sheriff')
+
+        key = vr.treasurer
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('treasurer')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('treasurer')
+
+    results = []
+    for name in votes.keys():
+        for position in positions[name]:
+            results.append(VoteCount(name=name, position=position, count=str(votes[name])))
+
+    return render(request, 'vote_count.html', {'query_results': results})
+

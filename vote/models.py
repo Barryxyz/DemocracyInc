@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 import datetime
+from django.utils.timezone import now
 
 Locality = (
     ('001', 'Accomack'),
@@ -196,14 +197,14 @@ class Voter(models.Model):
     # election_type = models.CharField(max_length=50, default='')
     locality = models.CharField(max_length=20, default='')
     confirmation = models.CharField(max_length=6)
-    voter_id = models.CharField(max_length=6)
+    #voter_id = models.CharField(max_length=6)
 
     def to_json(self):
         return {
             'first_name': self.first_name,
             'last_name': self.last_name,
             'confirmation': self.confirmation,
-            'voter_id': self.voter_id,
+            #'voter_id': self.voter_id,
             'id': self.id,
         }
 
@@ -224,5 +225,5 @@ class VoteRecord(models.Model):
     commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
     sheriff = models.CharField(max_length=50, choices=Sheriff)
     treasurer = models.CharField(max_length=50, choices=Treasurer)
-    voter = models.ForeignKey('Voter', on_delete=models.CASCADE)
-    time_stamp = models.DateTimeField(auto_now_add=True)
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default='')
+    time_stamp = models.DateTimeField(auto_now=True)

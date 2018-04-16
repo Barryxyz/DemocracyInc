@@ -14,3 +14,7 @@ class RegisteredForm(forms.ModelForm):
 
 class VoteIdCheckForm(forms.Form):
     vote_id = forms.CharField(max_length=20, label='Enter confirmation number')
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=20, label='Username')
+    password = forms.CharField(max_length=20, label='Password')

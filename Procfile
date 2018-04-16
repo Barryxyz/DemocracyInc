@@ -1,1 +1,1 @@
-web: gunicorn VotingApp.wsgi --log-file -
+web: python manage.py collectstatic --noinput; gunicorn VotingApp.wsgi --log-file -

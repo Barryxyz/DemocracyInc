@@ -8,9 +8,7 @@ from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
-
-from django.shortcuts import render, HttpResponse
+from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 import random, json, requests
 
 

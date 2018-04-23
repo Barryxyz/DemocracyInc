@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Voter, VoteRecord, Election, VoteCount
-from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -238,7 +237,7 @@ def vote_count(request):
     results = []
     for name in votes.keys():
         for position in positions[name]:
-            results.append(VoteCount.objects.create(name=name, position=position))
+            results.append(VoteCount(name=name, position=position, count=votes[name]))
 
     return render(request, 'vote_count.html', {'query_results': results})
 

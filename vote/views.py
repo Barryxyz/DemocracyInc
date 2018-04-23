@@ -4,22 +4,29 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Voter, VoteRecord, Election, VoteCount
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
-import random
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
+<<<<<<< HEAD
 from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
+=======
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
 from rest_framework import viewsets
 from .serializers import CountSerializer, RecordSerializer
 from django.shortcuts import render, HttpResponse
 import random, json, requests
+<<<<<<< HEAD
+=======
+
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
 
 
 # Create your views here.
@@ -289,23 +296,15 @@ def results(request):
     gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
     gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
 
-    governor_data = [
-        ['Candidates', 'Count'],
-        ['Matthew Ray', gov_count],
-        ['Travis Bailey', gov_count2],
-        ['Marisha Miller', gov_count3]
-    ]
+class CountViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = VoteCount.objects.all()
+    serializer_class = CountSerializer
 
-    prez_data_source = SimpleDataSource(data=president_data)
-    gov_data_source = SimpleDataSource(data=governor_data)
-    prez_chart = BarChart(prez_data_source, options={'title': "President",'xaxis':'Count'})
-    gov_chart = gchart.PieChart(gov_data_source, options={'title': "Governor"})
-    context = {
-        "prez_chart": prez_chart,
-        "gov_chart": gov_chart,
-    }
-    return render(request, 'results.html', context)
 
+<<<<<<< HEAD
 
 class CountViewSet(viewsets.ModelViewSet):
     """
@@ -315,6 +314,8 @@ class CountViewSet(viewsets.ModelViewSet):
     serializer_class = CountSerializer
 
 
+=======
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
 class RecordViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.

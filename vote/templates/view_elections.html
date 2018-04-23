@@ -12,10 +12,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type='text/javascript' src="{% static "js/inspect.js" %}"></script>
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type='text/javascript' src="{% static "js/inspect.js" %}"></script>
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
 <link rel="stylesheet" href={% static "css/voters.css" %}>
 <link rel="stylesheet" href={% static "css/main.css" %}>
 <link rel="stylesheet" href={% static "css/footer.css" %}>
@@ -31,9 +36,13 @@ function myFunction() {
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[0];
@@ -59,13 +68,17 @@ function myFunction() {
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
           <li class="nav-item">
             <a class="nav-link" href="{% url 'vote_count' %}">Vote Count</a>
           </li>
           <li class="nav-item">
+<<<<<<< HEAD
 <<<<<<< HEAD
                <li class="nav-item">
             <a class="nav-link" href="{% url 'results' %}">Election Results</a>
@@ -73,6 +86,8 @@ function myFunction() {
             <li class="nav-item">
 =======
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
           </li>
           <li class="nav-item dropdown">
@@ -105,10 +120,14 @@ function myFunction() {
     </nav>
 	<br>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <h1 style="color:black;" align="center">View Registered Voters</h1>
 =======
 <h1 style="color:black;" align="center">View Available Elections</h1>
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+<h1 style="color:black;" align="center">View Available Elections</h1>
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
 	<br>
 
 <div id="padder" align="center">
@@ -116,6 +135,7 @@ function myFunction() {
 
 <table id="myTable">
   <tr class="header">
+<<<<<<< HEAD
 <<<<<<< HEAD
     <th style="width:20%;">First Name</th>
     <th style="width:20%;">Last Name</th>
@@ -138,6 +158,14 @@ function myFunction() {
   <tr>
     <td>{{ item.type }}</td>
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+    <th style="width:20%;">Election</th>
+
+  </tr>
+  {% for item in query_results %}
+  <tr>
+    <td>{{ item.type }}</td>
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
   </tr>
   {% endfor %}
 </table>
@@ -166,6 +194,7 @@ function myFunction() {
                    <div class="col-md-6 item text">
                        <h3>DemocracyInc</h3>
 <<<<<<< HEAD
+<<<<<<< HEAD
                        <p>Our system provides users with an easy to use voting application.</p>
                    </div>
                    <div class="col item social">
@@ -188,12 +217,19 @@ function myFunction() {
 					   <img align="center" src="{% static "img/Logo_tiny.png" %}" alt="logo"/>
                    </div>
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+                       <p>Our system provides users with an easy to use voting application. </p>
+					   <br>
+					   <img align="center" src="{% static "img/Logo_tiny.png" %}" alt="logo"/>
+                   </div>
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
                <p class="copyright">DemocracyInc &copy; 2017</p>
            </div>
        </footer>
    </div>
 </div>
 </body>
+<<<<<<< HEAD
 <<<<<<< HEAD
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
@@ -202,6 +238,10 @@ function myFunction() {
     <!--<script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>-->
 >>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
+=======
+    <!--<script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>-->
+>>>>>>> 63d8029e6be4d621e4b04ed7bfa8a45eb232318d
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

@@ -219,6 +219,9 @@ class VoteCount(models.Model):
     count = models.CharField(max_length=50)
 
 
+class Position(models.Model):
+    name = models.CharField(max_length=50)
+
 class Voter(models.Model):
     # voter_number = models.IntegerField(max_length=12)
     # voter_status = models.CharField(max_length=20)

@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type='text/javascript' src="{% static "js/inspect.js" %}"></script>
 <link rel="stylesheet" href={% static "css/voters.css" %}>
 <link rel="stylesheet" href={% static "css/main.css" %}>
 <link rel="stylesheet" href={% static "css/footer.css" %}>
@@ -25,6 +27,7 @@ function myFunction() {
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
+
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[0];
@@ -49,15 +52,10 @@ function myFunction() {
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-
           <li class="nav-item">
             <a class="nav-link" href="{% url 'vote_count' %}">Vote Count</a>
           </li>
           <li class="nav-item">
-               <li class="nav-item">
-            <a class="nav-link" href="{% url 'results' %}">Election Results</a>
-          </li>
-            <li class="nav-item">
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
           </li>
           <li class="nav-item dropdown">
@@ -89,7 +87,7 @@ function myFunction() {
       </div>
     </nav>
 	<br>
-<h1 style="color:black;" align="center">View Registered Voters</h1>
+<h1 style="color:black;" align="center">View Available Elections</h1>
 	<br>
 
 <div id="padder" align="center">
@@ -97,19 +95,12 @@ function myFunction() {
 
 <table id="myTable">
   <tr class="header">
-    <th style="width:20%;">First Name</th>
-    <th style="width:20%;">Last Name</th>
-	<th style="width:20%;">Date of Birth</th>
-    <th style="width:20%;">Address</th>
-    <th style="width:20%;">Locality</th>
+    <th style="width:20%;">Election</th>
+
   </tr>
   {% for item in query_results %}
   <tr>
-    <td>{{ item.first_name }}</td>
-    <td>{{ item.last_name }}</td>
-	<td>{{ item.date_of_birth }}</td>
-	<td>{{ item.address }}</td>
-	<td>{{ item.locality }}</td>
+    <td>{{ item.type }}</td>
   </tr>
   {% endfor %}
 </table>
@@ -137,31 +128,18 @@ function myFunction() {
                    </div>
                    <div class="col-md-6 item text">
                        <h3>DemocracyInc</h3>
-                       <p>Our system provides users with an easy to use voting application.</p>
+                       <p>Our system provides users with an easy to use voting application. </p>
+					   <br>
+					   <img align="center" src="{% static "img/Logo_tiny.png" %}" alt="logo"/>
                    </div>
-                   <div class="col item social">
-                     <a href="#">
-                       <i class="icon ion-social-facebook" style="padding:10px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-twitter" style="padding:6px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-snapchat" style="padding:2px"></i>
-                     </a>
-                     <a href="#"><i class="icon ion-social-instagram" style="padding:3px"></i>
-                     </a>
-                   </div>
-               </div>
                <p class="copyright">DemocracyInc &copy; 2017</p>
            </div>
        </footer>
    </div>
 </div>
 </body>
-    <script src="{% static "js/jquery.min.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-
+    <!--<script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

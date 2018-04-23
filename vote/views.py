@@ -4,13 +4,15 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Voter, VoteRecord, Election, VoteCount
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
-import random
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
+import random, json, requests
+
 
 
 # Create your views here.
@@ -70,15 +72,15 @@ def checkin(request):
         if form.is_valid():
 
             # process the data in form.cleaned_data as required
-            voter_registered = Voter.objects.filter(
+            registered_voter = Voter.objects.get(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 date_of_birth=form.cleaned_data['date_of_birth'],
                 address=form.cleaned_data['address'],
                 locality=form.cleaned_data['locality']
-            ).exists()
+            )
 
-            if voter_registered:
+            if registered_voter:
                 task = form.save(commit=False)
                 key = generator()
                 full_name = task.first_name + " " + task.last_name

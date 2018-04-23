@@ -3,6 +3,7 @@
 {#{% block title %}Assigned Booth{% endblock %}#}
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 {% block content %}
 <div id="padder">
@@ -28,12 +29,43 @@
             {% load static %}
             <img src="{% static "img/Logo_small.png" %}" alt="logo"/>
             <hr>
+			<!--
 			<form>
 				<a href="{% url 'checkin' %}">
 				<input type=button value="Print" onClick="javascript:window.print()">
 				</a>
 			</form>
+			-->
         </div>
     </div>
 </div>
+<!--
+ <script type="text/javascript">
+      window.onload = function() { window.print(); }
+	  /*
+	  window.setTimeout(function()
+	  {
+        window.location.href = {% url 'checkin' %}";
+	  }, 5000);
+	  */
+	  
+	  window.onload = function(){ 
+		window.print(); 
+		setTimeout("closePrintView()", 3000);
+	  }
+	  
+      function closePrintView() {
+        window.location.href = {% url 'checkin' %}";
+	  }
+ </script>
+ -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.print();
+        setTimeout("closePrint()", 250);
+    });
+    function closePrint() {
+        document.location.href = '{% url 'checkin' %}';
+    }
+</script>
 {% endblock %}

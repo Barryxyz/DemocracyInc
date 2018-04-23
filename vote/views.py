@@ -9,14 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 import random
-<<<<<<< HEAD
 from graphos.sources.model import SimpleDataSource
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
-=======
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers import morris
->>>>>>> ff3bbae4fa3055d6e9ee63117e15290df4b08c24
 
 
 # Create your views here.
@@ -151,7 +148,6 @@ def generator():
         key += (''.join(''.join(random.choice(seq))))
     return key
 
-<<<<<<< HEAD
 @login_required
 def vote_count(request):
     records = VoteRecord.objects.all()
@@ -268,8 +264,6 @@ def results(request):
     return render(request, 'results.html', context)
 
 
-=======
-
 def vote_count(request):
     # VoteRecord.objects.filter()
     # VoteRecord.objects.filter(president="Hillary Clinton")
@@ -294,4 +288,3 @@ def vote_count(request):
     data_source = SimpleDataSource(data=data)
     chart = morris.LineChart(data_source, options={'title': "Line Chart"},html_id='gchart_div')
     return render(request,'vote_count.html', {'chart': chart})
->>>>>>> ff3bbae4fa3055d6e9ee63117e15290df4b08c24

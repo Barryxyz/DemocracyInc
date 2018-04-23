@@ -37,11 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'graphos',
-=======
     'rest_framework',
->>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
     'vote'
 ]
 

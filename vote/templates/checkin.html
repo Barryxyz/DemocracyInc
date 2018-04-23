@@ -3,6 +3,7 @@
 {#{% block title %}Checkin Form{% endblock %}#}
 
 {% block content %}
+    <head>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,6 +20,9 @@
 <link rel="stylesheet" href={% static "css/footer.css" %}>
 <link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
 
+    <title>Check In</title>
+    </head>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="{% url 'home' %}">DemocracyInc</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,6 +33,9 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'vote_count' %}">Vote Count</a>
+          </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'results' %}">Election Results</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>

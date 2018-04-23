@@ -11,6 +11,9 @@ from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
+from rest_framework import viewsets
+from .serializers import CountSerializer, RecordSerializer
+from django.shortcuts import render, HttpResponse
 import random, json, requests
 
 
@@ -245,20 +248,17 @@ def results(request):
     gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
     gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
 
-    governor_data = [
-        ['Candidates', 'Count'],
-        ['Matthew Ray', gov_count],
-        ['Travis Bailey', gov_count2],
-        ['Marisha Miller', gov_count3]
-    ]
+class CountViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = VoteCount.objects.all()
+    serializer_class = CountSerializer
 
-    prez_data_source = SimpleDataSource(data=president_data)
-    gov_data_source = SimpleDataSource(data=governor_data)
-    prez_chart = BarChart(prez_data_source, options={'title': "President",'xaxis':'Count'})
-    gov_chart = gchart.PieChart(gov_data_source, options={'title': "Governor"})
-    context = {
-        "prez_chart": prez_chart,
-        "gov_chart": gov_chart,
-    }
-    return render(request, 'results.html', context)
 
+class RecordViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = VoteRecord.objects.all()
+    serializer_class = RecordSerializer

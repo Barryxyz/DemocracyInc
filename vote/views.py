@@ -287,6 +287,23 @@ def results(request):
     gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
     gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
     gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
+    governor_data = [
+        ['Candidates', 'Count'],
+        ['Matthew Ray', gov_count],
+        ['Travis Bailey', gov_count2],
+        ['Marisha Miller', gov_count3]
+    ]
+
+    prez_data_source = SimpleDataSource(data=president_data)
+    gov_data_source = SimpleDataSource(data=governor_data)
+    prez_chart = BarChart(prez_data_source, options={'title': "President", 'xaxis': 'Count'})
+    gov_chart = gchart.PieChart(gov_data_source, options={'title': "Governor"})
+    context = {
+        "prez_chart": prez_chart,
+        "gov_chart": gov_chart,
+    }
+    return render(request, 'results.html', context)
+
 
 class CountViewSet(viewsets.ModelViewSet):
     """

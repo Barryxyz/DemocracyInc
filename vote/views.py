@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Voter, VoteRecord, Election, VoteCount
-from django.db.models import Count
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
@@ -287,14 +287,6 @@ def results(request):
     gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
     gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
     gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
-
-class CountViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = VoteCount.objects.all()
-    serializer_class = CountSerializer
-
 
 class CountViewSet(viewsets.ModelViewSet):
     """

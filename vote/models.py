@@ -209,10 +209,6 @@ class VoteCount(models.Model):
     position = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> acd0f8d2da205ef5505915143d8caa43d8bab1e9
 # Create your models here.
 
 

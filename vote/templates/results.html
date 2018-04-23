@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static "css/footer.css" %}">
     <link rel="stylesheet" href="{% static "css/ionicons.min.css" %}">
     <!-- <link rel="stylesheet" type="text/css" href="C:\Users\seant_000\Desktop\DemocracyInc-str8ht\vote\static\css\signup.css"> -->
-    <title>Vote Count</title>
+    <title>Election Results</title>
 
   <style>
 </style>
@@ -47,7 +47,7 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">View Available Elections</a>
               <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">View Registered Voters</a>
+                <a class="dropdown-item" href="{% url 'view_voters' %}">View Registered Voters</a>
             </div>
           </li>
         </ul>
@@ -138,49 +138,4 @@
 
   </body>
 </html>
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Election Results</title>#}
-{#</head>#}
-{#<body>#}
-{#<script type="text/javascript" src="https://www.google.com/jsapi"></script>#}
-{#<script type="text/javascript">#}
-{#    google.load("visualization", "1", {packages:["corechart"]});#}
-{#</script>#}
-{# {{ point_chart.as_html }}#}
-{##}
-{#</body>#}
-{#</html>#}
 
-<!--<ul class="bar-graph">-->
-  <!--<li class="bar-graph-axis">-->
-    <!--<div class="bar-graph-label">100%</div>-->
-    <!--<div class="bar-graph-label">80%</div>-->
-    <!--<div class="bar-graph-label">60%</div>-->
-    <!--<div class="bar-graph-label">40%</div>-->
-    <!--<div class="bar-graph-label">20%</div>-->
-    <!--<div class="bar-graph-label">0%</div>-->
-  <!--</li>-->
-  <!--<li class="bar primary" style="height: 95%;" title="95">-->
-    <!--<div class="percent">95<span>%</span></div>-->
-    <!--<div class="description">Yetis</div>-->
-  <!--</li>-->
-  <!--<li class="bar secondary" style="height: 90%;" title="90">-->
-    <!--<div class="percent">90<span>%</span></div>-->
-    <!--<div class="description">ZURBians</div>-->
-  <!--</li>-->
-  <!--<li class="bar success" style="height: 80%;" title="80">-->
-    <!--<div class="percent">80<span>%</span></div>-->
-    <!--<div class="description">Cows</div>-->
-  <!--</li>-->
-  <!--<li class="bar warning" style="height: 75%;" title="75">-->
-    <!--<div class="percent">75<span>%</span></div>-->
-    <!--<div class="description">Cows that think they're Yetis</div>-->
-  <!--</li>-->
-  <!--<li class="bar alert" style="height: 40%;" title="40">-->
-    <!--<div class="percent">40<span>%</span></div>-->
-    <!--<div class="description">Who knows</div>-->
-  <!--</li>-->
-<!--</ul>-->

@@ -4,16 +4,13 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Voter, VoteRecord, Election, VoteCount
-from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 import random
-from graphos.sources.model import SimpleDataSource
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
-from graphos.renderers import morris
 
 
 # Create your views here.
@@ -236,11 +233,11 @@ def vote_count(request):
 @login_required
 def results(request):
     prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
-    prez_count2 = VoteRecord.objects.filter(president='Donald Trump').count()
+    prez_count2 = VoteRecord.objects.filter(president='Hillary Clinton').count()
     president_data = [
         ['Candidates','Count'],
         ['Gary Johnson', prez_count],
-        ['Donald Trump', prez_count2]
+        ['Hillary Clinton', prez_count2]
     ]
     gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
     gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
@@ -263,28 +260,3 @@ def results(request):
     }
     return render(request, 'results.html', context)
 
-
-def vote_count(request):
-    # VoteRecord.objects.filter()
-    # VoteRecord.objects.filter(president="Hillary Clinton")
-    # presidents = VoteRecord.objects.annotate(Count('president'))
-    prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
-    prez_count2 = VoteRecord.objects.filter(president='Donald Trump').count()
-    # data = [
-    #     ['President','Count'],
-    #     ['Gary Johnson', prez_count],
-    #     ['Donald Trump', prez_count2]
-    # ]
-    data = [
-        ['Year', 'Sales'],
-        [2004, 1000],
-        [2005, 1170],
-        [2006, 660],
-        [2007, 1030]
-    ]
-    # queryset = VoteRecord.objects.all()
-    # data_source = ModelDataSource(queryset, fields=['president', 'count'])  # x-axis = presidet, y-axis = count
-    # chart = gchart.BarChart(data_source, options={'title': "Election Results", 'xaxis': {'mode': "Count"}})
-    data_source = SimpleDataSource(data=data)
-    chart = morris.LineChart(data_source, options={'title': "Line Chart"},html_id='gchart_div')
-    return render(request,'vote_count.html', {'chart': chart})

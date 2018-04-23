@@ -8,7 +8,11 @@ from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import VoteForm,VoteIdCheckForm,RegisteredForm,LoginForm
+from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
+
+
+from rest_framework import viewsets
+from vote.serializers import CountSerializer, RecordSerializer
 
 from django.shortcuts import render, HttpResponse
 import random, json, requests
@@ -244,3 +248,18 @@ def vote_count(request):
 
     return render(request, 'vote_count.html', {'query_results': results})
 
+
+class CountViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all()
+    serializer_class = CountSerializer
+
+
+class RecordViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = User.objects.all()
+    serializer_class = RecordSerializer

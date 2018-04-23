@@ -61,3 +61,8 @@ body {
 .features-icons .features-icons-item:hover .features-icons-icon i {
   font-size: 5rem;
 }
+
+#middle_container
+{
+	border-top: 2px solid black;
+}

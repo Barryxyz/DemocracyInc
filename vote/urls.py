@@ -31,7 +31,9 @@ urlpatterns = [
     url(r'^checkin/', views.checkin, name='checkin'),
     # url(r'^notregistered/', views.notregistered, name='notregistered'),
     # url(r'^checkin_success/', views.booth_assignment, name='success'),
-	url(r'^view_voters/', views.view_voters, name='view_voters')
+	url(r'^view_voters/', views.view_voters, name='view_voters'),
+    url(r'^view_elections/', views.view_elections, name='view_elections'),
+    url(r'^vote_count/', views.vote_count, name='vote_count')
 ]
 
 

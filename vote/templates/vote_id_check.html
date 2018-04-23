@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type='text/javascript' src="{% static "js/inspect.js" %}"></script>
 <link rel="stylesheet" href={% static "css/checkin.css" %}>
 {#  NEED TO CHANGE CSS FILE AS STYLE CHANGES  #}
 <link rel="stylesheet" href={% static "css/main.css" %}>
@@ -38,7 +40,7 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{% url 'vote_id_check' %}">Go to Voting Booth</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">View Available Elections</a>
+              <a class="dropdown-item" href="{% url 'view_elections' %}">View Available Elections</a>
               <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'view_voters' %}">View Registered Voters</a>
             </div>
@@ -99,31 +101,18 @@
                    </div>
                    <div class="col-md-6 item text">
                        <h3>DemocracyInc</h3>
-                       <p>Our system provides users with an easy to use voting application.</p>
+                       <p>Our system provides users with an easy to use voting application. </p>
+					   <br>
+					   <img align="center" src="{% static "img/Logo_tiny.png" %}" alt="logo"/>
                    </div>
-                   <div class="col item social">
-                     <a href="#">
-                       <i class="icon ion-social-facebook" style="padding:10px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-twitter" style="padding:6px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-snapchat" style="padding:2px"></i>
-                     </a>
-                     <a href="#"><i class="icon ion-social-instagram" style="padding:3px"></i>
-                     </a>
-                   </div>
-               </div>
                <p class="copyright">DemocracyInc &copy; 2017</p>
            </div>
        </footer>
    </div>
 </div>
 </body>
-    <script src="{% static "js/jquery.min.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-
+    <!--<script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

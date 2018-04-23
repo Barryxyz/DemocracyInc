@@ -2,27 +2,49 @@
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-    <link rel="stylesheet" href="{% static "css/checkin.css" %}">
-  <link rel="stylesheet" href="{% static "css/main.css" %}">
-    <link rel="stylesheet" href="{% static "css/footer.css" %}">
-    <link rel="stylesheet" href="{% static "css/ionicons.min.css" %}">
-    <!-- <link rel="stylesheet" type="text/css" href="C:\Users\seant_000\Desktop\DemocracyInc-str8ht\vote\static\css\signup.css"> -->
+<!-- Bootstrap CSS -->
 
-    <title>Vote Count</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type='text/javascript' src="{% static "js/inspect.js" %}"></script>
+<link rel="stylesheet" href={% static "css/voters.css" %}>
+<link rel="stylesheet" href={% static "css/main.css" %}>
+<link rel="stylesheet" href={% static "css/footer.css" %}>
+<link rel="stylesheet" href={% static "css/ionicons.min.css" %}>
 
-  <style>
-</style>
-  </head>
-  <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<head>
+<script>
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="{% url 'home' %}">DemocracyInc</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -43,12 +65,12 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{% url 'vote_id_check' %}">Go to Voting Booth</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">View Available Elections</a>
+              <a class="dropdown-item" href="{% url 'view_elections' %}">View Available Elections</a>
               <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">View Registered Voters</a>
+                <a class="dropdown-item" href="{% url 'view_voters' %}">View Registered Voters</a>
             </div>
           </li>
-        </ul>
+		</ul>
 		{% if user.is_authenticated %}
 			<li class="nav navbar-nav navbar-right">
               <h6 style="color:white">Logged in as: {{ user.username }}</h6>
@@ -64,26 +86,29 @@
 		{% endif %}
       </div>
     </nav>
-	<br><br>
-  <h1 style="color:black;" align="center">VOTE COUNT</h1>
-	<hr>
-<!-- Need to relate back to database and check to see if voter exist, then return this page-->
-<div id="padder">
-        <ul>
-            <li><label id="term">Profile was not found in the record of registered voters. </label></li>
-            <li><label id="term">Is the person registered to vote?</label></li>
-            <li><label id="term">If yes please enter the information again, else please inform them that they need to register to vote BEFORE the election, and then they will be able to vote in the next election cycle</label></li>
-            <span style="display:inline-block; width: 20px;"></span>
-            <a href="{% url 'checkin' %}">Try again</a>&nbsp;
-        </ul>
+	<br>
+<h1 style="color:black;" align="center">Vote Count</h1>
+	<br>
+
+<div id="padder" align="center">
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+
+<table id="myTable">
+  <tr class="header">
+    <th style="width:20%;">Candidate</th>
+      <th style="width:20%;">Position</th>
+    <th style="width:20%;">Count</th>
+  </tr>
+  {% for item in query_results %}
+  <tr>
+    <td>{{ item.name }}</td>
+    <td>{{ item.position }}</td>
+      <td>{{ item.count }}</td>
+
+  </tr>
+  {% endfor %}
+</table>
 </div>
-<div align="center">
-<br>
-{% load static %}
-<img align="center" src="{% static "img/Logo_small.png" %}" alt="logo"/>
-</div>
-<br>
-<br>
 
 <div class="footer-dark">
        <footer>
@@ -107,35 +132,19 @@
                    </div>
                    <div class="col-md-6 item text">
                        <h3>DemocracyInc</h3>
-                       <p>Our system provides users with an easy to use voting application.</p>
+                       <p>Our system provides users with an easy to use voting application. </p>
+					   <br>
+					   <img align="center" src="{% static "img/Logo_tiny.png" %}" alt="logo"/>
                    </div>
-                   <div class="col item social">
-                     <a href="#">
-                       <i class="icon ion-social-facebook" style="padding:10px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-twitter" style="padding:6px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-snapchat" style="padding:2px"></i>
-                     </a>
-                     <a href="#"><i class="icon ion-social-instagram" style="padding:3px"></i>
-                     </a>
-                   </div>
-               </div>
                <p class="copyright">DemocracyInc &copy; 2017</p>
            </div>
        </footer>
    </div>
-    <script src="{% static "js/jquery.min.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-
-
-
+</div>
+</body>
+    <!--<script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-
-  </body>
 </html>

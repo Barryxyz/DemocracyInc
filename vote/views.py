@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Voter, VoteRecord, Election, VoteCount
-from django.db.models import Count
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm

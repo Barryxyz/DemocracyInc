@@ -11,6 +11,9 @@ from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 from rest_framework import viewsets
 from .serializers import CountSerializer, RecordSerializer
 from django.shortcuts import render, HttpResponse
@@ -66,6 +69,23 @@ def view_voters(request):
 
 
 @login_required
+def view_elections(request):
+	# query_results = Election.objects.all()
+    query_results = []
+    query_results.append(Election(type='primary', id='ljsadlkfj'))
+    query_results.append(Election(type='presidential', id='ljsadlkfj'))
+    return render(request, 'view_elections.html', {'query_results': query_results})
+
+@login_required	
+def view_voters(request):
+	query_results = Voter.objects.all()
+	return render(request, 'view_voters.html', {'query_results': query_results})
+    # results = requests.get('http://cs3240votingproject.org/voters/?key={API_KEY}')
+    # content = results.text
+    # return HttpResponse(content)
+    # return render(request, 'view_voters.html', {'results': results})
+
+@login_required
 def checkin(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -92,6 +112,11 @@ def checkin(request):
                 task.save()
                 return render(request, 'booth_assignment.html',
                               {'booth': key, 'full_name': full_name, 'locality': locality})
+                registered_voter.confirmation = key
+                registered_voter.save()
+                # task.confirmation = key
+                # task.save(update_fields=['confirmation'])
+                return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
                 return render(request, 'notregistered.html', {})
@@ -149,6 +174,21 @@ def generator():
     for i in range(6):
         key += (''.join(''.join(random.choice(seq))))
     return key
+
+@login_required
+def vote_count(request):
+    records = VoteRecord.objects.all()
+    votes = dict()
+    positions = dict()
+    for vr in records:
+        key = vr.president
+        if key in votes:
+            votes[key] += 1
+            positions[key].add('president')
+        else:
+            votes[key] = 1
+            positions[key] = set()
+            positions[key].add('president')
 
 @login_required
 def vote_count(request):
@@ -247,6 +287,23 @@ def results(request):
     gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
     gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
     gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
+    governor_data = [
+        ['Candidates', 'Count'],
+        ['Matthew Ray', gov_count],
+        ['Travis Bailey', gov_count2],
+        ['Marisha Miller', gov_count3]
+    ]
+
+    prez_data_source = SimpleDataSource(data=president_data)
+    gov_data_source = SimpleDataSource(data=governor_data)
+    prez_chart = BarChart(prez_data_source, options={'title': "President", 'xaxis': 'Count'})
+    gov_chart = gchart.PieChart(gov_data_source, options={'title': "Governor"})
+    context = {
+        "prez_chart": prez_chart,
+        "gov_chart": gov_chart,
+    }
+    return render(request, 'results.html', context)
+
 
 class CountViewSet(viewsets.ModelViewSet):
     """

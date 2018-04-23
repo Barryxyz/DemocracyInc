@@ -8,13 +8,21 @@ from .models import Voter, VoteRecord, Election, VoteCount
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
+from graphos.renderers import gchart
+from graphos.renderers.gchart import BarChart
+from graphos.sources.simple import SimpleDataSource
+from rest_framework import viewsets
+from .serializers import CountSerializer, RecordSerializer
+from django.shortcuts import render, HttpResponse
 import random, json, requests
+
 
 
 # Create your views here.
 
 def home(request):
     return render(request, 'base.html', {})
+
 
 def login(request):
     if request.method == 'POST':
@@ -39,29 +47,23 @@ def login(request):
         form = LoginForm()
     return render(request, './registration/login.html', {'form': form})
 
+
 def logout_page(request):
     return render(request, 'registration/logout_success.html', {})
 
-def reset(request):
-	return render(request, 'registration/password_reset_form.html', {})
 
+def reset(request):
+    return render(request, 'registration/password_reset_form.html', {})
+
+def view_elections(request):
+	query_results = Election.objects.all()
+	return render(request, 'view_elections.html', {'query_results': query_results})
 
 @login_required
-def view_elections(request):
-	# query_results = Election.objects.all()
-    query_results = []
-    query_results.append(Election(type='primary', id='ljsadlkfj'))
-    query_results.append(Election(type='presidential', id='ljsadlkfj'))
-    return render(request, 'view_elections.html', {'query_results': query_results})
-
-@login_required	
 def view_voters(request):
-	query_results = Voter.objects.all()
-	return render(request, 'view_voters.html', {'query_results': query_results})
-    # results = requests.get('http://cs3240votingproject.org/voters/?key={API_KEY}')
-    # content = results.text
-    # return HttpResponse(content)
-    # return render(request, 'view_voters.html', {'results': results})
+    query_results = Voter.objects.all()
+    return render(request, 'view_voters.html', {'query_results': query_results})
+
 
 @login_required
 def checkin(request):
@@ -86,11 +88,10 @@ def checkin(request):
                 key = generator()
                 full_name = task.first_name + " " + task.last_name
                 locality = task.locality
-                registered_voter.confirmation = key
-                registered_voter.save()
-                # task.confirmation = key
-                # task.save(update_fields=['confirmation'])
-                return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
+                task.confirmation = key
+                task.save()
+                return render(request, 'booth_assignment.html',
+                              {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
                 return render(request, 'notregistered.html', {})
@@ -98,6 +99,7 @@ def checkin(request):
     else:
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
+
 
 def vote(request):
     if request.method == 'POST':
@@ -117,6 +119,7 @@ def vote(request):
         form = VoteForm()
     return render(request, 'vote.html', {'form': form})
 
+
 def vote_id_check(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -129,7 +132,7 @@ def vote_id_check(request):
                 request.session['input_key'] = input_key
                 return redirect(reverse('vote'))
             else:
-                return render(request, 'vote_id_check.html', {'form': form}) # need an error page?
+                return render(request, 'vote_id_check.html', {'form': form})  # need an error page?
         else:
             return redirect(reverse('home'))
 
@@ -138,23 +141,14 @@ def vote_id_check(request):
         form = VoteIdCheckForm()
     return render(request, 'vote_id_check.html', {'form': form})
 
+
 def generator():
     seq = "ABCDFGHJIKLMNOPQRSTUVWXYZ1234567890"
     key = ''
 
     for i in range(6):
-        key+=(''.join(''.join(random.choice(seq))))
+        key += (''.join(''.join(random.choice(seq))))
     return key
-
-# def vote_results(request):
-#     if request.method == 'POST':
-#         #VoteRecord.objects.filter()
-#         #VoteRecord.objects.filter(president="Hillary Clinton")
-#         presidents = VoteRecord.objects.annotate(Count('president'))
-#
-#         print(presidents)
-#
-#     return render(request, 'vote_count.html', {})
 
 @login_required
 def vote_count(request):
@@ -237,7 +231,34 @@ def vote_count(request):
     results = []
     for name in votes.keys():
         for position in positions[name]:
-            results.append(VoteCount(name=name, position=position, count=votes[name]))
+            results.append(VoteCount(name=name, position=position, count=str(votes[name])))
 
     return render(request, 'vote_count.html', {'query_results': results})
 
+@login_required
+def results(request):
+    prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
+    prez_count2 = VoteRecord.objects.filter(president='Hillary Clinton').count()
+    president_data = [
+        ['Candidates','Count'],
+        ['Gary Johnson', prez_count],
+        ['Hillary Clinton', prez_count2]
+    ]
+    gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
+    gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
+    gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
+
+class CountViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = VoteCount.objects.all()
+    serializer_class = CountSerializer
+
+
+class RecordViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = VoteRecord.objects.all()
+    serializer_class = RecordSerializer

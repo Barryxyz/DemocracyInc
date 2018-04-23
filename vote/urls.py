@@ -13,11 +13,17 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))"""
 
-from django.conf.urls import url
-from vote import views
 from VotingApp import settings
 from django.contrib import admin
 from django.conf.urls import url, include
+
+from rest_framework import routers
+from vote import views
+
+router = routers.DefaultRouter()
+router.register(r'count', views.CountViewSet)
+router.register(r'record', views.RecordViewSet)
+
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
@@ -32,8 +38,9 @@ urlpatterns = [
     # url(r'^notregistered/', views.notregistered, name='notregistered'),
     # url(r'^checkin_success/', views.booth_assignment, name='success'),
 	url(r'^view_voters/', views.view_voters, name='view_voters'),
-    url(r'^view_elections/', views.view_elections, name='view_elections'),
-    url(r'^vote_count/', views.vote_count, name='vote_count')
+    url(r'^view_election/', views.view_elections, name='view_elections'),
+    url(r'^vote_count/', views.vote_count, name='vote_count'),
+    url(r'^results/', views.results, name='results')
 ]
 
 
@@ -41,3 +48,14 @@ urlpatterns = [
 urlpatterns += [
     url(r'accounts/', include('django.contrib.auth.urls')),
 ]
+
+#for external api
+urlpatterns += [
+    url(r'^', include(router.urls)),
+    url(r'^api/', include('rest_framework.urls', namespace='rest_framework'))
+]
+
+# if settings.DEBUG:
+#     from django.conf.urls.static import static
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

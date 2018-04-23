@@ -22,7 +22,7 @@ from vote import views
 
 router = routers.DefaultRouter()
 router.register(r'count', views.CountViewSet)
-router.register(r'record',views.RecordViewSet)
+router.register(r'record', views.RecordViewSet)
 
 
 urlpatterns = [
@@ -41,9 +41,6 @@ urlpatterns = [
     url(r'^view_elections/', views.view_elections, name='view_elections'),
     url(r'^vote_count/', views.vote_count, name='vote_count'),
 
-    url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-
 ]
 
 
@@ -51,3 +48,14 @@ urlpatterns = [
 urlpatterns += [
     url(r'accounts/', include('django.contrib.auth.urls')),
 ]
+
+#for external api
+urlpatterns += [
+    url(r'^', include(router.urls)),
+    url(r'^api/', include('rest_framework.urls', namespace='rest_framework'))
+]
+
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

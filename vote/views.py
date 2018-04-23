@@ -12,7 +12,7 @@ from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 
 
 from rest_framework import viewsets
-from vote.serializers import CountSerializer, RecordSerializer
+from .serializers import CountSerializer, RecordSerializer
 
 from django.shortcuts import render, HttpResponse
 import random, json, requests
@@ -253,7 +253,7 @@ class CountViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all()
+    queryset = VoteCount.objects.all()
     serializer_class = CountSerializer
 
 
@@ -261,5 +261,5 @@ class RecordViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = User.objects.all()
+    queryset = VoteRecord.objects.all()
     serializer_class = RecordSerializer

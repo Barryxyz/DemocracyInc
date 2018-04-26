@@ -21,8 +21,8 @@ from rest_framework import routers
 from vote import views
 
 router = routers.DefaultRouter()
-router.register(r'count', views.CountViewSet)
-router.register(r'record', views.RecordViewSet)
+router.register(r'count_api', views.CountViewSet)
+router.register(r'records_api', views.RecordViewSet)
 
 
 urlpatterns = [
@@ -52,7 +52,7 @@ urlpatterns += [
 #for external api
 urlpatterns += [
     url(r'^', include(router.urls)),
-    url(r'^api/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
 # if settings.DEBUG:

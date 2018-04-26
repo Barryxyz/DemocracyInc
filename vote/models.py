@@ -210,55 +210,32 @@ class VoteCount(models.Model):
     count = models.CharField(max_length=50)
 
 
-# Create your models here.
-
-
-# class VoteCount(models.Model):
-#     name = models.CharField(max_length=50)
-#     position = models.CharField(max_length=50)
-#     count = models.CharField(max_length=50)
-
-
-
-
 class Candidate(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     position = models.CharField(max_length=50)
-    election_type = models.CharField(max_length=50)
+    election_type = models.ForeignKey('Election',on_delete=models.CASCADE, default='')
 
-class NewVoteRecord(models.Model):
+class VoteRecordPrimary(models.Model):
 
-    president = models.CharField(max_length=50, choices=President)
-    governor = models.CharField(max_length=50, choices=Governor)
-    lieutenant_Governor = models.CharField(max_length=50, choices=LieuGov)
-    attorney_General = models.CharField(max_length=50, choices=AttGen)
-    delegate = models.CharField(max_length=50, choices=Delegate)
-    commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
-    sheriff = models.CharField(max_length=50, choices=Sheriff)
-    treasurer = models.CharField(max_length=50, choices=Treasurer)
-    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default='')
-    time_stamp = models.DateTimeField(auto_now=True)
+    president = models.CharField(max_length=50, choices=#magic)
+    vice_president = models.CharField(max_length=50, choices=#magic)
+
+class VoteRecordPresidential(models.Model):
+
+    president = models.CharField(max_length=50, choices=#magic)
+    vice_president = models.CharField(max_length=50, choices=#magic)
+
 
 
 
 class Voter(models.Model):
-    # voter_number = models.IntegerField(max_length=12)
-    # voter_status = models.CharField(max_length=20)
-    # date_registered = models.DateField(max_length=8, default=datetime.date.today)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     date_of_birth = models.DateField(max_length=8, default=datetime.date.today)
-    # might not even be included with api json... ^^
-    # election_type = models.CharField(max_length=50, default='')
-    # state = models.CharField(max_length=2)
-    # zip = models.IntegerField(max_length=5)
     locality = models.CharField(max_length=20, default='')
-    # precinct = models.CharField(max_length=20, default='')
-    # precinct_id = models.IntegerField(max_length=10)
     confirmation = models.CharField(max_length=6)
-    #voter_id = models.CharField(max_length=6)
 
     def to_json(self):
         return {

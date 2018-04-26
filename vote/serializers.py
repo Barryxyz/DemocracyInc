@@ -13,5 +13,5 @@ class CountSerializer(serializers.HyperlinkedModelSerializer):
 class RecordSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = VoteRecord
-        fields = '_all_'
+        fields = '__all__'
 

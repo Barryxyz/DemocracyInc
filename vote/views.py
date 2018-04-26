@@ -64,8 +64,12 @@ def view_elections(request):
 
 @login_required
 def view_voters(request):
-    query_results = Voter.objects.all()
-    return render(request, 'view_voters.html', {'query_results': query_results})
+	query_results = Voter.objects.all()
+	return render(request, 'view_voters.html', {'query_results': query_results})
+    # results = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
+    # content = results.text
+    # return HttpResponse(content)
+    # return render(request, 'view_voters.html', {'results': results})
 
 
 @login_required

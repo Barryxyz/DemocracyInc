@@ -220,7 +220,24 @@ class VoteCount(models.Model):
     def __str__(self):
         return self.name, self.position, self.count
 
+class Candidate(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    position = models.CharField(max_length=50)
+    election_type = models.CharField(max_length=50)
 
+class NewVoteRecord(models.Model):
+
+    president = models.CharField(max_length=50, choices=President)
+    governor = models.CharField(max_length=50, choices=Governor)
+    lieutenant_Governor = models.CharField(max_length=50, choices=LieuGov)
+    attorney_General = models.CharField(max_length=50, choices=AttGen)
+    delegate = models.CharField(max_length=50, choices=Delegate)
+    commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
+    sheriff = models.CharField(max_length=50, choices=Sheriff)
+    treasurer = models.CharField(max_length=50, choices=Treasurer)
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default='')
+    time_stamp = models.DateTimeField(auto_now=True)
 
 class Voter(models.Model):
     voter_number = models.DecimalField(max_digits=12, decimal_places=0, null=True)

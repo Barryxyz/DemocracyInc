@@ -17,7 +17,7 @@ from VotingApp import settings
 from django.contrib import admin
 from django.conf.urls import url, include
 
-# from rest_framework import routers
+from rest_framework import routers
 from vote import views
 
 router = routers.DefaultRouter()
@@ -28,6 +28,7 @@ router.register(r'records_api', views.RecordViewSet)
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^admin/', admin.site.urls),
+    url(r'^load_voters/', views.load_voters, name='load_voters'),
     # url('^home/', views.home, name='home'),
     url(r'^login/', views.login, name='login'),
 	url(r'^logout_page/', views.logout_page, name='logout_page'),

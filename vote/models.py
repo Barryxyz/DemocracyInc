@@ -223,17 +223,19 @@ class VoteCount(models.Model):
 
 
 class Voter(models.Model):
-    voter_number = models.DecimalField(max_digits=12, decimal_places=0)
-    voter_status = models.CharField(max_length=20)
+    voter_number = models.DecimalField(max_digits=12, decimal_places=0, null=True)
+    voter_status = models.CharField(max_length=20, null=True)
     date_registered = models.DateField(max_length=8, default=datetime.date.today)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    street_address = models.CharField(max_length=100)
-    city = models.CharField(max_length=50)
-    state = models.CharField(max_length=2)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
+    street_address = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=2, null=True)
     zip = models.DecimalField(max_digits=5, decimal_places=0)
-    locality = models.CharField(max_length=20, default='')
-    confirmation = models.CharField(max_length=6)
+    locality = models.CharField(max_length=20, null=True)
+    precinct = models.CharField(max_length=100, null=True)
+    precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
+    confirmation = models.CharField(max_length=6, null=True)
 
     def to_json(self):
         return {

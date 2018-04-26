@@ -58,10 +58,6 @@ def view_elections(request):
 def view_voters(request):
 	query_results = Voter.objects.all()
 	return render(request, 'view_voters.html', {'query_results': query_results})
-    # results = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
-    # content = results.text
-    # return HttpResponse(content)
-    # return render(request, 'view_voters.html', {'results': results})
 
 def load_voters(request):
     r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
@@ -82,7 +78,9 @@ def load_voters(request):
                       city = voter["city"],
                       state = voter["state"],
                       zip = voter["zip"],
-                      locality = voter["locality"]
+                      locality = voter["locality"],
+                      precinct=voter["precinct"],
+                      precinct_id = voter["precinct_id"]
                 ).save()
     return render(request, 'base.html', {})
 
@@ -99,24 +97,18 @@ def checkin(request):
             registered_voter = Voter.objects.get(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
-                date_of_birth=form.cleaned_data['date_of_birth'],
-                address=form.cleaned_data['address'],
-                locality=form.cleaned_data['locality']
+                street_address=form.cleaned_data['street_address'],
+                city=form.cleaned_data['city'],
+                state=form.cleaned_data['state'],
+                zip=form.cleaned_data['zip']
             )
 
             if registered_voter:
-                task = form.save(commit=False)
                 key = generator()
-                full_name = task.first_name + " " + task.last_name
-                locality = task.locality
-                task.confirmation = key
-                task.save()
-                return render(request, 'booth_assignment.html',
-                              {'booth': key, 'full_name': full_name, 'locality': locality})
+                full_name = registered_voter.first_name + " " + registered_voter.last_name
+                locality = registered_voter.locality
                 registered_voter.confirmation = key
                 registered_voter.save()
-                # task.confirmation = key
-                # task.save(update_fields=['confirmation'])
                 return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:

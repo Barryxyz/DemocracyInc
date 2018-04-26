@@ -275,7 +275,7 @@ class VoteRecord(models.Model):
             'governor': self.governor,
             'lieutenant_Governor': self.lieutenant_Governor,
             'attorney_General': self.attorney_General,
-            'first_name': self.delegate,
+            'delegate': self.delegate,
             'commonwealth_Attorney': self.commonwealth_Attorney,
             'sheriff': self.sheriff,
             'treasurer': self.treasurer,

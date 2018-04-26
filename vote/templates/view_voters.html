@@ -99,19 +99,31 @@ function myFunction() {
 
 <table id="myTable">
   <tr class="header">
-    <th style="width:20%;">First Name</th>
-    <th style="width:20%;">Last Name</th>
-	<th style="width:20%;">Date of Birth</th>
-    <th style="width:20%;">Address</th>
+    <th style="width:10%;">First Name</th>
+    <th style="width:10%;">Last Name</th>
+	<th style="width:10%;">Voter #</th>
+	<th style="width:10%;">Status</th>
+    <th style="width:15%;">Street Address</th>
+	<th style="width:10%;">City</th>
+    <th style="width:5%;">State</th>
+    <th style="width:5%;">Zip</th>
     <th style="width:20%;">Locality</th>
+	<th style="width:5%;">Precinct</th>
+
   </tr>
   {% for item in query_results %}
   <tr>
     <td>{{ item.first_name }}</td>
     <td>{{ item.last_name }}</td>
-	<td>{{ item.date_of_birth }}</td>
-	<td>{{ item.address }}</td>
+	<td>{{ item.voter_number }}</td>
+	<td>{{ item.voter_status }}</td>
+	<td>{{ item.street_address }}</td>
+	<td>{{ item.city }}</td>
+	<td>{{ item.state }}</td>
+	<td>{{ item.zip }}</td>
 	<td>{{ item.locality }}</td>
+	<td>{{ item.precinct_id }}</td>
+
   </tr>
   {% endfor %}
 </table>

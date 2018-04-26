@@ -209,14 +209,6 @@ class VoteCount(models.Model):
     position = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
 
-# Create your models here.
-
-
-class VoteCount(models.Model):
-    name = models.CharField(max_length=50)
-    position = models.CharField(max_length=50)
-    count = models.CharField(max_length=50)
-
     def to_json(self):
         return {
             'name': self.name,
@@ -275,3 +267,22 @@ class VoteRecord(models.Model):
     treasurer = models.CharField(max_length=50, choices=Treasurer)
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default='')
     time_stamp = models.DateTimeField(auto_now=True)
+
+
+    def to_json(self):
+        return {
+            'president': self.president,
+            'governor': self.governor,
+            'lieutenant_Governor': self.lieutenant_Governor,
+            'attorney_General': self.attorney_General,
+            'first_name': self.delegate,
+            'commonwealth_Attorney': self.commonwealth_Attorney,
+            'sheriff': self.sheriff,
+            'treasurer': self.treasurer,
+            'voter': self.voter,
+            'time_stamp': self.time_stamp,
+        }
+
+    def __str__(self):
+        return self.president, self.governor, self.lieutenant_Governor, self.attorney_General, self.delegate, \
+               self.commonwealth_Attorney, self.sheriff, self.treasurer, self.voter, self.time_stamp

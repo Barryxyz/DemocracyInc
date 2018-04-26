@@ -17,12 +17,12 @@ from VotingApp import settings
 from django.contrib import admin
 from django.conf.urls import url, include
 
-from rest_framework import routers
+# from rest_framework import routers
 from vote import views
 
-router = routers.DefaultRouter()
-router.register(r'count', views.CountViewSet)
-router.register(r'record', views.RecordViewSet)
+# router = routers.DefaultRouter()
+# router.register(r'count', views.CountViewSet)
+# router.register(r'record', views.RecordViewSet)
 
 
 urlpatterns = [
@@ -49,11 +49,11 @@ urlpatterns += [
     url(r'accounts/', include('django.contrib.auth.urls')),
 ]
 
-#for external api
-urlpatterns += [
-    url(r'^', include(router.urls)),
-    url(r'^api/', include('rest_framework.urls', namespace='rest_framework'))
-]
+# #for external api
+# urlpatterns += [
+#     url(r'^', include(router.urls)),
+#     url(r'^api/', include('rest_framework.urls', namespace='rest_framework'))
+# ]
 
 # if settings.DEBUG:
 #     from django.conf.urls.static import static

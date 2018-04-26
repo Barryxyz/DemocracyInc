@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from .models import Voter, VoteRecord, Election, VoteCount
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 from rest_framework import viewsets
+
 from .serializers import CountSerializer, RecordSerializer
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -55,8 +56,12 @@ def view_elections(request):
 
 @login_required
 def view_voters(request):
-    query_results = Voter.objects.all()
-    return render(request, 'view_voters.html', {'query_results': query_results})
+	query_results = Voter.objects.all()
+	return render(request, 'view_voters.html', {'query_results': query_results})
+    # results = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
+    # content = results.text
+    # return HttpResponse(content)
+    # return render(request, 'view_voters.html', {'results': results})
 
 def load_voters(request):
     r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')

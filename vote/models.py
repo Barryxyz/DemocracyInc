@@ -210,6 +210,17 @@ class VoteCount(models.Model):
     position = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
 
+    def to_json(self):
+        return {
+            'name': self.name,
+            'position': self.position,
+            'count': self.count,
+        }
+
+    def __str__(self):
+        return self.name, self.position, self.count
+
+
 
 class Voter(models.Model):
     voter_number = models.DecimalField(max_digits=12, decimal_places=0)
@@ -235,7 +246,7 @@ class Voter(models.Model):
     def __str__(self):
         return self.first_name
 
-class PollPlaces(models.Model):
+class PollPlace(models.Model):
     precinct = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     poll_booths = models.IntegerField()

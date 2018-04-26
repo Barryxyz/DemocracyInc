@@ -21,8 +21,8 @@ from rest_framework import routers
 from vote import views
 
 router = routers.DefaultRouter()
-router.register(r'votecount/api', views.CountViewSet)
-router.register(r'voterecords/api', views.RecordViewSet)
+router.register(r'count_api', views.CountViewSet)
+router.register(r'records_api', views.RecordViewSet)
 
 
 urlpatterns = [

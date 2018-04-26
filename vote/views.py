@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from .models import Voter, VoteRecord, Election, VoteCount
-from django.db.models import Count
 
+from graphos.renderers import gchart
+from graphos.renderers.gchart import BarChart
+from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import Voter, VoteRecord, Election, VoteCount
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
-import random, json, requests
+from rest_framework import viewsets
 
+from .serializers import CountSerializer, RecordSerializer
+from django.shortcuts import render, redirect
+from django.urls import reverse
+import random, json, requests
 
 # Create your views here.
 
@@ -44,25 +48,41 @@ def logout_page(request):
     return render(request, 'registration/logout_success.html', {})
 
 def reset(request):
-	return render(request, 'registration/password_reset_form.html', {})
+    return render(request, 'registration/password_reset_form.html', {})
 
-
-@login_required
 def view_elections(request):
-	# query_results = Election.objects.all()
-    query_results = []
-    query_results.append(Election(type='primary', id='ljsadlkfj'))
-    query_results.append(Election(type='presidential', id='ljsadlkfj'))
+    query_results = Election.objects.all()
     return render(request, 'view_elections.html', {'query_results': query_results})
 
-@login_required	
+@login_required
 def view_voters(request):
 	query_results = Voter.objects.all()
 	return render(request, 'view_voters.html', {'query_results': query_results})
-    # results = requests.get('http://cs3240votingproject.org/voters/?key={API_KEY}')
-    # content = results.text
-    # return HttpResponse(content)
-    # return render(request, 'view_voters.html', {'results': results})
+
+def load_voters(request):
+    r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
+    response = r.json()
+    status = response["status"]
+    if (status == "200"):
+        voters = response["voters"]
+        for voter in voters:
+            # print(voter)
+            voter_exists = Voter.objects.filter(voter_number=voter["voter_number"]).exists()
+            if not voter_exists:
+                Voter(voter_number = voter["voter_number"],
+                      voter_status = voter["voter_status"],
+                      date_registered = voter["date_registered"],
+                      first_name = voter["first_name"],
+                      last_name = voter["last_name"],
+                      street_address = voter["street_address"],
+                      city = voter["city"],
+                      state = voter["state"],
+                      zip = voter["zip"],
+                      locality = voter["locality"],
+                      precinct=voter["precinct"],
+                      precinct_id = voter["precinct_id"]
+                ).save()
+    return render(request, 'base.html', {})
 
 @login_required
 def checkin(request):
@@ -77,20 +97,18 @@ def checkin(request):
             registered_voter = Voter.objects.get(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
-                date_of_birth=form.cleaned_data['date_of_birth'],
-                address=form.cleaned_data['address'],
-                locality=form.cleaned_data['locality']
+                street_address=form.cleaned_data['street_address'],
+                city=form.cleaned_data['city'],
+                state=form.cleaned_data['state'],
+                zip=form.cleaned_data['zip']
             )
 
             if registered_voter:
-                task = form.save(commit=False)
                 key = generator()
-                full_name = task.first_name + " " + task.last_name
-                locality = task.locality
+                full_name = registered_voter.first_name + " " + registered_voter.last_name
+                locality = registered_voter.locality
                 registered_voter.confirmation = key
                 registered_voter.save()
-                # task.confirmation = key
-                # task.save(update_fields=['confirmation'])
                 return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
@@ -130,7 +148,7 @@ def vote_id_check(request):
                 request.session['input_key'] = input_key
                 return redirect(reverse('vote'))
             else:
-                return render(request, 'vote_id_check.html', {'form': form}) # need an error page?
+                return render(request, 'vote_id_check.html', {'form': form})  # need an error page?
         else:
             return redirect(reverse('home'))
 
@@ -144,18 +162,8 @@ def generator():
     key = ''
 
     for i in range(6):
-        key+=(''.join(''.join(random.choice(seq))))
+        key += (''.join(''.join(random.choice(seq))))
     return key
-
-# def vote_results(request):
-#     if request.method == 'POST':
-#         #VoteRecord.objects.filter()
-#         #VoteRecord.objects.filter(president="Hillary Clinton")
-#         presidents = VoteRecord.objects.annotate(Count('president'))
-#
-#         print(presidents)
-#
-#     return render(request, 'vote_count.html', {})
 
 @login_required
 def vote_count(request):
@@ -238,7 +246,49 @@ def vote_count(request):
     results = []
     for name in votes.keys():
         for position in positions[name]:
-            results.append(VoteCount.objects.create(name=name, position=position))
+            results.append(VoteCount(name=name, position=position, count=str(votes[name])))
 
     return render(request, 'vote_count.html', {'query_results': results})
 
+@login_required
+def results(request):
+    prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
+    prez_count2 = VoteRecord.objects.filter(president='Hillary Clinton').count()
+    president_data = [
+        ['Candidates','Count'],
+        ['Gary Johnson', prez_count],
+        ['Hillary Clinton', prez_count2]
+    ]
+    gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
+    gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
+    gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
+    governor_data = [
+        ['Candidates', 'Count'],
+        ['Matthew Ray', gov_count],
+        ['Travis Bailey', gov_count2],
+        ['Marisha Miller', gov_count3]
+    ]
+
+    prez_data_source = SimpleDataSource(data=president_data)
+    gov_data_source = SimpleDataSource(data=governor_data)
+    prez_chart = BarChart(prez_data_source, options={'title': "President", 'xaxis': 'Count'})
+    gov_chart = gchart.PieChart(gov_data_source, options={'title': "Governor"})
+    context = {
+        "prez_chart": prez_chart,
+        "gov_chart": gov_chart,
+    }
+    return render(request, 'results.html', context)
+
+class CountViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = VoteCount.objects.all()
+    serializer_class = CountSerializer
+
+class RecordViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = VoteRecord.objects.all()
+    serializer_class = RecordSerializer

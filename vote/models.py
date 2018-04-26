@@ -188,6 +188,9 @@ Treasurer = (
     ('Jason Rothfuss', 'Jason Rothfuss')
 )
 
+
+# Create your models here.
+
 class Election(models.Model):
     election_id = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
@@ -202,24 +205,20 @@ class Election(models.Model):
     def __str__(self):
         return self.type
 
-
-
 class VoteCount(models.Model):
     name = models.CharField(max_length=50)
     position = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
 
+    def to_json(self):
+        return {
+            'name': self.name,
+            'position': self.position,
+            'count': self.count,
+        }
 
-# Create your models here.
-
-
-# class VoteCount(models.Model):
-#     name = models.CharField(max_length=50)
-#     position = models.CharField(max_length=50)
-#     count = models.CharField(max_length=50)
-
-
-
+    def __str__(self):
+        return self.name, self.position, self.count
 
 class Candidate(models.Model):
     first_name = models.CharField(max_length=50)
@@ -240,39 +239,33 @@ class NewVoteRecord(models.Model):
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default='')
     time_stamp = models.DateTimeField(auto_now=True)
 
-
-
 class Voter(models.Model):
-    # voter_number = models.IntegerField(max_length=12)
-    # voter_status = models.CharField(max_length=20)
-    # date_registered = models.DateField(max_length=8, default=datetime.date.today)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    address = models.CharField(max_length=100)
-    date_of_birth = models.DateField(max_length=8, default=datetime.date.today)
-    # might not even be included with api json... ^^
-    # election_type = models.CharField(max_length=50, default='')
-    # state = models.CharField(max_length=2)
-    # zip = models.IntegerField(max_length=5)
-    locality = models.CharField(max_length=20, default='')
-    # precinct = models.CharField(max_length=20, default='')
-    # precinct_id = models.IntegerField(max_length=10)
-    confirmation = models.CharField(max_length=6)
-    #voter_id = models.CharField(max_length=6)
+    voter_number = models.DecimalField(max_digits=12, decimal_places=0, null=True)
+    voter_status = models.CharField(max_length=20, null=True)
+    date_registered = models.DateField(max_length=8, default=datetime.date.today)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
+    street_address = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=2, null=True)
+    zip = models.DecimalField(max_digits=5, decimal_places=0)
+    locality = models.CharField(max_length=20, null=True)
+    precinct = models.CharField(max_length=100, null=True)
+    precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
+    confirmation = models.CharField(max_length=6, null=True)
 
     def to_json(self):
         return {
             'first_name': self.first_name,
             'last_name': self.last_name,
             'confirmation': self.confirmation,
-            #'voter_id': self.voter_id,
             'id': self.id,
         }
 
     def __str__(self):
         return self.first_name
 
-class PollPlaces(models.Model):
+class PollPlace(models.Model):
     precinct = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     poll_booths = models.IntegerField()

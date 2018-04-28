@@ -237,6 +237,7 @@ class Voter(models.Model):
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
     confirmation = models.CharField(max_length=6, null=True)
 
+
     def to_json(self):
         return {
             'first_name': self.first_name,

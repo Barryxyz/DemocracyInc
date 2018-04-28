@@ -8,6 +8,12 @@ class GeneralVoteForm(forms.ModelForm):
         fields = ['president','governor','lieutenant_governor','attorney_general','delegate','commonwealth_attorney','sheriff','treasurer']
     president = forms.ModelChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president")).values_list("full_name", flat=True))
 
+class PrimaryVoteForm(forms.ModelForm):
+    class Meta:
+        model = General_VoteRecord
+        fields = ['president','governor','lieutenant_governor','attorney_general','delegate','commonwealth_attorney','sheriff','treasurer']
+    president = forms.ModelChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president")).values_list("full_name", flat=True))
+
 
 class VoteForm(forms.ModelForm):
     class Meta:

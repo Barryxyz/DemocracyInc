@@ -8,7 +8,7 @@ from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Voter, VoteRecord, Election, VoteCount
-from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
+from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm
 from rest_framework import viewsets
 
 from .serializers import CountSerializer, RecordSerializer
@@ -292,3 +292,21 @@ class RecordViewSet(viewsets.ModelViewSet):
     """
     queryset = VoteRecord.objects.all()
     serializer_class = RecordSerializer
+
+def vote(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = GeneralVoteForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            voter = Voter.objects.get(confirmation=request.session['input_key'])
+            task = form.save(commit=False)
+            task.voter = voter
+            task.save()
+            # redirect to a new URL:
+            return redirect(reverse('home'))
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = VoteForm()
+    return render(request, 'vote.html', {'form': form})

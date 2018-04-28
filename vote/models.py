@@ -188,9 +188,12 @@ Treasurer = (
     ('Jason Rothfuss', 'Jason Rothfuss')
 )
 
+# Create your models here.
+
 class Election(models.Model):
-    election_id = models.CharField(max_length=50)
+    election_id = models.DateField(default=None)
     type = models.CharField(max_length=50)
+    status = models.CharField(max_length=50, default='inactive')
 
     def to_json(self):
         return {
@@ -198,61 +201,77 @@ class Election(models.Model):
             'type': self.type
         }
 
-
     def __str__(self):
         return self.type
 
-
-
-class VoteCount(models.Model):
+class Position(models.Model):
     name = models.CharField(max_length=50)
-    position = models.CharField(max_length=50)
-    count = models.CharField(max_length=50)
-
+    election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
 
 class Candidate(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    position = models.CharField(max_length=50)
-    election_type = models.ForeignKey('Election',on_delete=models.CASCADE, default='')
-
-class VoteRecordPrimary(models.Model):
-
-    president = models.CharField(max_length=50, choices=#magic)
-    vice_president = models.CharField(max_length=50, choices=#magic)
-
-class VoteRecordPresidential(models.Model):
-
-    president = models.CharField(max_length=50, choices=#magic)
-    vice_president = models.CharField(max_length=50, choices=#magic)
-
-
-
+    full_name = models.CharField(max_length=100)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, default=None)
 
 class Voter(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    address = models.CharField(max_length=100)
-    date_of_birth = models.DateField(max_length=8, default=datetime.date.today)
-    locality = models.CharField(max_length=20, default='')
-    confirmation = models.CharField(max_length=6)
+    voter_number = models.DecimalField(max_digits=12, decimal_places=0, null=True)
+    voter_status = models.CharField(max_length=20, null=True)
+    date_registered = models.DateField(max_length=8, default=datetime.date.today)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
+    street_address = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=2, null=True)
+    zip = models.DecimalField(max_digits=5, decimal_places=0)
+    locality = models.CharField(max_length=20, null=True)
+    precinct = models.CharField(max_length=100, null=True)
+    precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
+    confirmation = models.CharField(max_length=6, null=True)
+    checkin_time_stamp = models.DateTimeField(null=True)
 
     def to_json(self):
         return {
             'first_name': self.first_name,
             'last_name': self.last_name,
             'confirmation': self.confirmation,
-            #'voter_id': self.voter_id,
             'id': self.id,
         }
 
     def __str__(self):
         return self.first_name
 
-class PollPlaces(models.Model):
+class VoteCount(models.Model):
+    name = models.CharField(max_length=50)
+    position = models.CharField(max_length=50)
+    count = models.CharField(max_length=50)
+
+    def to_json(self):
+        return {
+            'name': self.name,
+            'position': self.position,
+            'count': self.count,
+        }
+
+    def __str__(self):
+        return self.name, self.position, self.count
+
+class PollPlace(models.Model):
     precinct = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     poll_booths = models.IntegerField()
+
+class General_VoteRecord(models.Model):
+    president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president')
+    governor = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='governor')
+    lieutenant_governor = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='lieutenant_governor')
+    attorney_general = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='attorney_general')
+    delegate = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='delegate')
+    commonwealth_attorney = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='commonwealth_attorney')
+    sheriff = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='sheriff')
+    treasurer = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='treasurer')
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
+    time_stamp = models.DateTimeField(auto_now=True)
 
 class VoteRecord(models.Model):
     president = models.CharField(max_length=50, choices=President)
@@ -263,5 +282,5 @@ class VoteRecord(models.Model):
     commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
     sheriff = models.CharField(max_length=50, choices=Sheriff)
     treasurer = models.CharField(max_length=50, choices=Treasurer)
-    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default='')
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)

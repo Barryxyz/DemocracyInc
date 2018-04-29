@@ -97,19 +97,33 @@ def checkin(request):
         if form.is_valid():
 
             # process the data in form.cleaned_data as required
-            registered_voter = Voter.objects.get(
+            registered_voter = Voter.objects.filter(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 street_address=form.cleaned_data['street_address'],
                 city=form.cleaned_data['city'],
                 state=form.cleaned_data['state'],
                 zip=form.cleaned_data['zip']
-            )
+            ).exists()
 
             if registered_voter:
 
+                voter = Voter.objects.get(
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    street_address=form.cleaned_data['street_address'],
+                    city=form.cleaned_data['city'],
+                    state=form.cleaned_data['state'],
+                    zip=form.cleaned_data['zip']
+                )
+
                 v_id = registered_voter.id
                 exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                inactive = registered_voter.voter_status
+
+                if inactive == "inactive":
+                    return render(request, 'inactive.html', {})
 
                 if exists:
                     return redirect(reverse('alreadyvoted'))

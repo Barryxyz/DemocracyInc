@@ -112,7 +112,7 @@ def checkin(request):
                 exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
                 if exists:
-                    return redirect(reverse('already_voted'))
+                    return redirect(reverse('alreadyvoted'))
 
                 else:
                     key = generator()
@@ -198,7 +198,7 @@ def vote_id_check(request):
                 exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
                 if exists:
-                    return redirect(reverse('already_voted'))
+                    return redirect(reverse('alreadyvoted'))
                 else:
 
                     request.session['input_key'] = input_key

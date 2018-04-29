@@ -50,6 +50,9 @@ def logout_page(request):
 def reset(request):
     return render(request, 'registration/password_reset_form.html', {})
 
+def already_voted(request):
+    return render(request, 'alreadyvoted.html', {})
+
 def view_elections(request):
     query_results = Election.objects.all()
     return render(request, 'view_elections.html', {'query_results': query_results})
@@ -131,7 +134,7 @@ def vote(request):
             exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
             if exists:
-                print("ALREADY VOTED")
+                return redirect(reverse('already_voted'))
             else:
 
                 task = form.save(commit=False)

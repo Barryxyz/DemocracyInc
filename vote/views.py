@@ -123,7 +123,7 @@ def checkin(request):
                 inactive = voter.voter_status
 
                 if inactive == "inactive":
-                    return render(request, 'inactive.html', {})
+                    return redirect(reverse('inactive'))
 
                 if exists:
                     return redirect(reverse('alreadyvoted'))
@@ -143,23 +143,8 @@ def checkin(request):
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
 
-# def vote(request):
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = VoteForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             # process the data in form.cleaned_data as required
-#             voter = Voter.objects.get(confirmation=request.session['input_key'])
-#             task = form.save(commit=False)
-#             task.voter = voter
-#             task.save()
-#             # redirect to a new URL:
-#             return redirect(reversto_field_name="full_name")e('home'))
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = VoteForm()
-#     return render(request, 'vote.html', {'form': form})
+def inactive(request):
+    return render(request, 'inactive.html', {})
 
 def vote(request):
     active_election = Election.objects.get(status="active").type
@@ -239,7 +224,6 @@ def generator():
     for i in range(6):
         key += (''.join(''.join(random.choice(seq))))
     return key
-
 
 @login_required
 def vote_count(request):

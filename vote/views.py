@@ -7,7 +7,7 @@ from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Voter, VoteRecord, Election, VoteCount
+from .models import Voter, VoteRecord, Election, VoteCount, Candidate
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
 from rest_framework import viewsets
 
@@ -176,23 +176,28 @@ def vote(request):
             # process the data in form.cleaned_data as required
             voter = Voter.objects.get(confirmation=request.session['input_key'])
 
-            # v_id = voter.id
-            # exists = VoteRecord.objects.filter(voter_id=v_id).exists()
-            #
-            # if exists:
-            #     return redirect(reverse('already_voted'))
-            # else:
-            #     task = form.save(commit=False)
-            #     task.voter = voter
-            #     task.save()
-            #     # redirect to a new URL:
-            #     return redirect(reverse('home'))
+            v_id = voter.id
+            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+            if exists:
+                return redirect(reverse('already_voted'))
+            else:
+                task = form.save(commit=False)
+                if active_election == 'general':
+                    task.president = form.cleaned_data['president'].full_name
+                    task.vice_president = form.cleaned_data['vice_president'].full_name
+                elif active_election == 'primary':
+                    task.president_nominee = form.cleaned_data['president_nominee'].full_name
+                task.voter = voter
+                task.save()
+                # redirect to a new URL:
+                return redirect(reverse('home'))
     # if a GET (or any other method) we'll create a blank form
     else:
         if (active_election == 'general'):
-            form = GeneralVoteForm(request.POST)
+            form = GeneralVoteForm()
         elif (active_election == 'primary'):
-            form = PrimaryVoteForm(request.POST)
+            form = PrimaryVoteForm()
 
     return render(request, 'vote.html', {'form': form})
 

@@ -117,10 +117,10 @@ def checkin(request):
                     zip=form.cleaned_data['zip']
                 )
 
-                v_id = registered_voter.id
+                v_id = voter.id
                 exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
-                inactive = registered_voter.voter_status
+                inactive = voter.voter_status
 
                 if inactive == "inactive":
                     return render(request, 'inactive.html', {})

@@ -1,11 +1,11 @@
 from django import forms
-from .models import Voter, VoteRecord, Candidate, Position, Election, General_VoteRecord
+from .models import Voter, VoteRecord, Candidate, Position, Election, General_VoteRecord, Primary_VoteRecord
 
 
 class GeneralVoteForm(forms.ModelForm):
     class Meta:
         model = General_VoteRecord
-        fields = ['president','primary']
+        fields = ['president','vice_president']
     president = forms.ModelChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president")).values_list("full_name", flat=True))
     vice_president = forms.ModelChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="vice_president")).values_list("full_name", flat=True))
     #need to change fields accordingly in the General_VoteRecord
@@ -13,7 +13,7 @@ class GeneralVoteForm(forms.ModelForm):
 
 class PrimaryVoteForm(forms.ModelForm):
     class Meta:
-        model = General_VoteRecord #change/create new Primary_voterecord?
+        model = Primary_VoteRecord #change/create new Primary_voterecord?
         fields = ['president_nominee']
     president_nominees = forms.ModelChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president_nominee")).values_list("full_name", flat=True))
 

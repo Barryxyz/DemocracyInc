@@ -7,8 +7,8 @@ from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Voter, VoteRecord, Election, VoteCount
-from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
+from .models import Voter, VoteRecord, Election, VoteCount, Candidate
+from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
 from rest_framework import viewsets
 
 from .serializers import CountSerializer, RecordSerializer
@@ -49,6 +49,9 @@ def logout_page(request):
 
 def reset(request):
     return render(request, 'registration/password_reset_form.html', {})
+
+def already_voted(request):
+    return render(request, 'alreadyvoted.html', {})
 
 def view_elections(request):
     query_results = Election.objects.all()
@@ -94,22 +97,44 @@ def checkin(request):
         if form.is_valid():
 
             # process the data in form.cleaned_data as required
-            registered_voter = Voter.objects.get(
+            registered_voter = Voter.objects.filter(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 street_address=form.cleaned_data['street_address'],
                 city=form.cleaned_data['city'],
                 state=form.cleaned_data['state'],
                 zip=form.cleaned_data['zip']
-            )
+            ).exists()
 
             if registered_voter:
-                key = generator()
-                full_name = registered_voter.first_name + " " + registered_voter.last_name
-                locality = registered_voter.locality
-                registered_voter.confirmation = key
-                registered_voter.save()
-                return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
+
+                voter = Voter.objects.get(
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    street_address=form.cleaned_data['street_address'],
+                    city=form.cleaned_data['city'],
+                    state=form.cleaned_data['state'],
+                    zip=form.cleaned_data['zip']
+                )
+
+                v_id = voter.id
+                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                inactive = voter.voter_status
+
+                if inactive == "inactive":
+                    return redirect(reverse('inactive'))
+
+                if exists:
+                    return redirect(reverse('alreadyvoted'))
+
+                else:
+                    key = generator()
+                    full_name = registered_voter.first_name + " " + registered_voter.last_name
+                    locality = registered_voter.locality
+                    registered_voter.confirmation = key
+                    registered_voter.save()
+                    return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
                 return render(request, 'notregistered.html', {})
@@ -118,22 +143,47 @@ def checkin(request):
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
 
+def inactive(request):
+    return render(request, 'inactive.html', {})
+
 def vote(request):
-    if request.method == 'POST':
+    active_election = Election.objects.get(status="active").type
+    print(active_election)
+    if request.method == 'POST' :
         # create a form instance and populate it with data from the request:
-        form = VoteForm(request.POST)
+        if(active_election == 'general'):
+            form = GeneralVoteForm(request.POST)
+        elif(active_election == 'primary'):
+            form = PrimaryVoteForm(request.POST)
+
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
             voter = Voter.objects.get(confirmation=request.session['input_key'])
-            task = form.save(commit=False)
-            task.voter = voter
-            task.save()
-            # redirect to a new URL:
-            return redirect(reverse('home'))
+
+            v_id = voter.id
+            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+            if exists:
+                return redirect(reverse('already_voted'))
+            else:
+                task = form.save(commit=False)
+                if active_election == 'general':
+                    task.president = form.cleaned_data['president'].full_name
+                    task.vice_president = form.cleaned_data['vice_president'].full_name
+                elif active_election == 'primary':
+                    task.president_nominee = form.cleaned_data['president_nominee'].full_name
+                task.voter = voter
+                task.save()
+                # redirect to a new URL:
+                return redirect(reverse('home'))
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = VoteForm()
+        if (active_election == 'general'):
+            form = GeneralVoteForm()
+        elif (active_election == 'primary'):
+            form = PrimaryVoteForm()
+
     return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
@@ -144,9 +194,19 @@ def vote_id_check(request):
         if form.is_valid():
             input_key = form.cleaned_data['vote_id']
             valid_key = Voter.objects.filter(confirmation=input_key).exists()
+
             if valid_key:
-                request.session['input_key'] = input_key
-                return redirect(reverse('vote'))
+
+                voter = Voter.objects.get(confirmation=input_key)
+                v_id = voter.id
+                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                if exists:
+                    return redirect(reverse('alreadyvoted'))
+                else:
+
+                    request.session['input_key'] = input_key
+                    return redirect(reverse('vote'))
             else:
                 return render(request, 'vote_id_check.html', {'form': form})  # need an error page?
         else:

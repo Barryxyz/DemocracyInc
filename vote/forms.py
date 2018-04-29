@@ -1,11 +1,29 @@
 from django import forms
-from .models import Voter, VoteRecord
+from .models import Voter, VoteRecord, Candidate, Position, General_VoteRecord, Primary_VoteRecord
+
+class CandidateChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+         return obj.full_name
+
+class GeneralVoteForm(forms.ModelForm):
+    class Meta:
+        model = General_VoteRecord
+        fields = ['president']
+    president = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president")))
+    vice_president = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="vice_president")))
+
+class PrimaryVoteForm(forms.ModelForm):
+    class Meta:
+        model = Primary_VoteRecord
+        fields = ['president_nominee']
+    president_nominees = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president_nominee")))
 
 
 class VoteForm(forms.ModelForm):
     class Meta:
         model = VoteRecord
-        fields = ['president','governor','lieutenant_Governor','attorney_General','delegate','commonwealth_Attorney','sheriff','treasurer']
+        fields = ['president', 'governor', 'lieutenant_Governor', 'attorney_General', 'delegate',
+                  'commonwealth_Attorney', 'sheriff', 'treasurer']
 
 class RegisteredForm(forms.ModelForm):
     class Meta:

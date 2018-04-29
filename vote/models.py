@@ -188,12 +188,12 @@ Treasurer = (
     ('Jason Rothfuss', 'Jason Rothfuss')
 )
 
-
 # Create your models here.
 
 class Election(models.Model):
-    election_id = models.CharField(max_length=50)
+    election_id = models.DateField(default=None)
     type = models.CharField(max_length=50)
+    status = models.CharField(max_length=50, default='inactive')
 
     def to_json(self):
         return {
@@ -201,26 +201,18 @@ class Election(models.Model):
             'type': self.type
         }
 
-
     def __str__(self):
         return self.type
-      
-class VoteCount(models.Model):
+
+class Position(models.Model):
     name = models.CharField(max_length=50)
-    position = models.CharField(max_length=50)
-    count = models.CharField(max_length=50)
+    election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
 
-    def to_json(self):
-        return {
-            'name': self.name,
-            'position': self.position,
-            'count': self.count,
-        }
-
-    def __str__(self):
-        return self.name, self.position, self.count
-
-
+class Candidate(models.Model):
+    # first_name = models.CharField(max_length=50)
+    # last_name = models.CharField(max_length=50)
+    full_name = models.CharField(max_length=100)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, default=None)
 
 class Voter(models.Model):
     voter_number = models.DecimalField(max_digits=12, decimal_places=0, null=True)
@@ -236,6 +228,8 @@ class Voter(models.Model):
     precinct = models.CharField(max_length=100, null=True)
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
     confirmation = models.CharField(max_length=6, null=True)
+    checkin_time_stamp = models.DateTimeField(null=True)
+
 
     def to_json(self):
         return {
@@ -248,10 +242,39 @@ class Voter(models.Model):
     def __str__(self):
         return self.first_name
 
+class VoteCount(models.Model):
+    name = models.CharField(max_length=50)
+    position = models.CharField(max_length=50)
+    count = models.CharField(max_length=50)
+
+    def to_json(self):
+        return {
+            'name': self.name,
+            'position': self.position,
+            'count': self.count,
+        }
+
+    def __str__(self):
+        return self.name, self.position, self.count
+
 class PollPlace(models.Model):
     precinct = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     poll_booths = models.IntegerField()
+
+class General_VoteRecord(models.Model):
+    # president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president')
+    # vice_president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='vice_president')
+    president = models.CharField(max_length=100)
+    vice_president = models.CharField(max_length=100)
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
+    time_stamp = models.DateTimeField(auto_now=True)
+
+class Primary_VoteRecord(models.Model):
+    # president_nominee = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president_nominee')
+    president_nominee = models.CharField(max_length=100)
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
+    time_stamp = models.DateTimeField(auto_now=True)
 
 class VoteRecord(models.Model):
     president = models.CharField(max_length=50, choices=President)
@@ -262,7 +285,7 @@ class VoteRecord(models.Model):
     commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
     sheriff = models.CharField(max_length=50, choices=Sheriff)
     treasurer = models.CharField(max_length=50, choices=Treasurer)
-    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default='')
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)
 
 
@@ -283,3 +306,4 @@ class VoteRecord(models.Model):
     def __str__(self):
         return self.president, self.governor, self.lieutenant_Governor, self.attorney_General, self.delegate, \
                self.commonwealth_Attorney, self.sheriff, self.treasurer, self.voter, self.time_stamp
+

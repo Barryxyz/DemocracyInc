@@ -17,12 +17,17 @@ from VotingApp import settings
 from django.contrib import admin
 from django.conf.urls import url, include
 
-from rest_framework import routers
+from rest_framework import routers, serializers, viewsets
+from rest_framework_swagger.views import get_swagger_view
+from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from vote import views
 
 router = routers.DefaultRouter()
+router.register(r'elections', views.electionViewSet)
 router.register(r'count_api', views.CountViewSet)
 router.register(r'records_api', views.RecordViewSet)
+
+# schema_view = get_swagger_view(title='API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
 
 urlpatterns = [
@@ -40,8 +45,12 @@ urlpatterns = [
     # url(r'^checkin_success/', views.booth_assignment, name='success'),
 	url(r'^view_voters/', views.view_voters, name='view_voters'),
     url(r'^view_election/', views.view_elections, name='view_elections'),
-    url(r'^vote_count/', views.vote_count, name='vote_count'),
-    url(r'^results/', views.results, name='results')
+    # url(r'^vote_count/', views.vote_count, name='vote_count'),
+    # url(r'^results/', views.results, name='results'),
+
+    # url(r'^view_election/', views.view_elections, name='view_elections'),
+    url(r'^vote_count/', views.schema_view, name='vote_count'),
+    url(r'^results/', views.schema_view, name='results')
 ]
 
 

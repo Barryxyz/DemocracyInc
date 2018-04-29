@@ -10,13 +10,18 @@ from django.contrib.auth.models import User
 from .models import Voter, VoteRecord, Election, VoteCount
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
 from rest_framework import viewsets
+from rest_framework_swagger.views import get_swagger_view
+from rest_framework.schemas import get_schema_view
+from rest_framework.renderers import CoreJSONRenderer
 
-from .serializers import CountSerializer, RecordSerializer
+from .serializers import CountSerializer, RecordSerializer, electionSerializer
 from django.shortcuts import render, redirect
 from django.urls import reverse
-import random, json, requests
+import random, requests
 
 # Create your views here.
+
+schema_view = get_schema_view(title='Election API', renderer_classes=[CoreJSONRenderer])
 
 def home(request):
     return render(request, 'base.html', {})
@@ -292,3 +297,11 @@ class RecordViewSet(viewsets.ModelViewSet):
     """
     queryset = VoteRecord.objects.all()
     serializer_class = RecordSerializer
+
+class electionViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Election.objects.all()
+    serializer_class = electionSerializer
+

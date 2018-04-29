@@ -1,5 +1,12 @@
-from .models import VoteCount, VoteRecord
+from .models import VoteCount, VoteRecord, Election
 from rest_framework import serializers
+
+
+class electionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Election
+        # fields = '_all_' , not working for some reason...
+        fields = ('id', 'type')
 
 
 class CountSerializer(serializers.HyperlinkedModelSerializer):

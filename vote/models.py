@@ -201,7 +201,6 @@ class Election(models.Model):
             'type': self.type
         }
 
-
     def __str__(self):
         return self.type
       

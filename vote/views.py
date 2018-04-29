@@ -107,12 +107,20 @@ def checkin(request):
             )
 
             if registered_voter:
-                key = generator()
-                full_name = registered_voter.first_name + " " + registered_voter.last_name
-                locality = registered_voter.locality
-                registered_voter.confirmation = key
-                registered_voter.save()
-                return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
+
+                v_id = registered_voter.id
+                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                if exists:
+                    return redirect(reverse('already_voted'))
+
+                else:
+                    key = generator()
+                    full_name = registered_voter.first_name + " " + registered_voter.last_name
+                    locality = registered_voter.locality
+                    registered_voter.confirmation = key
+                    registered_voter.save()
+                    return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
                 return render(request, 'notregistered.html', {})
@@ -156,14 +164,14 @@ def vote_id_check(request):
             input_key = form.cleaned_data['vote_id']
             valid_key = Voter.objects.filter(confirmation=input_key).exists()
 
-            voter = Voter.objects.get(confirmation=input_key)
-            v_id = voter.id
-            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
-
             if valid_key:
 
+                voter = Voter.objects.get(confirmation=input_key)
+                v_id = voter.id
+                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
                 if exists:
-                    print("ALREADY VOTED")
+                    return redirect(reverse('already_voted'))
                 else:
 
                     request.session['input_key'] = input_key
@@ -186,9 +194,6 @@ def generator():
         key += (''.join(''.join(random.choice(seq))))
     return key
 
-#def vote_exists(id):
-    #voters_id = Voter.objects.get(id)
-    #voter_exists = VoteRecord.objects.filter(id="voter").exists()
 
 @login_required
 def vote_count(request):

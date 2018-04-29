@@ -12,7 +12,7 @@ class GeneralVoteForm(forms.ModelForm):
     president = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president")))
     vice_president = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="vice_president")))
     house_rep = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="house_rep")))
-    senator_rep = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="senator")))
+    senator = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="senator")))
 
 class PrimaryVoteForm(forms.ModelForm):
     class Meta:

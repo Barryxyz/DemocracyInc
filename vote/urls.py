@@ -41,7 +41,8 @@ urlpatterns = [
 	url(r'^view_voters/', views.view_voters, name='view_voters'),
     url(r'^view_election/', views.view_elections, name='view_elections'),
     url(r'^vote_count/', views.vote_count, name='vote_count'),
-    url(r'^results/', views.results, name='results')
+    url(r'^results/', views.results, name='results'),
+    url(r'^alreadyvoted/', views.already_voted, name='already_voted')
 ]
 
 

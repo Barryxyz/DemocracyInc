@@ -50,6 +50,9 @@ def logout_page(request):
 def reset(request):
     return render(request, 'registration/password_reset_form.html', {})
 
+def already_voted(request):
+    return render(request, 'alreadyvoted.html', {})
+
 def view_elections(request):
     query_results = Election.objects.all()
     return render(request, 'view_elections.html', {'query_results': query_results})
@@ -126,11 +129,19 @@ def vote(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             voter = Voter.objects.get(confirmation=request.session['input_key'])
-            task = form.save(commit=False)
-            task.voter = voter
-            task.save()
-            # redirect to a new URL:
-            return redirect(reverse('home'))
+
+            v_id = voter.id
+            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+            if exists:
+                return redirect(reverse('already_voted'))
+            else:
+
+                task = form.save(commit=False)
+                task.voter = voter
+                task.save()
+                # redirect to a new URL:
+                return redirect(reverse('home'))
     # if a GET (or any other method) we'll create a blank form
     else:
         form = VoteForm()
@@ -144,9 +155,19 @@ def vote_id_check(request):
         if form.is_valid():
             input_key = form.cleaned_data['vote_id']
             valid_key = Voter.objects.filter(confirmation=input_key).exists()
+
+            voter = Voter.objects.get(confirmation=input_key)
+            v_id = voter.id
+            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
             if valid_key:
-                request.session['input_key'] = input_key
-                return redirect(reverse('vote'))
+
+                if exists:
+                    print("ALREADY VOTED")
+                else:
+
+                    request.session['input_key'] = input_key
+                    return redirect(reverse('vote'))
             else:
                 return render(request, 'vote_id_check.html', {'form': form})  # need an error page?
         else:
@@ -164,6 +185,10 @@ def generator():
     for i in range(6):
         key += (''.join(''.join(random.choice(seq))))
     return key
+
+#def vote_exists(id):
+    #voters_id = Voter.objects.get(id)
+    #voter_exists = VoteRecord.objects.filter(id="voter").exists()
 
 @login_required
 def vote_count(request):

@@ -168,10 +168,9 @@ input:required:invalid, input:focus:invalid {
 
 #inner_content ul {
 	position: absolute;
-	top: 275px;
+	top: 350px;
 	font: 15px 'Segoe UI',Arial,sans-serif;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-	left: 85px;
 }
 
 #inner_content input {

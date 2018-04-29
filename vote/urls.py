@@ -29,20 +29,18 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^load_voters/', views.load_voters, name='load_voters'),
-    # url('^home/', views.home, name='home'),
     url(r'^login/', views.login, name='login'),
 	url(r'^logout_page/', views.logout_page, name='logout_page'),
 	url(r'^password_reset/$',views.reset, name='reset_pass'),
     url(r'^vote/', views.vote, name='vote'),
     url(r'^vote_id_check/', views.vote_id_check, name='vote_id_check'),
     url(r'^checkin/', views.checkin, name='checkin'),
-    # url(r'^notregistered/', views.notregistered, name='notregistered'),
-    # url(r'^checkin_success/', views.booth_assignment, name='success'),
 	url(r'^view_voters/', views.view_voters, name='view_voters'),
     url(r'^view_election/', views.view_elections, name='view_elections'),
     url(r'^vote_count/', views.vote_count, name='vote_count'),
     url(r'^results/', views.results, name='results'),
-    url(r'^alreadyvoted/', views.already_voted, name='already_voted')
+    url(r'^alreadyvoted/', views.already_voted, name='already_voted'),
+    url(r'^inactive/', views.inactive, name='inactive')
 ]
 
 

@@ -171,6 +171,8 @@ def vote(request):
                 if active_election == 'general':
                     task.president = form.cleaned_data['president'].full_name
                     task.vice_president = form.cleaned_data['vice_president'].full_name
+                    task.house_rep = form.cleaned_data['house_rep'].full_name
+                    task.senator = form.cleaned_data['senator'].full_name
                 elif active_election == 'primary':
                     task.president_nominee = form.cleaned_data['president_nominee'].full_name
                 task.voter = voter

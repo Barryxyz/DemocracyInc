@@ -263,13 +263,13 @@ class PollPlace(models.Model):
 
 class General_VoteRecord(models.Model):
     president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president')
-    governor = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='governor')
-    lieutenant_governor = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='lieutenant_governor')
-    attorney_general = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='attorney_general')
-    delegate = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='delegate')
-    commonwealth_attorney = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='commonwealth_attorney')
-    sheriff = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='sheriff')
-    treasurer = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='treasurer')
+    vice_president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='vice_president')
+    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
+    time_stamp = models.DateTimeField(auto_now=True)
+
+
+class Primary_VoteRecord(models.Model):
+    president_nominee = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president_nominee')
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)
 

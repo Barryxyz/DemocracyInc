@@ -267,6 +267,8 @@ class General_VoteRecord(models.Model):
     # vice_president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='vice_president')
     president = models.CharField(max_length=100)
     vice_president = models.CharField(max_length=100)
+    house_rep = models.CharField(max_length=100)
+    senator = models.CharField(max_length=100)
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)
 

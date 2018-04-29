@@ -134,7 +134,7 @@ def vote(request):
             exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
             if exists:
-                print("ALREADY VOTED")
+                return redirect(reverse('already_voted'))
             else:
 
                 task = form.save(commit=False)

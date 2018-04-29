@@ -8,7 +8,7 @@ from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Voter, VoteRecord, Election, VoteCount
-from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm
+from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
 from rest_framework import viewsets
 
 from .serializers import CountSerializer, RecordSerializer
@@ -129,6 +129,29 @@ def vote(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             voter = Voter.objects.get(confirmation=request.session['input_key'])
+            task = form.save(commit=False)
+            task.voter = voter
+            task.save()
+            # redirect to a new URL:
+            return redirect(reverse('home'))
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = VoteForm()
+    return render(request, 'vote.html', {'form': form})
+
+def vote(request):
+    active_election = Election.objects.filter(status="active").values('type')
+    if request.method == 'POST' :
+        # create a form instance and populate it with data from the request:
+        if(active_election == 'general'):
+            form = GeneralVoteForm(request.POST)
+        elif(active_election == 'primary'):
+            form = PrimaryVoteForm(request.POST)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            voter = Voter.objects.get(confirmation=request.session['input_key'])
 
             v_id = voter.id
             exists = VoteRecord.objects.filter(voter_id=v_id).exists()
@@ -136,7 +159,6 @@ def vote(request):
             if exists:
                 return redirect(reverse('already_voted'))
             else:
-
                 task = form.save(commit=False)
                 task.voter = voter
                 task.save()
@@ -144,7 +166,10 @@ def vote(request):
                 return redirect(reverse('home'))
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = VoteForm()
+        if (active_election == 'general'):
+            form = GeneralVoteForm(request.POST)
+        elif (active_election == 'primary'):
+            form = PrimaryVoteForm(request.POST)
     return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
@@ -317,3 +342,21 @@ class RecordViewSet(viewsets.ModelViewSet):
     """
     queryset = VoteRecord.objects.all()
     serializer_class = RecordSerializer
+
+def vote(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = GeneralVoteForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            voter = Voter.objects.get(confirmation=request.session['input_key'])
+            task = form.save(commit=False)
+            task.voter = voter
+            task.save()
+            # redirect to a new URL:
+            return redirect(reverse('home'))
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = VoteForm()
+    return render(request, 'vote.html', {'form': form})

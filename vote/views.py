@@ -121,26 +121,27 @@ def checkin(request):
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
 
-def vote(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = VoteForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            voter = Voter.objects.get(confirmation=request.session['input_key'])
-            task = form.save(commit=False)
-            task.voter = voter
-            task.save()
-            # redirect to a new URL:
-            return redirect(reverse('home'))
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = VoteForm()
-    return render(request, 'vote.html', {'form': form})
+# def vote(request):
+#     if request.method == 'POST':
+#         # create a form instance and populate it with data from the request:
+#         form = VoteForm(request.POST)
+#         # check whether it's valid:
+#         if form.is_valid():
+#             # process the data in form.cleaned_data as required
+#             voter = Voter.objects.get(confirmation=request.session['input_key'])
+#             task = form.save(commit=False)
+#             task.voter = voter
+#             task.save()
+#             # redirect to a new URL:
+#             return redirect(reversto_field_name="full_name")e('home'))
+#     # if a GET (or any other method) we'll create a blank form
+#     else:
+#         form = VoteForm()
+#     return render(request, 'vote.html', {'form': form})
 
 def vote(request):
-    active_election = Election.objects.filter(status="active").values('type')
+    active_election = Election.objects.get(status="active").type
+    print(active_election)
     if request.method == 'POST' :
         # create a form instance and populate it with data from the request:
         if(active_election == 'general'):
@@ -153,23 +154,24 @@ def vote(request):
             # process the data in form.cleaned_data as required
             voter = Voter.objects.get(confirmation=request.session['input_key'])
 
-            v_id = voter.id
-            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
-
-            if exists:
-                return redirect(reverse('already_voted'))
-            else:
-                task = form.save(commit=False)
-                task.voter = voter
-                task.save()
-                # redirect to a new URL:
-                return redirect(reverse('home'))
+            # v_id = voter.id
+            # exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+            #
+            # if exists:
+            #     return redirect(reverse('already_voted'))
+            # else:
+            #     task = form.save(commit=False)
+            #     task.voter = voter
+            #     task.save()
+            #     # redirect to a new URL:
+            #     return redirect(reverse('home'))
     # if a GET (or any other method) we'll create a blank form
     else:
         if (active_election == 'general'):
             form = GeneralVoteForm(request.POST)
         elif (active_election == 'primary'):
             form = PrimaryVoteForm(request.POST)
+
     return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
@@ -342,21 +344,3 @@ class RecordViewSet(viewsets.ModelViewSet):
     """
     queryset = VoteRecord.objects.all()
     serializer_class = RecordSerializer
-
-def vote(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = GeneralVoteForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            voter = Voter.objects.get(confirmation=request.session['input_key'])
-            task = form.save(commit=False)
-            task.voter = voter
-            task.save()
-            # redirect to a new URL:
-            return redirect(reverse('home'))
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = VoteForm()
-    return render(request, 'vote.html', {'form': form})

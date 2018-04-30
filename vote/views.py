@@ -249,10 +249,10 @@ def generator():
         key += (''.join(''.join(random.choice(seq))))
     return key
 
-@login_required
-def vote_count(request):
+def count_votes():
     # primary_positions = [a for a in dir(Primary_VoteRecord) if (not a.startswith('__') and  a is not 'voter' and a is not 'time_stamp')]
     # general_positions = [a for a in dir(General_VoteRecord) if (not a.startswith('__') and  a is not 'voter' and a is not 'time_stamp')]
+    VoteCount.objects.all().delete()
     primary_positions = ['president_nominee']
     general_positions = ['president', 'vice_president', 'house_rep', 'senator']
     primary_records = Primary_VoteRecord.objects.all()
@@ -282,12 +282,21 @@ def vote_count(request):
     results = []
     for i in range(0, len(primary_positions)):
         for name in primary_votes[i].keys():
-            results.append(VoteCount(name=name, position=primary_positions[i], count=primary_votes[i][name], election = 'primary'))
+            results.append(
+                VoteCount(name=name, position=primary_positions[i], count=primary_votes[i][name], election='primary'))
 
     for i in range(0, len(general_positions)):
         for name in general_votes[i].keys():
-            results.append(VoteCount(name=name, position=general_positions[i], count=general_votes[i][name], election = 'general'))
+            results.append(
+                VoteCount(name=name, position=general_positions[i], count=general_votes[i][name], election='general'))
 
+    for r in results:
+        r.save()
+
+@login_required
+def vote_count(request):
+    count_votes()
+    results = VoteCount.objects.all()
     return render(request, 'vote_count.html', {'query_results': results})
 
 @login_required

@@ -34,9 +34,14 @@
             <a class="nav-link" href="{% url 'vote_count' %}">Vote Count</a>
           </li>
           <li class="nav-item">
-               <li class="nav-item">
-            <a class="nav-link" href="{% url 'results' %}">Election Results</a>
-          </li>
+                <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Election Results
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'general_results' %}">General Election</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'primary_results' %}">Primary Election</a>
             <li class="nav-item">
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
           </li>

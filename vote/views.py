@@ -162,7 +162,6 @@ def checkin(request):
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
 
-
 def inactive(request):
     return render(request, 'inactive.html', {})
 
@@ -372,7 +371,6 @@ def primary_results(request):
     }
     return render(request, 'primary_results.html', context)
 
-
 class primaryViewSet(viewsets.ModelViewSet):
     """
         retrieve:
@@ -395,7 +393,6 @@ class primaryViewSet(viewsets.ModelViewSet):
     """
     queryset = Primary_VoteRecord.objects.all()
     serializer_class = primarySerializer
-
 
 class generalViewSet(viewsets.ModelViewSet):
     """

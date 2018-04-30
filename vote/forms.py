@@ -19,7 +19,7 @@ class PrimaryVoteForm(forms.ModelForm):
     class Meta:
         model = Primary_VoteRecord
         fields = ['president_nominee']
-    president_nominees = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president_nominee")))
+    president_nominee = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president_nominee")))
 
 #
 # class VoteForm(forms.ModelForm):

@@ -31,7 +31,7 @@ class PrimaryVoteForm(forms.ModelForm):
 class RegisteredForm(forms.ModelForm):
     class Meta:
         model = Voter
-        fields = ["first_name","last_name","street_address","city","state","zip","precinct_id"]
+        fields = ["first_name","last_name","street_address","city","state","zip","locality"]
 
 class VoteIdCheckForm(forms.Form):
     vote_id = forms.CharField(max_length=20, label='Enter confirmation number')

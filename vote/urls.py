@@ -23,7 +23,7 @@ from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from vote import views
 
 router = routers.DefaultRouter()
-router.register(r'^', views.electionViewSet)
+router.register(r'^/', views.electionViewSet)
 router.register(r'^/2017-11', views.generalViewSet)
 router.register(r'^/2017-06', views.primaryViewSet)
 

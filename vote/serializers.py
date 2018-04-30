@@ -20,6 +20,7 @@ class primarySerializer(serializers.HyperlinkedModelSerializer):
 class generalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = General_VoteRecord
+        print("serializing general election")
         # fields = '__all__'
         fields = ('president', 'vice_president', 'house_rep', 'senator',)
 

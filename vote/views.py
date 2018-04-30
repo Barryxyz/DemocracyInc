@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
@@ -9,14 +8,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Voter, VoteRecord, Election, VoteCount, Candidate, General_VoteRecord, Primary_VoteRecord
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
-from rest_framework import viewsets
 
-from .serializers import CountSerializer, RecordSerializer
+from rest_framework import viewsets
+from rest_framework.schemas import get_schema_view
+from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+
+from .serializers import generalSerializer, primarySerializer, electionSerializer
 from django.shortcuts import render, redirect
 from django.urls import reverse
-import random, json, requests
+import random, requests
 
 # Create your views here.
+
+# for swagger UI
+schema_view = get_schema_view(title='Election API', urlconf='vote.urls', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
 def home(request):
     return render(request, 'base.html', {})
@@ -59,8 +64,8 @@ def view_elections(request):
 
 @login_required
 def view_voters(request):
-	query_results = Voter.objects.all()
-	return render(request, 'view_voters.html', {'query_results': query_results})
+    query_results = Voter.objects.all()
+    return render(request, 'view_voters.html', {'query_results': query_results})
 
 def load_voters(request):
     r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
@@ -69,7 +74,6 @@ def load_voters(request):
     if (status == "200"):
         voters = response["voters"]
         for voter in voters:
-            # print(voter)
             voter_exists = Voter.objects.filter(voter_number=voter["voter_number"]).exists()
             if not voter_exists:
                 Voter(voter_number = voter["voter_number"],
@@ -155,7 +159,6 @@ def inactive(request):
 
 def vote(request):
     active_election = Election.objects.get(status="active").type
-    print(active_election)
     if request.method == 'POST' :
         # create a form instance and populate it with data from the request:
         if(active_election == 'general'):
@@ -188,7 +191,9 @@ def vote(request):
                 task.voter = voter
                 task.save()
                 # redirect to a new URL:
-                return redirect(reverse('home'))
+                # return redirect(reverse('home'))
+                return render(request, 'ballot_print.html', {'form': form, 'president': task.president, 'vice_president': task.vice_president,'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
+
     # if a GET (or any other method) we'll create a blank form
     else:
         if (active_election == 'general'):
@@ -303,7 +308,6 @@ def results(request):
 #        count = VoteCount.objects.filter(president=candidate).count()
 #        president_data.append(candidate,count)
 
-
 ################################################################################		
     prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
     prez_count2 = VoteRecord.objects.filter(president='Hillary Clinton').count()
@@ -331,17 +335,79 @@ def results(request):
         "gov_chart": gov_chart,
     }
     return render(request, 'results.html', context)
+####################################################################
 
-class CountViewSet(viewsets.ModelViewSet):
+class primaryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = VoteCount.objects.all()
-    serializer_class = CountSerializer
+        retrieve:
+            Return an instance of a candidate
 
-class RecordViewSet(viewsets.ModelViewSet):
+        list:
+            Returns result of the number of vote per candidate
+
+        create:
+            Create an instance of a candidate result.
+
+        delete:
+            Remove an instance of a candidate result.
+
+        partial_update:
+            Update one or more fields of a candidate.
+
+        update:
+            Update a candidate.
     """
-    API endpoint that allows groups to be viewed or edited.
+    queryset = Primary_VoteRecord.objects.all()
+    serializer_class = primarySerializer
+
+class generalViewSet(viewsets.ModelViewSet):
     """
-    queryset = VoteRecord.objects.all()
-    serializer_class = RecordSerializer
+        retrieve:
+            Return an instance of a candidate
+
+        list:
+            Returns result of the number of vote per candidate
+
+        create:
+            Create an instance of a candidate result.
+
+        delete:
+            Remove an instance of a candidate result.
+
+        partial_update:
+            Update one or more fields of a candidate.
+
+        update:
+            Update a candidate.
+    """
+
+    queryset = General_VoteRecord.objects.all()
+    serializer_class = generalSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+class electionViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        Return an instance of election type/date
+
+    list:
+        Return all available elections, ordered by date.
+
+    create:
+        Create an instance of an election.
+
+    delete:
+        Remove an instance of an election.
+
+    partial_update:
+        Update one or more fields on an existing election.
+
+    update:
+        Update an election.
+    """
+
+    queryset = Election.objects.all()
+    serializer_class = electionSerializer
+

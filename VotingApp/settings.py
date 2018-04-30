@@ -39,8 +39,32 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'graphos',
     'rest_framework',
+    'rest_framework_swagger',
     'vote'
 ]
+
+DEFAULT_RENDERER_CLASSES = (
+    'rest_framework.renderers.JSONRenderer',
+)
+
+if DEBUG:
+    DEFAULT_RENDERER_CLASSES = DEFAULT_RENDERER_CLASSES + (
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ),
+    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
+}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+#     ],
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,26 +110,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-# # Sqlite sandbox
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'sandbox.db'),
-#     }
-# }
-
-# # Docker MySQL container
-# DATABASES = {
-#           'default': {
-#               'ENGINE': 'django.db.backends.mysql',
-#               'NAME': 'cs3240',
-#               'USER': 'electionadmin',
-#               'PASSWORD': 'meme12345',
-#               'HOST': 'db',
-#           }
-#       }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

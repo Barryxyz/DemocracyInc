@@ -2,12 +2,12 @@
 from __future__ import unicode_literals
 
 from graphos.renderers import gchart
-from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
+from graphos.sources.model import ModelDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Voter, VoteRecord, Election, VoteCount, Candidate, General_VoteRecord, Primary_VoteRecord
-from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
+from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Position, Candidate
+from .forms import VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
 
 from rest_framework import viewsets
 from rest_framework.schemas import get_schema_view
@@ -17,6 +17,7 @@ from .serializers import generalSerializer, primarySerializer, electionSerialize
 from django.shortcuts import render, redirect
 from django.urls import reverse
 import random, requests
+from itertools import groupby
 
 # Create your views here.
 
@@ -293,6 +294,7 @@ def count_votes():
     for r in results:
         r.save()
 
+
 @login_required
 def vote_count(request):
     count_votes()
@@ -300,42 +302,39 @@ def vote_count(request):
     return render(request, 'vote_count.html', {'query_results': results})
 
 @login_required
-def results(request):
-#    candidates_pres = General_VoteRecord.president
-#	
-#    president_data = [['Candidates','Count']]
-#    for candidate in candidates_pres:
-#        count = VoteCount.objects.filter(president=candidate).count()
-#        president_data.append(candidate,count)
+def general_results(request):
+    general_count = []
+    general_id = Election.objects.get(type="general").id
+    general_positions = Position.objects.filter(election=general_id)
+    for position in general_positions:
+        general_candidates = Candidate.objects.filter(position=position.id).values_list("name", flat=True)
+        for candidate in general_candidates:
+            if position.name == "president":
+                num_votes = General_VoteRecord.objects.filter(president=candidate).count()
+            elif position.name == "vice_president":
+                num_votes = General_VoteRecord.objects.filter(vice_president=candidate).count()
 
-################################################################################		
-    prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
-    prez_count2 = VoteRecord.objects.filter(president='Hillary Clinton').count()
-    president_data = [
-        ['Candidates','Count'],
-        ['Gary Johnson', prez_count],
-        ['Hillary Clinton', prez_count2]
-    ]
-    gov_count = VoteRecord.objects.filter(governor='Matthew Ray').count()
-    gov_count2 = VoteRecord.objects.filter(governor='Travis Bailey').count()
-    gov_count3 = VoteRecord.objects.filter(governor='Marisha Miller').count()
-    governor_data = [
-        ['Candidates', 'Count'],
-        ['Matthew Ray', gov_count],
-        ['Travis Bailey', gov_count2],
-        ['Marisha Miller', gov_count3]
-    ]
+                
+@login_required
+def primary_results(request):
+    pn_data = [['Candidates','Count']]
 
-    prez_data_source = SimpleDataSource(data=president_data)
-    gov_data_source = SimpleDataSource(data=governor_data)
-    prez_chart = BarChart(prez_data_source, options={'title': "President", 'xaxis': 'Count'})
-    gov_chart = gchart.PieChart(gov_data_source, options={'title': "Governor"})
+    primary_id = Election.objects.get(type="primary").id
+    primary_positions = Position.objects.filter(election=primary_id)
+    for position in primary_positions:
+        general_candidates = Candidate.objects.filter(position=position.id).values_list("full_name", flat=True)
+        for candidate in general_candidates:
+            if position.name == "president_nominee":
+                count = Primary_VoteRecord.objects.filter(president_nominee=candidate).count()
+                pn_data.append([candidate, count])
+
+    pn_data_source = SimpleDataSource(data=pn_data)
+    pn_chart = gchart.PieChart(pn_data_source, options={'title': "President Nominee"})
     context = {
-        "prez_chart": prez_chart,
-        "gov_chart": gov_chart,
+        "pn_chart": pn_chart
     }
-    return render(request, 'results.html', context)
-####################################################################
+    return render(request, 'primary_results.html', context)
+
 
 class primaryViewSet(viewsets.ModelViewSet):
     """
@@ -359,6 +358,7 @@ class primaryViewSet(viewsets.ModelViewSet):
     """
     queryset = Primary_VoteRecord.objects.all()
     serializer_class = primarySerializer
+
 
 class generalViewSet(viewsets.ModelViewSet):
     """

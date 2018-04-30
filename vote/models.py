@@ -265,8 +265,6 @@ class PollPlace(models.Model):
     poll_booths = models.IntegerField()
 
 class General_VoteRecord(models.Model):
-    # president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president')
-    # vice_president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='vice_president')
     president = models.CharField(max_length=100)
     vice_president = models.CharField(max_length=100)
     house_rep = models.CharField(max_length=100)
@@ -288,7 +286,6 @@ class General_VoteRecord(models.Model):
         return self.president, self.vice_president, self.house_rep, self.senator, self.voter, self.time_stamp
 
 class Primary_VoteRecord(models.Model):
-    # president_nominee = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president_nominee')
     president_nominee = models.CharField(max_length=100)
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)
@@ -302,35 +299,3 @@ class Primary_VoteRecord(models.Model):
 
     def __str__(self):
         return self.president_nominee, self.voter, self.time_stamp
-
-class VoteRecord(models.Model):
-    president = models.CharField(max_length=50, choices=President)
-    governor = models.CharField(max_length=50, choices=Governor)
-    lieutenant_Governor = models.CharField(max_length=50, choices=LieuGov)
-    attorney_General = models.CharField(max_length=50, choices=AttGen)
-    delegate = models.CharField(max_length=50, choices=Delegate)
-    commonwealth_Attorney = models.CharField(max_length=50, choices=CommAtt)
-    sheriff = models.CharField(max_length=50, choices=Sheriff)
-    treasurer = models.CharField(max_length=50, choices=Treasurer)
-    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
-    time_stamp = models.DateTimeField(auto_now=True)
-
-
-    def to_json(self):
-        return {
-            'president': self.president,
-            'governor': self.governor,
-            'lieutenant_Governor': self.lieutenant_Governor,
-            'attorney_General': self.attorney_General,
-            'delegate': self.delegate,
-            'commonwealth_Attorney': self.commonwealth_Attorney,
-            'sheriff': self.sheriff,
-            'treasurer': self.treasurer,
-            'voter': self.voter,
-            'time_stamp': self.time_stamp,
-        }
-
-    def __str__(self):
-        return self.president, self.governor, self.lieutenant_Governor, self.attorney_General, self.delegate, \
-               self.commonwealth_Attorney, self.sheriff, self.treasurer, self.voter, self.time_stamp
-

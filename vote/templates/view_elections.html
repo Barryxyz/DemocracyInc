@@ -35,9 +35,14 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'vote_count' %}">Vote Count</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'results' %}">Election Results</a>
-          </li>
+           <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Election Results
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'general_results' %}">General Election</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'primary_results' %}">Primary Election</a>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
           </li>
@@ -121,7 +126,7 @@
 					   <br>
 					   <img align="center" src="{% static "img/Logo_tiny.png" %}" alt="logo"/>
                    </div>
-               <p class="copyright">DemocracyInc &copy; 2017</p>
+               <p class="copyright">DemocracyInc &copy; 2018</p>
            </div>
        </footer>
    </div>

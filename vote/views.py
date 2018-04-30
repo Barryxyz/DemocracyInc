@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from graphos.renderers import gchart
 from graphos.sources.simple import SimpleDataSource
-from graphos.sources.model import ModelDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Position, Candidate, PollWorker
@@ -17,16 +16,18 @@ from .serializers import generalSerializer, primarySerializer, electionSerialize
 from django.shortcuts import render, redirect
 from django.urls import reverse
 import random, requests
-from itertools import groupby
+
 
 # Create your views here.
 
 # for swagger UI
 schema_view = get_schema_view(title='Election API', urlconf='vote.urls', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
+# Homepage/landing page
 def home(request):
     return render(request, 'base.html', {})
 
+# user authentication
 def login(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -63,11 +64,15 @@ def view_elections(request):
     query_results = Election.objects.all()
     return render(request, 'view_elections.html', {'query_results': query_results})
 
+
+# certain pages require a certain elevated user access
+# page to see the list of all registered and eligible voters
 @login_required
 def view_voters(request):
     query_results = Voter.objects.all()
     return render(request, 'view_voters.html', {'query_results': query_results})
 
+# function to load voter api into database on heroku
 def load_voters(request):
     r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
     response = r.json()

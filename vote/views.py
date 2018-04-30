@@ -12,8 +12,6 @@ from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, General
 
 from rest_framework import viewsets
 from rest_framework.schemas import get_schema_view
-
-
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
 from .serializers import generalSerializer, primarySerializer, electionSerializer
@@ -67,8 +65,8 @@ def view_elections(request):
 
 @login_required
 def view_voters(request):
-	query_results = Voter.objects.all()
-	return render(request, 'view_voters.html', {'query_results': query_results})
+    query_results = Voter.objects.all()
+    return render(request, 'view_voters.html', {'query_results': query_results})
 
 def load_voters(request):
     r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
@@ -264,7 +262,6 @@ def vote_count(request):
     primary_records = Primary_VoteRecord.objects.all()
     general_records = General_VoteRecord.objects.all()
 
-
     primary_votes = [dict() for i in primary_positions]
     general_votes = [dict() for i in general_positions]
 
@@ -305,7 +302,6 @@ def results(request):
 #    for candidate in candidates_pres:
 #        count = VoteCount.objects.filter(president=candidate).count()
 #        president_data.append(candidate,count)
-
 
 ################################################################################		
     prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
@@ -359,7 +355,6 @@ class primaryViewSet(viewsets.ModelViewSet):
     """
     queryset = Primary_VoteRecord.objects.all()
     serializer_class = primarySerializer
-
 
 class generalViewSet(viewsets.ModelViewSet):
     """

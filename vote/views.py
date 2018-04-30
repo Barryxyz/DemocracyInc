@@ -9,14 +9,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Voter, VoteRecord, Election, VoteCount, Candidate, General_VoteRecord, Primary_VoteRecord
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
-from rest_framework import viewsets
 
-from .serializers import CountSerializer, RecordSerializer
+from rest_framework import viewsets
+from rest_framework.schemas import get_schema_view
+
+
+from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+
+from .serializers import generalSerializer, primarySerializer, electionSerializer
 from django.shortcuts import render, redirect
 from django.urls import reverse
-import random, json, requests
+import random, requests
 
 # Create your views here.
+
+# for swagger UI
+schema_view = get_schema_view(title='Election API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
 def home(request):
     return render(request, 'base.html', {})
@@ -327,16 +335,80 @@ def results(request):
     }
     return render(request, 'results.html', context)
 
-class CountViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = VoteCount.objects.all()
-    serializer_class = CountSerializer
+####################################################################
 
-class RecordViewSet(viewsets.ModelViewSet):
+class primaryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+        retrieve:
+            Return an instance of a candidate
+
+        list:
+            Returns result of the number of vote per candidate
+
+        create:
+            Create an instance of a candidate result.
+
+        delete:
+            Remove an instance of a candidate result.
+
+        partial_update:
+            Update one or more fields of a candidate.
+
+        update:
+            Update a candidate.
     """
-    queryset = VoteRecord.objects.all()
-    serializer_class = RecordSerializer
+    queryset = Primary_VoteRecord.objects.all()
+    serializer_class = primarySerializer
+
+
+class generalViewSet(viewsets.ModelViewSet):
+    """
+        retrieve:
+            Return an instance of a candidate
+
+        list:
+            Returns result of the number of vote per candidate
+
+        create:
+            Create an instance of a candidate result.
+
+        delete:
+            Remove an instance of a candidate result.
+
+        partial_update:
+            Update one or more fields of a candidate.
+
+        update:
+            Update a candidate.
+    """
+
+    queryset = General_VoteRecord.objects.all()
+    serializer_class = generalSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+class electionViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        Return an instance of election type/date
+
+    list:
+        Return all available elections, ordered by date.
+
+    create:
+        Create an instance of an election.
+
+    delete:
+        Remove an instance of an election.
+
+    partial_update:
+        Update one or more fields on an existing election.
+
+    update:
+        Update an election.
+    """
+
+    queryset = Election.objects.all()
+    serializer_class = electionSerializer
+

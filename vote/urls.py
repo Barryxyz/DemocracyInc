@@ -17,12 +17,15 @@ from VotingApp import settings
 from django.contrib import admin
 from django.conf.urls import url, include
 
-from rest_framework import routers
+from rest_framework import routers, serializers, viewsets
+from rest_framework_swagger.views import get_swagger_view
+from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from vote import views
 
 router = routers.DefaultRouter()
-router.register(r'count_api', views.CountViewSet)
-router.register(r'records_api', views.RecordViewSet)
+router.register(r'elections', views.electionViewSet)
+router.register(r'2018-11', views.generalViewSet)
+router.register(r'2018-07', views.primaryViewSet)
 
 
 urlpatterns = [
@@ -51,11 +54,15 @@ urlpatterns += [
 
 #for external api
 urlpatterns += [
+    # viewing api
     url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+    # url(r'^elections/2018-11/', include(router.urls)),
 
-# if settings.DEBUG:
-#     from django.conf.urls.static import static
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+    # swagger UI material
+    # url(r'^', views.schema_view, name='docs'),
+    # url(r'^elections/', include(router.urls)),
+    # url(r'^elections/2018-07', include(router.urls)),
+    # url(r'^elections/2018-11', include(router.urls)),
+    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+]

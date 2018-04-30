@@ -109,7 +109,8 @@ def checkin(request):
                 street_address=form.cleaned_data['street_address'],
                 city=form.cleaned_data['city'],
                 state=form.cleaned_data['state'],
-                zip=form.cleaned_data['zip']
+                zip=form.cleaned_data['zip'],
+				precinct_id=form.cleaned_data['precinct_id']
             ).exists()
 
             if registered_voter:
@@ -120,7 +121,8 @@ def checkin(request):
                     street_address=form.cleaned_data['street_address'],
                     city=form.cleaned_data['city'],
                     state=form.cleaned_data['state'],
-                    zip=form.cleaned_data['zip']
+                    zip=form.cleaned_data['zip'],
+					precinct_id=form.cleaned_data['precinct_id']
                 )
 
                 v_id = voter.id
@@ -133,12 +135,20 @@ def checkin(request):
                 #exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
                 inactive = voter.voter_status
+                locality = voter.locality
+                precinct = voter.precinct_id
+                full_name = voter.first_name + " " + voter.last_name
+                polling_locality = "Prince William"   # This is subject to change...
+                polling_precinct = 404	 # Ths is subject to change...
 
                 if inactive == "inactive":
                     return redirect(reverse('inactive'))
 
                 if exists:
                     return redirect(reverse('already_voted'))
+					
+                if precinct != polling_precinct:
+                    return render(request, 'incorrect_precinct.html', {'full_name': full_name, 'locality': locality, 'precinct': precinct, 'polling_locality': polling_locality, 'polling_precinct': polling_precinct})
 
                 else:
                     key = generator()
@@ -154,6 +164,7 @@ def checkin(request):
     else:
         form = RegisteredForm()
     return render(request, 'checkin.html', {'form': form})
+
 
 def inactive(request):
     return render(request, 'inactive.html', {})

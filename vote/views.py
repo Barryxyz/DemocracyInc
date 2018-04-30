@@ -137,6 +137,7 @@ def checkin(request):
                 curr_user = User.objects.get(username=request.user.username)
                 curr_pollworker = PollWorker.objects.get(user=curr_user.id)
                 polling_precinct = curr_pollworker.precinct_id
+                polling_locality = curr_pollworker.locality
 
                 if voter.voter_status == "inactive":
                     return redirect(reverse('inactive'))

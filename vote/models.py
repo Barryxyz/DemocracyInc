@@ -78,6 +78,7 @@ class VoteCount(models.Model):
 class PollWorker(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
+    locality = models.CharField(max_length=20, null=True)
 
 class General_VoteRecord(models.Model):
     president = models.CharField(max_length=100)

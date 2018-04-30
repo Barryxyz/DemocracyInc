@@ -197,12 +197,12 @@ class Election(models.Model):
 
     def to_json(self):
         return {
-            'id': self.id,
+            'id': self.election_id,
             'type': self.type
         }
 
     def __str__(self):
-        return self.type
+        return self.election_id, self.type
 
 class Position(models.Model):
     name = models.CharField(max_length=50)
@@ -246,12 +246,15 @@ class VoteCount(models.Model):
     name = models.CharField(max_length=50)
     position = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
+    election = models.CharField(max_length=50)
+
 
     def to_json(self):
         return {
             'name': self.name,
             'position': self.position,
             'count': self.count,
+            'election': self.election
         }
 
     def __str__(self):
@@ -272,11 +275,34 @@ class General_VoteRecord(models.Model):
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)
 
+    def to_json(self):
+        return {
+            'president': self.president,
+            'vice_president': self.vice_president,
+            'house_rep': self.house_rep,
+            'senator': self.senator,
+            'voter': self.voter,
+            'time_stamp': self.time_stamp,
+        }
+
+    def __str__(self):
+        return self.president, self.vice_president, self.house_rep, self.senator, self.voter, self.time_stamp
+
 class Primary_VoteRecord(models.Model):
     # president_nominee = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president_nominee')
     president_nominee = models.CharField(max_length=100)
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)
+
+    def to_json(self):
+        return {
+            'president_nominee': self.president_nominee,
+            'voter': self.voter,
+            'time_stamp': self.time_stamp,
+        }
+
+    def __str__(self):
+        return self.president_nominee, self.voter, self.time_stamp
 
 class VoteRecord(models.Model):
     president = models.CharField(max_length=50, choices=President)

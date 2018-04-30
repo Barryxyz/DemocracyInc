@@ -6,7 +6,7 @@ from graphos.sources.simple import SimpleDataSource
 from graphos.sources.model import ModelDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Position, Candidate
+from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Position, Candidate, PollWorker
 from .forms import VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
 
 from rest_framework import viewsets
@@ -103,50 +103,46 @@ def checkin(request):
         if form.is_valid():
 
             # process the data in form.cleaned_data as required
-            registered_voter = Voter.objects.filter(
+            registered_voter = Voter.objects.get(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 street_address=form.cleaned_data['street_address'],
                 city=form.cleaned_data['city'],
                 state=form.cleaned_data['state'],
                 zip=form.cleaned_data['zip'],
-				precinct_id=form.cleaned_data['precinct_id']
+                locality=form.cleaned_data['locality'].upper() + " COUNTY"
             ).exists()
 
             if registered_voter:
-
                 voter = Voter.objects.get(
                     first_name=form.cleaned_data['first_name'],
                     last_name=form.cleaned_data['last_name'],
                     street_address=form.cleaned_data['street_address'],
                     city=form.cleaned_data['city'],
                     state=form.cleaned_data['state'],
-                    zip=form.cleaned_data['zip'],
-					precinct_id=form.cleaned_data['precinct_id']
+                    zip=form.cleaned_data['zip']
                 )
 
                 v_id = voter.id
 
                 if (active_election == 'general'):
                     exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
-
                 elif (active_election == 'primary'):
                     exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
-                #exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
-                inactive = voter.voter_status
                 locality = voter.locality
                 precinct = voter.precinct_id
                 full_name = voter.first_name + " " + voter.last_name
-                polling_locality = "Prince William"   # This is subject to change...
-                polling_precinct = 404	 # Ths is subject to change...
 
-                if inactive == "inactive":
+                curr_user = User.objects.get(username=request.user.username)
+                curr_pollworker = PollWorker.objects.get(user=curr_user.id)
+                polling_precinct = curr_pollworker.precinct_id
+
+                if voter.voter_status == "inactive":
                     return redirect(reverse('inactive'))
-
                 if exists:
                     return redirect(reverse('already_voted'))
-					
+
                 if precinct != polling_precinct:
                     return render(request, 'incorrect_precinct.html', {'full_name': full_name, 'locality': locality, 'precinct': precinct, 'polling_locality': polling_locality, 'polling_precinct': polling_precinct})
 

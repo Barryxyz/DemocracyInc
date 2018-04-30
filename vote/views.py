@@ -267,16 +267,16 @@ def count_votes():
             if name in primary_votes[i]:
                 primary_votes[i][name] += 1
             else:
-                primary_votes[i][name] = 0
+                primary_votes[i][name] = 1
 
     for vr in general_records:
-        for i in range(0, len(general_positions)):
+        for i in range(0,len(general_positions)):
             pos = general_positions[i]
             name = getattr(vr, pos)
             if name in general_votes[i]:
                 general_votes[i][name] += 1
             else:
-                general_votes[i][name] = 0
+                general_votes[i][name] = 1
 
     results = []
     for i in range(0, len(primary_positions)):

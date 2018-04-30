@@ -334,7 +334,20 @@ def results(request):
 
 class CountViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    retrieve:
+        returns results of the number of vote per candidate
+
+    list:
+        Return all results, ordered by most recently joined.
+
+    delete:
+        Remove an existing candidate result.
+
+    partial_update:
+        Update one or more fields on an existing candidate.
+
+    update:
+        Update a candidate.
     """
     queryset = VoteCount.objects.all()
     serializer_class = CountSerializer

@@ -1,0 +1,46 @@
+{% load staticfiles %}
+
+{#{% block title %}Assigned Booth{% endblock %}#}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+{% block content %}
+<div id="padder">
+	<div id="formContainer">
+        <div align="center" style="font-family: tahoma, serif;">			
+		<!-- These are subject to change -->
+            <h1 align="center">Hard Copy of Ballot</h1>
+            <br>
+            <h2 align="center"><strong>President: </strong>{{ president }}</h2>
+            <hr>
+            <h2 align="center"><strong>Vice President: </strong>{{ vice_president }}</h2>
+            <hr>
+            <h2 align="center"><strong>House of Representatives: </strong>{{ house_rep }}</h2>
+            <hr>  
+            <h2 align="center"><strong>Senator: </strong>{{ senator }}</h2>
+            <hr>
+            <h2 align="center"><strong>Time of Submission: </strong><h3 id="demo"></h3>
+            <script>
+                var d = new Date();
+                document.getElementById("demo").innerHTML = d;
+            </script>
+            </h2>
+            <hr>
+            {% load static %}
+            <img src="{% static "img/Logo_small.png" %}" alt="logo"/>
+            <hr>
+			<h1 align="center">*Store This Ballot for Manual Recount Purposes*</h1>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.print();
+        setTimeout("closePrint()", 250);
+    });
+    function closePrint() {
+        document.location.href = '{% url 'vote_id_check' %}';
+    }
+</script>
+{% endblock %}

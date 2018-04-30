@@ -188,7 +188,10 @@ def vote(request):
                 task.voter = voter
                 task.save()
                 # redirect to a new URL:
-                return redirect(reverse('home'))
+                # return redirect(reverse('home'))
+                return render(request, 'ballot_print.html', {'form': form, 'president': task.president, 'vice_president': task.vice_president,
+				'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
+
     # if a GET (or any other method) we'll create a blank form
     else:
         if (active_election == 'general'):

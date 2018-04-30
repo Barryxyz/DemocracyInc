@@ -201,6 +201,7 @@ def vote(request):
                 # redirect to a new URL:
                 # return redirect(reverse('home'))
 
+            print(active_election)
             if (active_election == 'general'):
                 return render(request, 'ballot_print.html',
                               {'form': form, 'election':active_election, 'president': task.president, 'vice_president': task.vice_president,

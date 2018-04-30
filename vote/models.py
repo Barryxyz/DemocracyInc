@@ -265,8 +265,6 @@ class PollPlace(models.Model):
     poll_booths = models.IntegerField()
 
 class General_VoteRecord(models.Model):
-    # president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president')
-    # vice_president = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='vice_president')
     president = models.CharField(max_length=100)
     vice_president = models.CharField(max_length=100)
     house_rep = models.CharField(max_length=100)
@@ -288,7 +286,6 @@ class General_VoteRecord(models.Model):
         return self.president, self.vice_president, self.house_rep, self.senator, self.voter, self.time_stamp
 
 class Primary_VoteRecord(models.Model):
-    # president_nominee = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None, related_name='president_nominee')
     president_nominee = models.CharField(max_length=100)
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
     time_stamp = models.DateTimeField(auto_now=True)

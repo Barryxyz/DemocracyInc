@@ -6,7 +6,7 @@ from graphos.sources.simple import SimpleDataSource
 from graphos.sources.model import ModelDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Candidate
+from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Position, Candidate
 from .forms import VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
 
 from rest_framework import viewsets
@@ -373,89 +373,98 @@ def vote_count(request):
     # return render(request, 'vote_count.html', {'query_results': results})
     return render(request, 'vote_count.html')
 
-
-
-@login_required
 def general_results(request):
-    #for General Election
-    from django.db.models import Count
-    # prez_count = General_VoteRecord.objects.values('president').annotate(the_count=Count('president'))
-    # candidates_pres = General_VoteRecord.objects.all().values_list('president', flat=True).order_by('president')
+    general_count = []
+    general_id = Election.objects.get(type="general").id
+    general_positions = Position.objects.filter(election=general_id).values_list("name", flat=True)
+    for position in general_positions:
+        general_candidates = Candidate.objects.filter(position=position.id).values_list("name", flat=True)
+        for candidate in general_candidates:
+            if position == "president":
+                num_votes = General_VoteRecord.objects.filter(president=candidate).count()
+            elif position == "vice_president":
+                num_votes = General_VoteRecord.objects.filter(vice_president=candidate).count()
 
-    from collections import Counter
-    # primary_records = Primary_VoteRecord.objects.all().values_list('president_nominee', flat=True).orderby('president_nominee')
-    # c = Counter(getattr() for i in primary_records)
-    general_records = General_VoteRecord.objects.all().values_list('president', flat=True).order_by('president')
-    president_data = [[]]
-    for candidate in general_records:
-        count = General_VoteRecord.objects.filter(president=candidate).count()
-        president_data.append([candidate,count])
-
-    # president_data = {item['president']: item['president__count'] for item in general_records}
-        # president_data=[
-        #     ['president',general_records]
-        # ]
-
-    #
-    # primary_positions = ['president_nominee']
-    # general_positions = ['president', 'vice_president', 'house_rep', 'senator']
-    # primary_records = Primary_VoteRecord.objects.all().values_list('president_nominee', flat=True).orderby('president_nominee')
-    # for i in range(primary_records):
-    #     if
-    #
-    #
-    # for i in primary_positions:
-    #     president_data =[
-    #         ['president_nominee',primary_records]
-    #     ]
-    # general_records = General_VoteRecord.objects.all()
-
-    # prez_count = General_VoteRecord.objects.filter(president='Hillary Clinton').count()
-    # prez_count2 = General_VoteRecord.objects.filter(president='Donald Trump').count()
-    # president_data = [
-    #     ['Candidates','Count'],
-    #     ['Hillary Clinton', prez_count],
-    #     ['Donald Trump', prez_count2]
-    # ]
-    vp_count = General_VoteRecord.objects.filter(vice_president='Tim Kaine').count()
-    vp_count2 = General_VoteRecord.objects.filter(vice_president='Mike Pence').count()
-
-    governor_data = [
-        ['Candidates', 'Count'],
-        ['Tim Kaine', vp_count],
-        ['Mike Pence', vp_count2],
-    ]
-    houserep_count = General_VoteRecord.objects.filter(house_rep='LuAnn Bennett').count()
-    houserep_count2 = General_VoteRecord.objects.filter(house_rep='Barbara Comstock').count()
-    houserep_data = [
-        ['Candidates', 'Count'],
-        ['LuAnn Bennett', houserep_count],
-        ['Barbara Comstock', houserep_count2],
-    ]
-    senator_count = General_VoteRecord.objects.filter(senator='Mark Warner').count()
-    senator_count2 = General_VoteRecord.objects.filter(senator='Ed Gillespie').count()
-    senator_data =[
-        ['Candidates', 'Count'],
-        ['Mark Warner', senator_count],
-        ['Ed Gillespie', senator_count2],
-    ]
-
-    prez_data_source = SimpleDataSource(data=president_data)
-    gov_data_source = SimpleDataSource(data=governor_data)
-    houserep_data_source = SimpleDataSource(data=houserep_data)
-    senator_data_source = SimpleDataSource(data=senator_data)
-    prez_chart = gchart.PieChart(prez_data_source, options={'title': "President"})
-    vp_chart = gchart.PieChart(gov_data_source, options={'title': "Vice President"})
-    houserep_chart = gchart.PieChart(houserep_data_source, options={'title': "House of Representative"})
-    senator_chart = gchart.PieChart(senator_data_source, options={'title': "Senator"})
-
-    context = {
-        "prez_chart": prez_chart,
-        "vp_chart": vp_chart,
-        "houserep_chart": houserep_chart,
-        "senator_chart": senator_chart
-    }
-    return render(request, 'general_results.html', context)
+# @login_required
+# def general_results(request):
+#     #for General Election
+#     # prez_count = General_VoteRecord.objects.values('president').annotate(the_count=Count('president'))
+#     # candidates_pres = General_VoteRecord.objects.all().values_list('president', flat=True).order_by('president')
+#
+#     from collections import Counter
+#     # primary_records = Primary_VoteRecord.objects.all().values_list('president_nominee', flat=True).orderby('president_nominee')
+#     # c = Counter(getattr() for i in primary_records)
+#     general_records = General_VoteRecord.objects.all().values_list('president', flat=True).order_by('president')
+#     president_data = [[]]
+#     for candidate in general_records:
+#         count = General_VoteRecord.objects.filter(president=candidate).count()
+#         president_data.append([candidate,count])
+#
+#     # president_data = {item['president']: item['president__count'] for item in general_records}
+#         # president_data=[
+#         #     ['president',general_records]
+#         # ]
+#
+#     #
+#     # primary_positions = ['president_nominee']
+#     # general_positions = ['president', 'vice_president', 'house_rep', 'senator']
+#     # primary_records = Primary_VoteRecord.objects.all().values_list('president_nominee', flat=True).orderby('president_nominee')
+#     # for i in range(primary_records):
+#     #     if
+#     #
+#     #
+#     # for i in primary_positions:
+#     #     president_data =[
+#     #         ['president_nominee',primary_records]
+#     #     ]
+#     # general_records = General_VoteRecord.objects.all()
+#
+#     # prez_count = General_VoteRecord.objects.filter(president='Hillary Clinton').count()
+#     # prez_count2 = General_VoteRecord.objects.filter(president='Donald Trump').count()
+#     # president_data = [
+#     #     ['Candidates','Count'],
+#     #     ['Hillary Clinton', prez_count],
+#     #     ['Donald Trump', prez_count2]
+#     # ]
+#     vp_count = General_VoteRecord.objects.filter(vice_president='Tim Kaine').count()
+#     vp_count2 = General_VoteRecord.objects.filter(vice_president='Mike Pence').count()
+#
+#     governor_data = [
+#         ['Candidates', 'Count'],
+#         ['Tim Kaine', vp_count],
+#         ['Mike Pence', vp_count2],
+#     ]
+#     houserep_count = General_VoteRecord.objects.filter(house_rep='LuAnn Bennett').count()
+#     houserep_count2 = General_VoteRecord.objects.filter(house_rep='Barbara Comstock').count()
+#     houserep_data = [
+#         ['Candidates', 'Count'],
+#         ['LuAnn Bennett', houserep_count],
+#         ['Barbara Comstock', houserep_count2],
+#     ]
+#     senator_count = General_VoteRecord.objects.filter(senator='Mark Warner').count()
+#     senator_count2 = General_VoteRecord.objects.filter(senator='Ed Gillespie').count()
+#     senator_data =[
+#         ['Candidates', 'Count'],
+#         ['Mark Warner', senator_count],
+#         ['Ed Gillespie', senator_count2],
+#     ]
+#
+#     prez_data_source = SimpleDataSource(data=president_data)
+#     gov_data_source = SimpleDataSource(data=governor_data)
+#     houserep_data_source = SimpleDataSource(data=houserep_data)
+#     senator_data_source = SimpleDataSource(data=senator_data)
+#     prez_chart = gchart.PieChart(prez_data_source, options={'title': "President"})
+#     vp_chart = gchart.PieChart(gov_data_source, options={'title': "Vice President"})
+#     houserep_chart = gchart.PieChart(houserep_data_source, options={'title': "House of Representative"})
+#     senator_chart = gchart.PieChart(senator_data_source, options={'title': "Senator"})
+#
+#     context = {
+#         "prez_chart": prez_chart,
+#         "vp_chart": vp_chart,
+#         "houserep_chart": houserep_chart,
+#         "senator_chart": senator_chart
+#     }
+#     return render(request, 'general_results.html', context)
 
 
 @login_required

@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 
 class electionSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.CharField(source='election_id')
     class Meta:
         model = Election
         # fields = '__all__'
@@ -15,7 +16,6 @@ class primarySerializer(serializers.HyperlinkedModelSerializer):
         model = Primary_VoteRecord
         # fields = '_all_' , not working for some reason...
         fields = ('president_nominee',)
-
 
 
 class generalSerializer(serializers.HyperlinkedModelSerializer):
@@ -32,10 +32,9 @@ class CountSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name', 'position', 'count',)
 
 
-
 class RecordSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = VoteRecord
         # fields = '__all__'
         fields = ('president', 'governor', 'lieutenant_Governor', 'attorney_General', 'delegate',
-                  'commonwealth_Attorney', 'sheriff', 'treasurer', )
+                  'commonwealth_Attorney', 'sheriff', 'treasurer',)

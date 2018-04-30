@@ -7,7 +7,7 @@ from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Voter, VoteRecord, Election, VoteCount, Candidate
+from .models import Voter, VoteRecord, Election, VoteCount, Candidate, General_VoteRecord, Primary_VoteRecord
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
 from rest_framework import viewsets
 from rest_framework_swagger.views import get_swagger_view
@@ -95,6 +95,7 @@ def load_voters(request):
 @login_required
 def checkin(request):
     # if this is a POST request we need to process the form data
+    active_election = Election.objects.get(status="active").type
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = RegisteredForm(request.POST)
@@ -123,7 +124,13 @@ def checkin(request):
                 )
 
                 v_id = voter.id
-                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                if (active_election == 'general'):
+                    exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                elif (active_election == 'primary'):
+                    exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
+                #exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
                 inactive = voter.voter_status
 
@@ -131,14 +138,14 @@ def checkin(request):
                     return redirect(reverse('inactive'))
 
                 if exists:
-                    return redirect(reverse('alreadyvoted'))
+                    return redirect(reverse('already_voted'))
 
                 else:
                     key = generator()
-                    full_name = registered_voter.first_name + " " + registered_voter.last_name
-                    locality = registered_voter.locality
-                    registered_voter.confirmation = key
-                    registered_voter.save()
+                    full_name = voter.first_name + " " + voter.last_name
+                    locality = voter.locality
+                    voter.confirmation = key
+                    voter.save()
                     return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
@@ -167,7 +174,10 @@ def vote(request):
             voter = Voter.objects.get(confirmation=request.session['input_key'])
 
             v_id = voter.id
-            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+            if (active_election == 'general'):
+                exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
+            elif (active_election == 'primary'):
+                exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
 
             if exists:
                 return redirect(reverse('already_voted'))
@@ -176,6 +186,8 @@ def vote(request):
                 if active_election == 'general':
                     task.president = form.cleaned_data['president'].full_name
                     task.vice_president = form.cleaned_data['vice_president'].full_name
+                    task.house_rep = form.cleaned_data['house_rep'].full_name
+                    task.senator = form.cleaned_data['senator'].full_name
                 elif active_election == 'primary':
                     task.president_nominee = form.cleaned_data['president_nominee'].full_name
                 task.voter = voter
@@ -192,6 +204,7 @@ def vote(request):
     return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
+    active_election = Election.objects.get(status="active").type
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = VoteIdCheckForm(request.POST)
@@ -204,10 +217,14 @@ def vote_id_check(request):
 
                 voter = Voter.objects.get(confirmation=input_key)
                 v_id = voter.id
-                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+                if (active_election == 'general'):
+                    exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                elif (active_election == 'primary'):
+                    exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
 
                 if exists:
-                    return redirect(reverse('alreadyvoted'))
+                    return redirect(reverse('already_voted'))
                 else:
 
                     request.session['input_key'] = input_key

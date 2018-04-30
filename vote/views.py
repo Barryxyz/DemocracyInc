@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
@@ -22,7 +21,7 @@ import random, requests
 # Create your views here.
 
 # for swagger UI
-schema_view = get_schema_view(title='Election API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
+schema_view = get_schema_view(title='Election API', urlconf='vote.urls', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
 def home(request):
     return render(request, 'base.html', {})
@@ -75,7 +74,6 @@ def load_voters(request):
     if (status == "200"):
         voters = response["voters"]
         for voter in voters:
-            # print(voter)
             voter_exists = Voter.objects.filter(voter_number=voter["voter_number"]).exists()
             if not voter_exists:
                 Voter(voter_number = voter["voter_number"],
@@ -161,7 +159,6 @@ def inactive(request):
 
 def vote(request):
     active_election = Election.objects.get(status="active").type
-    print(active_election)
     if request.method == 'POST' :
         # create a form instance and populate it with data from the request:
         if(active_election == 'general'):

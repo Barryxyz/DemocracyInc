@@ -331,22 +331,22 @@ def results(request):
 class primaryViewSet(viewsets.ModelViewSet):
     """
         retrieve:
-            Return an instance of a candidate
+            Return an instance of a ballot.
 
         list:
-            Returns result of the number of vote per candidate
+            Returns result of the number of vote per candidate.
 
         create:
-            Create an instance of a candidate result.
+            Create an instance of a ballot result.
 
         delete:
-            Remove an instance of a candidate result.
+            Remove an instance of a ballot result.
 
         partial_update:
-            Update one or more fields of a candidate.
+            Update one or more fields of a ballot.
 
         update:
-            Update a candidate.
+            Update a ballot.
     """
     queryset = Primary_VoteRecord.objects.all()
     serializer_class = primarySerializer
@@ -354,10 +354,10 @@ class primaryViewSet(viewsets.ModelViewSet):
 class generalViewSet(viewsets.ModelViewSet):
     """
         retrieve:
-            Return an instance of a candidate
+            Return an instance of a candidate.
 
         list:
-            Returns result of the number of vote per candidate
+            Returns result of the number of vote per candidate.
 
         create:
             Create an instance of a candidate result.
@@ -375,13 +375,11 @@ class generalViewSet(viewsets.ModelViewSet):
     queryset = General_VoteRecord.objects.all()
     serializer_class = generalSerializer
 
-    def perform_create(self, serializer):
-        serializer.save()
 
 class electionViewSet(viewsets.ModelViewSet):
     """
     retrieve:
-        Return an instance of election type/date
+        Return an instance of election type/date.
 
     list:
         Return all available elections, ordered by date.

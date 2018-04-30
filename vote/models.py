@@ -191,7 +191,7 @@ Treasurer = (
 # Create your models here.
 
 class Election(models.Model):
-    election_id = models.DateField(default=None)
+    election_id = models.CharField(max_length=7, default=None, null=True)
     type = models.CharField(max_length=50)
     status = models.CharField(max_length=50, default='inactive')
 
@@ -246,8 +246,7 @@ class VoteCount(models.Model):
     name = models.CharField(max_length=50)
     position = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
-    election = models.CharField(max_length=50)
-
+    election = models.CharField(max_length=50, null=True)
 
     def to_json(self):
         return {

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-
 from graphos.renderers import gchart
 from graphos.renderers.gchart import BarChart
 from graphos.sources.simple import SimpleDataSource
@@ -12,8 +11,6 @@ from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, General
 
 from rest_framework import viewsets
 from rest_framework.schemas import get_schema_view
-
-
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
 from .serializers import generalSerializer, primarySerializer, electionSerializer
@@ -24,7 +21,7 @@ import random, requests
 # Create your views here.
 
 # for swagger UI
-schema_view = get_schema_view(title='Election API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
+schema_view = get_schema_view(title='Election API', urlconf='vote.urls', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
 def home(request):
     return render(request, 'base.html', {})
@@ -67,8 +64,8 @@ def view_elections(request):
 
 @login_required
 def view_voters(request):
-	query_results = Voter.objects.all()
-	return render(request, 'view_voters.html', {'query_results': query_results})
+    query_results = Voter.objects.all()
+    return render(request, 'view_voters.html', {'query_results': query_results})
 
 def load_voters(request):
     r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
@@ -77,7 +74,6 @@ def load_voters(request):
     if (status == "200"):
         voters = response["voters"]
         for voter in voters:
-            # print(voter)
             voter_exists = Voter.objects.filter(voter_number=voter["voter_number"]).exists()
             if not voter_exists:
                 Voter(voter_number = voter["voter_number"],
@@ -163,7 +159,6 @@ def inactive(request):
 
 def vote(request):
     active_election = Election.objects.get(status="active").type
-    print(active_election)
     if request.method == 'POST' :
         # create a form instance and populate it with data from the request:
         if(active_election == 'general'):
@@ -197,8 +192,7 @@ def vote(request):
                 task.save()
                 # redirect to a new URL:
                 # return redirect(reverse('home'))
-                return render(request, 'ballot_print.html', {'form': form, 'president': task.president, 'vice_president': task.vice_president,
-				'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
+                return render(request, 'ballot_print.html', {'form': form, 'president': task.president, 'vice_president': task.vice_president,'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -264,7 +258,6 @@ def vote_count(request):
     primary_records = Primary_VoteRecord.objects.all()
     general_records = General_VoteRecord.objects.all()
 
-
     primary_votes = [dict() for i in primary_positions]
     general_votes = [dict() for i in general_positions]
 
@@ -306,7 +299,6 @@ def results(request):
 #        count = VoteCount.objects.filter(president=candidate).count()
 #        president_data.append(candidate,count)
 
-
 ################################################################################		
     prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
     prez_count2 = VoteRecord.objects.filter(president='Hillary Clinton').count()
@@ -334,7 +326,6 @@ def results(request):
         "gov_chart": gov_chart,
     }
     return render(request, 'results.html', context)
-
 ####################################################################
 
 class primaryViewSet(viewsets.ModelViewSet):
@@ -359,7 +350,6 @@ class primaryViewSet(viewsets.ModelViewSet):
     """
     queryset = Primary_VoteRecord.objects.all()
     serializer_class = primarySerializer
-
 
 class generalViewSet(viewsets.ModelViewSet):
     """

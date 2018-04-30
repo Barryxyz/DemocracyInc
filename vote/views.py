@@ -199,6 +199,7 @@ def vote(request):
     return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
+    isNotCheckedIn = False
     active_election = Election.objects.get(status="active").type
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -225,14 +226,15 @@ def vote_id_check(request):
                     request.session['input_key'] = input_key
                     return redirect(reverse('vote'))
             else:
-                return render(request, 'vote_id_check.html', {'form': form})  # need an error page?
+                isNotCheckedIn = True
+                return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})  # need an error page?
         else:
             return redirect(reverse('home'))
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = VoteIdCheckForm()
-    return render(request, 'vote_id_check.html', {'form': form})
+    return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
 
 def generator():
     seq = "ABCDFGHJIKLMNOPQRSTUVWXYZ1234567890"
@@ -329,6 +331,15 @@ def vote_count(request):
 
 @login_required
 def results(request):
+#    candidates_pres = General_VoteRecord.president
+#	
+#    president_data = [['Candidates','Count']]
+#    for candidate in candidates_pres:
+#        count = VoteCount.objects.filter(president=candidate).count()
+#        president_data.append(candidate,count)
+
+
+################################################################################		
     prez_count = VoteRecord.objects.filter(president='Gary Johnson').count()
     prez_count2 = VoteRecord.objects.filter(president='Hillary Clinton').count()
     president_data = [

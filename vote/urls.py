@@ -22,7 +22,7 @@ from vote import views
 
 router = routers.DefaultRouter()
 router.register(r'count_api', views.CountViewSet)
-router.register(r'records_api', views.RecordViewSet)
+# router.register(r'records_api', views.RecordViewSet)
 
 
 urlpatterns = [
@@ -38,7 +38,8 @@ urlpatterns = [
 	url(r'^view_voters/', views.view_voters, name='view_voters'),
     url(r'^view_election/', views.view_elections, name='view_elections'),
     url(r'^vote_count/', views.vote_count, name='vote_count'),
-    url(r'^results/', views.results, name='results'),
+    url(r'^general_results/', views.general_results, name='general_results'),
+    url(r'^primary_results/', views.primary_results, name='primary_results'),
     url(r'^alreadyvoted/', views.already_voted, name='already_voted'),
     url(r'^inactive/', views.inactive, name='inactive')
 ]

@@ -23,46 +23,33 @@ from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from vote import views
 
 router = routers.DefaultRouter()
-router.register(r'^$', views.electionViewSet)
+router.register(r'^', views.electionViewSet)
 router.register(r'^/2017-11', views.generalViewSet)
 router.register(r'^/2017-06', views.primaryViewSet)
-
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^admin/=', admin.site.urls),
     url(r'^load_voters/', views.load_voters, name='load_voters'),
     url(r'^login/', views.login, name='login'),
-	url(r'^logout_page/', views.logout_page, name='logout_page'),
-	url(r'^password_reset/$',views.reset, name='reset_pass'),
+    url(r'^logout_page/', views.logout_page, name='logout_page'),
+    url(r'^password_reset/$',views.reset, name='reset_pass'),
     url(r'^vote/', views.vote, name='vote'),
     url(r'^vote_id_check/', views.vote_id_check, name='vote_id_check'),
     url(r'^checkin/', views.checkin, name='checkin'),
-	url(r'^view_voters/', views.view_voters, name='view_voters'),
+    url(r'^view_voters/', views.view_voters, name='view_voters'),
     url(r'^view_election/', views.view_elections, name='view_elections'),
     url(r'^vote_count/', views.vote_count, name='vote_count'),
-    url(r'^results/', views.results, name='results'),
+    url(r'^general_results/', views.general_results, name='general_results'),
+    url(r'^primary_results/', views.primary_results, name='primary_results'),
     url(r'^alreadyvoted/', views.already_voted, name='already_voted'),
     url(r'^inactive/', views.inactive, name='inactive')
 ]
 
-
 #Add Django site authentication urls (for login, logout, password management)
 urlpatterns += [
     url(r'accounts/', include('django.contrib.auth.urls')),
-    url(r'^elections', include((router.urls))),
+    url(r'^elections', include(router.urls)),
     url(r'^api_doc', views.schema_view, name='docs'),
 ]
 
-# for external api
-# urlpatterns += router.urls
-# [
-#     url(r'^elections/2018-11/', include(router.urls)),
-#
-#     swagger UI material
-#     url(r'^', views.schema_view, name='docs'),
-#     url(r'^elections/', include(router.urls)),
-#     url(r'^elections/2018-07', include(router.urls)),
-#     url(r'^elections/2018-11', include(router.urls)),
-#     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-# ]

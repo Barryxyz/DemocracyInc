@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static "css/footer.css" %}">
     <link rel="stylesheet" href="{% static "css/ionicons.min.css" %}">
     <!-- <link rel="stylesheet" type="text/css" href="C:\Users\seant_000\Desktop\DemocracyInc-str8ht\vote\static\css\signup.css"> -->
-    <title>Election Results</title>
+    <title>General Election Results</title>
 
   <style>
 </style>
@@ -31,10 +31,15 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'vote_count' %}">Vote Count</a>
           </li>
-          <li class="nav-item">
-               <li class="nav-item">
-            <a class="nav-link" href="{% url 'results' %}">Election Results</a>
-          </li>
+             <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Election Results
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'general_results' %}">General Election</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'primary_results' %}">Primary Election</a>
+
             <li class="nav-item">
             <a class="nav-link" href="{% url 'checkin' %}">Check In</a>
           </li>
@@ -67,7 +72,7 @@
       </div>
     </nav>
 	<br><br>
-  <h1 style="color:black;" align="center">ELECTION RESULTS</h1>
+  <h1 style="color:black;" align="center">GENERAL ELECTION RESULTS</h1>
 	<hr>
 
 {# THIS IS WHERE THE CHART CODE GOES:#}
@@ -75,14 +80,21 @@
 <script type="text/javascript">
     google.load("visualization", "1", {packages:["corechart"]});
 </script>
+  <div id="padder" align="center">
   {{ prez_chart.as_html }}
   <br>
 <br>
-    {{ gov_chart.as_html }}
+    {{ vp_chart.as_html }}
+   <br>
+<br>
+  {{ houserep_chart.as_html }}
+   <br>
+<br>
+  {{ senator_chart.as_html }}
+      </div>
 
 <br>
 <br>
-
 <div class="footer-dark">
        <footer>
            <div class="container">
@@ -105,36 +117,20 @@
                    </div>
                    <div class="col-md-6 item text">
                        <h3>DemocracyInc</h3>
-                       <p>Our system provides users with an easy to use voting application.</p>
+                       <p>Our system provides users with an easy to use voting application. </p>
+					   <br>
+					   <img align="center" src="{% static "img/Logo_tiny.png" %}" alt="logo"/>
                    </div>
-                   <div class="col item social">
-                     <a href="#">
-                       <i class="icon ion-social-facebook" style="padding:10px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-twitter" style="padding:6px"></i>
-                     </a>
-                     <a href="#">
-                       <i class="icon ion-social-snapchat" style="padding:2px"></i>
-                     </a>
-                     <a href="#"><i class="icon ion-social-instagram" style="padding:3px"></i>
-                     </a>
-                   </div>
-               </div>
                <p class="copyright">DemocracyInc &copy; 2017</p>
            </div>
        </footer>
    </div>
-    <script src="{% static "js/jquery.min.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-
-
-
+</div>
+    <!--<script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-
   </body>
 </html>
-

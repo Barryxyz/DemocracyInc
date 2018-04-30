@@ -1,9 +1,9 @@
 from django import forms
-from .models import Voter, VoteRecord, Candidate, Position, General_VoteRecord, Primary_VoteRecord
+from .models import Voter, Candidate, Position, General_VoteRecord, Primary_VoteRecord
 
 class CandidateChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-         return obj.full_name
+         return obj.full_name # add policital part here. maybe change to full name to first and last name?
 
 class GeneralVoteForm(forms.ModelForm):
     class Meta:
@@ -18,14 +18,7 @@ class PrimaryVoteForm(forms.ModelForm):
     class Meta:
         model = Primary_VoteRecord
         fields = ['president_nominee']
-    president_nominees = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president_nominee")))
-
-
-class VoteForm(forms.ModelForm):
-    class Meta:
-        model = VoteRecord
-        fields = ['president', 'governor', 'lieutenant_Governor', 'attorney_General', 'delegate',
-                  'commonwealth_Attorney', 'sheriff', 'treasurer']
+    president_nominee = CandidateChoiceField(queryset=Candidate.objects.filter(position=Position.objects.get(name="president_nominee")))
 
 class RegisteredForm(forms.ModelForm):
     class Meta:

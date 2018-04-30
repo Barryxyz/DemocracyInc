@@ -9,11 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Voter, VoteRecord, Election, VoteCount, Candidate, General_VoteRecord, Primary_VoteRecord
 from .forms import VoteForm, VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
+
 from rest_framework import viewsets
 from rest_framework.schemas import get_schema_view
-from rest_framework.response import Response
 
-from rest_framework_swagger.views import get_swagger_view
+
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
 from .serializers import generalSerializer, primarySerializer, electionSerializer
@@ -23,6 +23,7 @@ import random, requests
 
 # Create your views here.
 
+# for swagger UI
 schema_view = get_schema_view(title='Election API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
 def home(request):
@@ -333,6 +334,8 @@ def results(request):
         "gov_chart": gov_chart,
     }
     return render(request, 'results.html', context)
+
+####################################################################
 
 class primaryViewSet(viewsets.ModelViewSet):
     """

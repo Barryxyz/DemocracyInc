@@ -1,23 +1,28 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-
 from graphos.renderers import gchart
 from graphos.sources.simple import SimpleDataSource
 from graphos.sources.model import ModelDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Candidate
+from .models import Voter, General_VoteRecord, Primary_VoteRecord, Election, VoteCount, Position, Candidate
 from .forms import VoteIdCheckForm, RegisteredForm, LoginForm, GeneralVoteForm, PrimaryVoteForm
-from rest_framework import viewsets
 
-from .serializers import CountSerializer
+from rest_framework import viewsets
+from rest_framework.schemas import get_schema_view
+from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+
+from .serializers import generalSerializer, primarySerializer, electionSerializer
 from django.shortcuts import render, redirect
 from django.urls import reverse
-import random, json, requests
+import random, requests
 from itertools import groupby
 
 # Create your views here.
+
+# for swagger UI
+schema_view = get_schema_view(title='Election API', urlconf='vote.urls', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
 def home(request):
     return render(request, 'base.html', {})
@@ -60,8 +65,8 @@ def view_elections(request):
 
 @login_required
 def view_voters(request):
-	query_results = Voter.objects.all()
-	return render(request, 'view_voters.html', {'query_results': query_results})
+    query_results = Voter.objects.all()
+    return render(request, 'view_voters.html', {'query_results': query_results})
 
 def load_voters(request):
     r = requests.get('http://cs3240votingproject.org/voters/?key=democracy')
@@ -70,7 +75,6 @@ def load_voters(request):
     if (status == "200"):
         voters = response["voters"]
         for voter in voters:
-            # print(voter)
             voter_exists = Voter.objects.filter(voter_number=voter["voter_number"]).exists()
             if not voter_exists:
                 Voter(voter_number = voter["voter_number"],
@@ -91,6 +95,7 @@ def load_voters(request):
 @login_required
 def checkin(request):
     # if this is a POST request we need to process the form data
+    active_election = Election.objects.get(status="active").type
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = RegisteredForm(request.POST)
@@ -119,7 +124,13 @@ def checkin(request):
                 )
 
                 v_id = voter.id
-                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                if (active_election == 'general'):
+                    exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                elif (active_election == 'primary'):
+                    exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
+                #exists = VoteRecord.objects.filter(voter_id=v_id).exists()
 
                 inactive = voter.voter_status
 
@@ -127,14 +138,14 @@ def checkin(request):
                     return redirect(reverse('inactive'))
 
                 if exists:
-                    return redirect(reverse('alreadyvoted'))
+                    return redirect(reverse('already_voted'))
 
                 else:
                     key = generator()
-                    full_name = registered_voter.first_name + " " + registered_voter.last_name
-                    locality = registered_voter.locality
-                    registered_voter.confirmation = key
-                    registered_voter.save()
+                    full_name = voter.first_name + " " + voter.last_name
+                    locality = voter.locality
+                    voter.confirmation = key
+                    voter.save()
                     return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:
@@ -149,7 +160,6 @@ def inactive(request):
 
 def vote(request):
     active_election = Election.objects.get(status="active").type
-    print(active_election)
     if request.method == 'POST' :
         # create a form instance and populate it with data from the request:
         if(active_election == 'general'):
@@ -163,7 +173,10 @@ def vote(request):
             voter = Voter.objects.get(confirmation=request.session['input_key'])
 
             v_id = voter.id
-            exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+            if (active_election == 'general'):
+                exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
+            elif (active_election == 'primary'):
+                exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
 
             if exists:
                 return redirect(reverse('already_voted'))
@@ -179,7 +192,9 @@ def vote(request):
                 task.voter = voter
                 task.save()
                 # redirect to a new URL:
-                return redirect(reverse('home'))
+                # return redirect(reverse('home'))
+                return render(request, 'ballot_print.html', {'form': form, 'president': task.president, 'vice_president': task.vice_president,'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
+
     # if a GET (or any other method) we'll create a blank form
     else:
         if (active_election == 'general'):
@@ -190,6 +205,8 @@ def vote(request):
     return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):
+    isNotCheckedIn = False
+    active_election = Election.objects.get(status="active").type
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = VoteIdCheckForm(request.POST)
@@ -202,23 +219,28 @@ def vote_id_check(request):
 
                 voter = Voter.objects.get(confirmation=input_key)
                 v_id = voter.id
-                exists = VoteRecord.objects.filter(voter_id=v_id).exists()
+                if (active_election == 'general'):
+                    exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
+
+                elif (active_election == 'primary'):
+                    exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
 
                 if exists:
-                    return redirect(reverse('alreadyvoted'))
+                    return redirect(reverse('already_voted'))
                 else:
 
                     request.session['input_key'] = input_key
                     return redirect(reverse('vote'))
             else:
-                return render(request, 'vote_id_check.html', {'form': form})  # need an error page?
+                isNotCheckedIn = True
+                return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})  # need an error page?
         else:
             return redirect(reverse('home'))
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = VoteIdCheckForm()
-    return render(request, 'vote_id_check.html', {'form': form})
+    return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
 
 def generator():
     seq = "ABCDFGHJIKLMNOPQRSTUVWXYZ1234567890"
@@ -228,163 +250,88 @@ def generator():
         key += (''.join(''.join(random.choice(seq))))
     return key
 
+def count_votes():
+    VoteCount.objects.all().delete()
+    primary_positions = ['president_nominee']
+    general_positions = ['president', 'vice_president', 'house_rep', 'senator']
+    primary_records = Primary_VoteRecord.objects.all()
+    general_records = General_VoteRecord.objects.all()
+
+    primary_votes = [dict() for i in primary_positions]
+    general_votes = [dict() for i in general_positions]
+
+    for vr in primary_records:
+        for i in range(0, len(primary_positions)):
+            pos = primary_positions[i]
+            name = getattr(vr, pos)
+            if name in primary_votes[i]:
+                primary_votes[i][name] += 1
+            else:
+                primary_votes[i][name] = 0
+
+    for vr in general_records:
+        for i in range(0, len(general_positions)):
+            pos = general_positions[i]
+            name = getattr(vr, pos)
+            if name in general_votes[i]:
+                general_votes[i][name] += 1
+            else:
+                general_votes[i][name] = 0
+
+    results = []
+    for i in range(0, len(primary_positions)):
+        for name in primary_votes[i].keys():
+            results.append(
+                VoteCount(name=name, position=primary_positions[i], count=primary_votes[i][name], election='primary'))
+
+    for i in range(0, len(general_positions)):
+        for name in general_votes[i].keys():
+            results.append(
+                VoteCount(name=name, position=general_positions[i], count=general_votes[i][name], election='general'))
+
+    for r in results:
+        r.save()
+
 @login_required
 def vote_count(request):
-    # records = VoteRecord.objects.all()
-    # votes = dict()
-    # positions = dict()
-    # for vr in records:
-    #     key = vr.president
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('president')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('president')
-    #
-    #     key = vr.governor
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('governor')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('governor')
-    #
-    #     key = vr.lieutenant_Governor
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('lieutenant_Governor')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('lieutenant_Governor')
-    #
-    #     key = vr.attorney_General
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('attorney_General')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('attorney_General')
-    #
-    #     key = vr.delegate
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('delegate')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('delegate')
-    #
-    #     key = vr.commonwealth_Attorney
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('votes')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('votes')
-    #
-    #     key = vr.sheriff
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('sheriff')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('sheriff')
-    #
-    #     key = vr.treasurer
-    #     if key in votes:
-    #         votes[key] += 1
-    #         positions[key].add('treasurer')
-    #     else:
-    #         votes[key] = 1
-    #         positions[key] = set()
-    #         positions[key].add('treasurer')
-    #
-    # results = []
-    # for name in votes.keys():
-    #     for position in positions[name]:
-    #         results.append(VoteCount(name=name, position=position, count=str(votes[name])))
-
-    # return render(request, 'vote_count.html', {'query_results': results})
-    return render(request, 'vote_count.html')
-
+    count_votes()
+    results = VoteCount.objects.all()
+    return render(request, 'vote_count.html', {'query_results': results})
 
 @login_required
 def general_results(request):
-    #for General Election
-    from django.db.models import Count
-    # prez_count = General_VoteRecord.objects.values('president').annotate(the_count=Count('president'))
-    # candidates_pres = General_VoteRecord.objects.all().values_list('president', flat=True).order_by('president')
+    president_data = [['Candidates','Count']]
+    vp_data = [['Candidates','Count']]
+    houserep_data = [['Candidates','Count']]
+    senator_data = [['Candidates','Count']]
 
-    from collections import Counter
-    # primary_records = Primary_VoteRecord.objects.all().values_list('president_nominee', flat=True).orderby('president_nominee')
-    # c = Counter(getattr() for i in primary_records)
-    general_records = General_VoteRecord.objects.all().values_list('president', flat=True).order_by('president')
-    president_data = [[]]
-    for candidate in general_records:
-        count = General_VoteRecord.objects.filter(president=candidate).count()
-        president_data.append([candidate,count])
+    general_id = Election.objects.get(type="general").id
+    general_positions = Position.objects.filter(election=general_id)
+    for position in general_positions:
+        general_candidates = Candidate.objects.filter(position=position.id).values_list("full_name", flat=True)
+        for candidate in general_candidates:
+            if position.name == "president":
+                count = General_VoteRecord.objects.filter(president=candidate).count()
+                president_data.append([candidate, count])
+            elif position.name == "vice_president":
+                count = General_VoteRecord.objects.filter(vice_president=candidate).count()
+                vp_data.append([candidate, count])
+            elif position.name == "house_rep":
+                count = General_VoteRecord.objects.filter(house_rep=candidate).count()
+                houserep_data.append([candidate, count])
+            elif position.name == "senator":
+                count = General_VoteRecord.objects.filter(senator=candidate).count()
+                senator_data.append([candidate, count])
 
-    # president_data = {item['president']: item['president__count'] for item in general_records}
-        # president_data=[
-        #     ['president',general_records]
-        # ]
-
-    #
-    # primary_positions = ['president_nominee']
-    # general_positions = ['president', 'vice_president', 'house_rep', 'senator']
-    # primary_records = Primary_VoteRecord.objects.all().values_list('president_nominee', flat=True).orderby('president_nominee')
-    # for i in range(primary_records):
-    #     if
-    #
-    #
-    # for i in primary_positions:
-    #     president_data =[
-    #         ['president_nominee',primary_records]
-    #     ]
-    # general_records = General_VoteRecord.objects.all()
-
-    # prez_count = General_VoteRecord.objects.filter(president='Hillary Clinton').count()
-    # prez_count2 = General_VoteRecord.objects.filter(president='Donald Trump').count()
-    # president_data = [
-    #     ['Candidates','Count'],
-    #     ['Hillary Clinton', prez_count],
-    #     ['Donald Trump', prez_count2]
-    # ]
-    vp_count = General_VoteRecord.objects.filter(vice_president='Tim Kaine').count()
-    vp_count2 = General_VoteRecord.objects.filter(vice_president='Mike Pence').count()
-    governor_data = [
-        ['Candidates', 'Count'],
-        ['Tim Kaine', vp_count],
-        ['Mike Pence', vp_count2],
-    ]
-    houserep_count = General_VoteRecord.objects.filter(house_rep='LuAnn Bennett').count()
-    houserep_count2 = General_VoteRecord.objects.filter(house_rep='Barbara Comstock').count()
-    houserep_data = [
-        ['Candidates', 'Count'],
-        ['LuAnn Bennett', houserep_count],
-        ['Barbara Comstock', houserep_count2],
-    ]
-    senator_count = General_VoteRecord.objects.filter(senator='Mark Warner').count()
-    senator_count2 = General_VoteRecord.objects.filter(senator='Ed Gillespie').count()
-    senator_data =[
-        ['Candidates', 'Count'],
-        ['Mark Warner', senator_count],
-        ['Ed Gillespie', senator_count2],
-    ]
+    print(president_data)
 
     prez_data_source = SimpleDataSource(data=president_data)
-    gov_data_source = SimpleDataSource(data=governor_data)
+    vp_data_source = SimpleDataSource(data=vp_data)
     houserep_data_source = SimpleDataSource(data=houserep_data)
     senator_data_source = SimpleDataSource(data=senator_data)
+
     prez_chart = gchart.PieChart(prez_data_source, options={'title': "President"})
-    vp_chart = gchart.PieChart(gov_data_source, options={'title': "Vice President"})
+    vp_chart = gchart.PieChart(vp_data_source, options={'title': "Vice President"})
     houserep_chart = gchart.PieChart(houserep_data_source, options={'title': "House of Representative"})
     senator_chart = gchart.PieChart(senator_data_source, options={'title': "Senator"})
 
@@ -394,25 +341,102 @@ def general_results(request):
         "houserep_chart": houserep_chart,
         "senator_chart": senator_chart
     }
-    return render(request, 'general_results.html', context)
 
+    return render(request, 'general_results.html', context)
 
 @login_required
 def primary_results(request):
-    return render(request, 'primary_results.html')
+    pn_data = [['Candidates','Count']]
+
+    primary_id = Election.objects.get(type="primary").id
+    primary_positions = Position.objects.filter(election=primary_id)
+    for position in primary_positions:
+        general_candidates = Candidate.objects.filter(position=position.id).values_list("full_name", flat=True)
+        for candidate in general_candidates:
+            if position.name == "president_nominee":
+                count = Primary_VoteRecord.objects.filter(president_nominee=candidate).count()
+                pn_data.append([candidate, count])
+
+    pn_data_source = SimpleDataSource(data=pn_data)
+    pn_chart = gchart.PieChart(pn_data_source, options={'title': "President Nominee"})
+    context = {
+        "pn_chart": pn_chart
+    }
+    return render(request, 'primary_results.html', context)
 
 
-
-class CountViewSet(viewsets.ModelViewSet):
+class primaryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = VoteCount.objects.all()
-    serializer_class = CountSerializer
+        retrieve:
+            Return an instance of a candidate
 
-# class RecordViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows groups to be viewed or edited.
-#     """
-#     queryset = VoteRecord.objects.all()
-#     serializer_class = RecordSerializer
+        list:
+            Returns result of the number of vote per candidate
+
+        create:
+            Create an instance of a candidate result.
+
+        delete:
+            Remove an instance of a candidate result.
+
+        partial_update:
+            Update one or more fields of a candidate.
+
+        update:
+            Update a candidate.
+    """
+    queryset = Primary_VoteRecord.objects.all()
+    serializer_class = primarySerializer
+
+
+class generalViewSet(viewsets.ModelViewSet):
+    """
+        retrieve:
+            Return an instance of a candidate
+
+        list:
+            Returns result of the number of vote per candidate
+
+        create:
+            Create an instance of a candidate result.
+
+        delete:
+            Remove an instance of a candidate result.
+
+        partial_update:
+            Update one or more fields of a candidate.
+
+        update:
+            Update a candidate.
+    """
+
+    queryset = General_VoteRecord.objects.all()
+    serializer_class = generalSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+class electionViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        Return an instance of election type/date
+
+    list:
+        Return all available elections, ordered by date.
+
+    create:
+        Create an instance of an election.
+
+    delete:
+        Remove an instance of an election.
+
+    partial_update:
+        Update one or more fields on an existing election.
+
+    update:
+        Update an election.
+    """
+
+    queryset = Election.objects.all()
+    serializer_class = electionSerializer
+

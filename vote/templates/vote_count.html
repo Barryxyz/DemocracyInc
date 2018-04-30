@@ -98,15 +98,18 @@ function myFunction() {
 
 <table id="myTable">
   <tr class="header">
+          <th style="width:20%;">Election</th>
     <th style="width:20%;">Candidate</th>
       <th style="width:20%;">Position</th>
     <th style="width:20%;">Count</th>
   </tr>
   {% for item in query_results %}
   <tr>
+            <td>{{ item.election }}</td>
     <td>{{ item.name }}</td>
     <td>{{ item.position }}</td>
       <td>{{ item.count }}</td>
+
 
   </tr>
   {% endfor %}

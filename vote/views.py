@@ -137,10 +137,10 @@ def checkin(request):
 
                 else:
                     key = generator()
-                    full_name = registered_voter.first_name + " " + registered_voter.last_name
-                    locality = registered_voter.locality
-                    registered_voter.confirmation = key
-                    registered_voter.save()
+                    full_name = voter.first_name + " " + voter.last_name
+                    locality = voter.locality
+                    voter.confirmation = key
+                    voter.save()
                     return render(request, 'booth_assignment.html', {'booth': key, 'full_name': full_name, 'locality': locality})
 
             else:

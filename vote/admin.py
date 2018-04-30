@@ -24,6 +24,7 @@ class general_election(admin.ModelAdmin):
 class primary_election(admin.ModelAdmin):
         model = Primary_VoteRecord
 
+# instantiating all the pages so that they exist in the admin page
 admin.site.register(Voter, registered_voters)
 admin.site.register(PollWorker, pollworkers)
 admin.site.register(Election, elections)

@@ -385,6 +385,7 @@ def primary_results(request):
     }
     return render(request, 'primary_results.html', context)
 
+# external API to view primary election results
 class primaryViewSet(viewsets.ModelViewSet):
     """
         retrieve:
@@ -408,6 +409,7 @@ class primaryViewSet(viewsets.ModelViewSet):
     queryset = Primary_VoteRecord.objects.all()
     serializer_class = primarySerializer
 
+# external API to view general election results
 class generalViewSet(viewsets.ModelViewSet):
     """
         retrieve:
@@ -432,7 +434,7 @@ class generalViewSet(viewsets.ModelViewSet):
     queryset = General_VoteRecord.objects.all()
     serializer_class = generalSerializer
 
-
+# external API to view election types
 class electionViewSet(viewsets.ModelViewSet):
     """
     retrieve:

@@ -246,12 +246,15 @@ class VoteCount(models.Model):
     name = models.CharField(max_length=50)
     position = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
+    election = models.CharField(max_length=50)
+
 
     def to_json(self):
         return {
             'name': self.name,
             'position': self.position,
             'count': self.count,
+            'election': self.election
         }
 
     def __str__(self):

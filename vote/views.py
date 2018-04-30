@@ -249,86 +249,43 @@ def generator():
 
 @login_required
 def vote_count(request):
-    records = VoteRecord.objects.all()
-    votes = dict()
-    positions = dict()
-    for vr in records:
-        key = vr.president
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('president')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('president')
+    # primary_positions = [a for a in dir(Primary_VoteRecord) if (not a.startswith('__') and  a is not 'voter' and a is not 'time_stamp')]
+    # general_positions = [a for a in dir(General_VoteRecord) if (not a.startswith('__') and  a is not 'voter' and a is not 'time_stamp')]
+    primary_positions = ['president_nominee']
+    general_positions = ['president', 'vice_president', 'house_rep', 'senator']
+    primary_records = Primary_VoteRecord.objects.all()
+    general_records = General_VoteRecord.objects.all()
 
-        key = vr.governor
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('governor')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('governor')
 
-        key = vr.lieutenant_Governor
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('lieutenant_Governor')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('lieutenant_Governor')
+    primary_votes = [dict() for i in primary_positions]
+    general_votes = [dict() for i in general_positions]
 
-        key = vr.attorney_General
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('attorney_General')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('attorney_General')
+    for vr in primary_records:
+        for i in range(0, len(primary_positions)):
+            pos = primary_positions[i]
+            name = getattr(vr, pos)
+            if name in primary_votes[i]:
+                primary_votes[i][name] += 1
+            else:
+                primary_votes[i][name] = 0
 
-        key = vr.delegate
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('delegate')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('delegate')
-
-        key = vr.commonwealth_Attorney
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('votes')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('votes')
-
-        key = vr.sheriff
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('sheriff')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('sheriff')
-
-        key = vr.treasurer
-        if key in votes:
-            votes[key] += 1
-            positions[key].add('treasurer')
-        else:
-            votes[key] = 1
-            positions[key] = set()
-            positions[key].add('treasurer')
+    for vr in general_records:
+        for i in range(0, len(general_positions)):
+            pos = general_positions[i]
+            name = getattr(vr, pos)
+            if name in general_votes[i]:
+                general_votes[i][name] += 1
+            else:
+                general_votes[i][name] = 0
 
     results = []
-    for name in votes.keys():
-        for position in positions[name]:
-            results.append(VoteCount(name=name, position=position, count=str(votes[name])))
+    for i in range(0, len(primary_positions)):
+        for name in primary_votes[i].keys():
+            results.append(VoteCount(name=name, position=primary_positions[i], count=primary_votes[i][name], election = 'primary'))
+
+    for i in range(0, len(general_positions)):
+        for name in general_votes[i].keys():
+            results.append(VoteCount(name=name, position=general_positions[i], count=general_votes[i][name], election = 'general'))
 
     return render(request, 'vote_count.html', {'query_results': results})
 

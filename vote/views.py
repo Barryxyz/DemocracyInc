@@ -103,7 +103,7 @@ def checkin(request):
         if form.is_valid():
 
             # process the data in form.cleaned_data as required
-            registered_voter = Voter.objects.get(
+            registered_voter = Voter.objects.filter(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 street_address=form.cleaned_data['street_address'],

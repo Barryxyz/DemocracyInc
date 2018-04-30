@@ -251,8 +251,6 @@ def generator():
     return key
 
 def count_votes():
-    # primary_positions = [a for a in dir(Primary_VoteRecord) if (not a.startswith('__') and  a is not 'voter' and a is not 'time_stamp')]
-    # general_positions = [a for a in dir(General_VoteRecord) if (not a.startswith('__') and  a is not 'voter' and a is not 'time_stamp')]
     VoteCount.objects.all().delete()
     primary_positions = ['president_nominee']
     general_positions = ['president', 'vice_president', 'house_rep', 'senator']
@@ -294,7 +292,6 @@ def count_votes():
     for r in results:
         r.save()
 
-
 @login_required
 def vote_count(request):
     count_votes()
@@ -303,18 +300,50 @@ def vote_count(request):
 
 @login_required
 def general_results(request):
-    general_count = []
+    president_data = [['Candidates','Count']]
+    vp_data = [['Candidates','Count']]
+    houserep_data = [['Candidates','Count']]
+    senator_data = [['Candidates','Count']]
+
     general_id = Election.objects.get(type="general").id
     general_positions = Position.objects.filter(election=general_id)
     for position in general_positions:
-        general_candidates = Candidate.objects.filter(position=position.id).values_list("name", flat=True)
+        general_candidates = Candidate.objects.filter(position=position.id).values_list("full_name", flat=True)
         for candidate in general_candidates:
             if position.name == "president":
-                num_votes = General_VoteRecord.objects.filter(president=candidate).count()
+                count = General_VoteRecord.objects.filter(president=candidate).count()
+                president_data.append([candidate, count])
             elif position.name == "vice_president":
-                num_votes = General_VoteRecord.objects.filter(vice_president=candidate).count()
+                count = General_VoteRecord.objects.filter(vice_president=candidate).count()
+                vp_data.append([candidate, count])
+            elif position.name == "house_rep":
+                count = General_VoteRecord.objects.filter(house_rep=candidate).count()
+                houserep_data.append([candidate, count])
+            elif position.name == "senator":
+                count = General_VoteRecord.objects.filter(senator=candidate).count()
+                senator_data.append([candidate, count])
 
-                
+    print(president_data)
+
+    prez_data_source = SimpleDataSource(data=president_data)
+    vp_data_source = SimpleDataSource(data=vp_data)
+    houserep_data_source = SimpleDataSource(data=houserep_data)
+    senator_data_source = SimpleDataSource(data=senator_data)
+
+    prez_chart = gchart.PieChart(prez_data_source, options={'title': "President"})
+    vp_chart = gchart.PieChart(vp_data_source, options={'title': "Vice President"})
+    houserep_chart = gchart.PieChart(houserep_data_source, options={'title': "House of Representative"})
+    senator_chart = gchart.PieChart(senator_data_source, options={'title': "Senator"})
+
+    context = {
+        "prez_chart": prez_chart,
+        "vp_chart": vp_chart,
+        "houserep_chart": houserep_chart,
+        "senator_chart": senator_chart
+    }
+
+    return render(request, 'general_results.html', context)
+
 @login_required
 def primary_results(request):
     pn_data = [['Candidates','Count']]

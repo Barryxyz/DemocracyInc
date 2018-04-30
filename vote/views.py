@@ -202,13 +202,14 @@ def vote(request):
                 # return redirect(reverse('home'))
 
             print(active_election)
-            if (active_election == 'general'):
-                return render(request, 'ballot_print.html',
+            # if (active_election == 'general'):
+            return render(request, 'ballot_print.html',
                               {'form': form, 'election':active_election, 'president': task.president, 'vice_president': task.vice_president,
                                'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
-            elif (active_election == 'primary'):
-                return render(request, 'ballot_print.html',
-                              {'form': form, 'election': active_election, 'president_nominee': task.president_nominee})
+            # elif (active_election == 'primary'):
+            #     return render(request, 'ballot_print.html',
+            #                   {'form': form, 'election': active_election, 'president_nominee': task.president_nominee})
+
 
 
     # if a GET (or any other method) we'll create a blank form

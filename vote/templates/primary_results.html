@@ -80,20 +80,11 @@
 <script type="text/javascript">
     google.load("visualization", "1", {packages:["corechart"]});
 </script>
-{#  {{ prez_chart.as_html }}#}
-{#  <br>#}
-{#<br>#}
-{#    {{ vp_chart.as_html }}#}
-{#   <br>#}
-{#<br>#}
-{#  {{ houserep_chart.as_html }}#}
-{#   <br>#}
-{#<br>#}
-{#  {{ senator_chart.as_html }}#}
-{##}
-{#<br>#}
-{#<br>#}
-
+    <div id="padder" align="center">
+        {{ pn_chart.as_html }}
+        <br>
+        <br>
+    </div>
     <div class="footer-dark">
        <footer>
            <div class="container">

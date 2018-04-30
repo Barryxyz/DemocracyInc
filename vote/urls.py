@@ -23,14 +23,14 @@ from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from vote import views
 
 router = routers.DefaultRouter()
-router.register(r'elections', views.electionViewSet)
-router.register(r'2018-11', views.generalViewSet)
-router.register(r'2018-07', views.primaryViewSet)
+router.register(r'^$', views.electionViewSet)
+router.register(r'^/2017-11', views.generalViewSet)
+router.register(r'^/2017-06', views.primaryViewSet)
 
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/=', admin.site.urls),
     url(r'^load_voters/', views.load_voters, name='load_voters'),
     url(r'^login/', views.login, name='login'),
 	url(r'^logout_page/', views.logout_page, name='logout_page'),
@@ -50,19 +50,19 @@ urlpatterns = [
 #Add Django site authentication urls (for login, logout, password management)
 urlpatterns += [
     url(r'accounts/', include('django.contrib.auth.urls')),
+    url(r'^elections', include((router.urls))),
+    url(r'^api_doc', views.schema_view, name='docs'),
 ]
 
-#for external api
-urlpatterns += [
-    # viewing api
-    url(r'^', include(router.urls)),
-    # url(r'^elections/2018-11/', include(router.urls)),
-
-
-    # swagger UI material
-    # url(r'^', views.schema_view, name='docs'),
-    # url(r'^elections/', include(router.urls)),
-    # url(r'^elections/2018-07', include(router.urls)),
-    # url(r'^elections/2018-11', include(router.urls)),
-    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+# for external api
+# urlpatterns += router.urls
+# [
+#     url(r'^elections/2018-11/', include(router.urls)),
+#
+#     swagger UI material
+#     url(r'^', views.schema_view, name='docs'),
+#     url(r'^elections/', include(router.urls)),
+#     url(r'^elections/2018-07', include(router.urls)),
+#     url(r'^elections/2018-11', include(router.urls)),
+#     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+# ]

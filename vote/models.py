@@ -61,7 +61,7 @@ class Voter(models.Model):
     def __str__(self):
         return self.first_name
 
-
+# model used to contain the results of ballots
 class VoteCount(models.Model):
     name = models.CharField(max_length=50)
     position = models.CharField(max_length=50)
@@ -79,11 +79,14 @@ class VoteCount(models.Model):
     def __str__(self):
         return self.name, self.position, self.count
 
+# model used to contain accounts for poll workers
 class PollWorker(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
     locality = models.CharField(max_length=20, null=True)
 
+# model used to record each ballot for the general election
+# contains code for external api access with json
 class General_VoteRecord(models.Model):
     president = models.CharField(max_length=100)
     vice_president = models.CharField(max_length=100)
@@ -105,6 +108,8 @@ class General_VoteRecord(models.Model):
     def __str__(self):
         return self.president, self.vice_president, self.house_rep, self.senator, self.voter, self.time_stamp
 
+# model that contains the record for each ballot for the primary elections
+# contains code for external api access with json
 class Primary_VoteRecord(models.Model):
     president_nominee = models.CharField(max_length=100)
     voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)

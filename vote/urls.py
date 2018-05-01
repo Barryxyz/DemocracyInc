@@ -13,15 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))"""
 
-from VotingApp import settings
 from django.contrib import admin
 from django.conf.urls import url, include
 
-from rest_framework import routers, serializers, viewsets
-from rest_framework_swagger.views import get_swagger_view
-from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+from rest_framework import routers
 from vote import views
 
+# url links for API
 router = routers.DefaultRouter()
 router.register(r'^/', views.electionViewSet)
 router.register(r'^/2017-11', views.generalViewSet)

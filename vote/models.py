@@ -86,42 +86,9 @@ class PollWorker(models.Model):
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
     locality = models.CharField(max_length=20, null=True)
 
-# model used to record each ballot for the general election
-# contains code for external api access with json
-class General_VoteRecord(models.Model):
-    president = models.CharField(max_length=100)
-    vice_president = models.CharField(max_length=100)
-    house_rep = models.CharField(max_length=100)
-    senator = models.CharField(max_length=100)
-    voter = models.ForeignKey(Voter, on_delete=models.CASCADE, default=None)
+class VoteRecord(models.Model):
+    election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, default=None)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None)
+    voter = models.ForeignKey(Voter, on_delete=models.CASCADE, default=None, null=True)
     time_stamp = models.DateTimeField(auto_now=True)
-
-    def to_json(self):
-        return {
-            'president': self.president,
-            'vice_president': self.vice_president,
-            'house_rep': self.house_rep,
-            'senator': self.senator,
-            'voter': self.voter,
-            'time_stamp': self.time_stamp,
-        }
-
-    def __str__(self):
-        return self.president, self.vice_president, self.house_rep, self.senator, self.voter, self.time_stamp
-
-# model that contains the record for each ballot for the primary elections
-# contains code for external api access with json
-class Primary_VoteRecord(models.Model):
-    president_nominee = models.CharField(max_length=100)
-    voter = models.ForeignKey('Voter', on_delete=models.CASCADE, default=None)
-    time_stamp = models.DateTimeField(auto_now=True)
-
-    def to_json(self):
-        return {
-            'president_nominee': self.president_nominee,
-            'voter': self.voter,
-            'time_stamp': self.time_stamp,
-        }
-
-    def __str__(self):
-        return self.president_nominee, self.voter, self.time_stamp

@@ -1,19 +1,23 @@
 {% load staticfiles %}
-
 {% include 'header.html' %}
 	<br><br>
-  <h1 style="color:black;" align="center">PRIMARY ELECTION RESULTS</h1>
+  <h1 style="color:black;" align="center">{{ election }} ELECTION RESULTS</h1>
 	<hr>
+
+
 
 {# THIS IS WHERE THE CHART CODE GOES:#}
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
     google.load("visualization", "1", {packages:["corechart"]});
 </script>
-    <div id="padder" align="center">
-        {{ pn_chart.as_html }}
-        <br>
-        <br>
-    </div>
+  <div id="padder" align="center">
+      {% for i, chart in context.items %}
+          {{ chart.as_html }}
+      {% endfor %}
+  </div>
+
+<br>
+<br>
 
 {% include 'footer.html' %}

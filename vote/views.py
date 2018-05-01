@@ -6,8 +6,10 @@ from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-from rest_framework import viewsets
+from rest_framework import viewsets, generics, permissions
+from rest_framework.response import Response
 from rest_framework.schemas import get_schema_view
+from rest_framework.views import APIView
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
 from .serializers import voteSerializer, electionSerializer
@@ -287,7 +289,7 @@ def results(request):
     return render(request, 'results.html', {'context': context, 'election': election.type.upper()})
 
 # external API to view general election results
-class generalViewSet(viewsets.ModelViewSet):
+class voteViewSet(viewsets.ModelViewSet):
     """
         retrieve:
             Return an instance of a candidate.
@@ -307,8 +309,7 @@ class generalViewSet(viewsets.ModelViewSet):
         update:
             Update a candidate.
     """
-
-    queryset = models.VoteRecord.objects.filter(election=models.Election.objects.filter(type="general"))
+    queryset = models.VoteRecord.objects.all()
     serializer_class = voteSerializer
 
 # external API to view general election results
@@ -360,4 +361,3 @@ class electionViewSet(viewsets.ModelViewSet):
 
     queryset = models.Election.objects.all()
     serializer_class = electionSerializer
-

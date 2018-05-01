@@ -21,7 +21,7 @@ from vote import views
 
 # url links for API
 router = routers.DefaultRouter()
-router.register(r'2017-11', views.generalViewSet)
+router.register(r'2017-11', views.voteViewSet)
 router.register(r'2017-06', views.primaryViewSet)
 router.register(r'', views.electionViewSet)
 

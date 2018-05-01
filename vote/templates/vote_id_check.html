@@ -4,7 +4,7 @@
 
 {% block content %}
 {% include 'header.html' %}
-	<br>
+<br>
 <h1 style="color:black;" align="center">CONFIRMATION NUMBER</h1>
 <br>
 {% if isNotCheckedIn == True %}
@@ -16,10 +16,13 @@
         <form action="{% url 'vote_id_check' %}" method="POST">
             {% csrf_token %}
             {{form.as_p}}
+			<br>
         <button type="submit">Submit</button>
         </form>
+		<br>
     </div>
+	<br>
 </div>
-
+<br>
 {% include 'footer.html' %}
 {% endblock %}

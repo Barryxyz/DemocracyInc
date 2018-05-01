@@ -21,9 +21,9 @@ from vote import views
 
 # url links for API
 router = routers.DefaultRouter()
-router.register(r'^/', views.electionViewSet)
-router.register(r'^/2017-11', views.generalViewSet)
-router.register(r'^/2017-06', views.primaryViewSet)
+router.register(r'2017-11', views.generalViewSet)
+router.register(r'^2017-06', views.primaryViewSet)
+router.register(r'', views.electionViewSet)
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
@@ -44,10 +44,10 @@ urlpatterns = [
     url(r'^inactive/', views.inactive, name='inactive')
 ]
 
-#Add Django site authentication urls (for login, logout, password management)
+# #Add Django site authentication urls (for login, logout, password management)
 urlpatterns += [
     url(r'accounts/', include('django.contrib.auth.urls')),
-    url(r'^elections', include(router.urls)),
+    url(r'^elections/', include(router.urls)),
     url(r'^api_doc', views.schema_view, name='docs'),
 ]
 

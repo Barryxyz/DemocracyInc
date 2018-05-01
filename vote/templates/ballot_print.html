@@ -8,30 +8,33 @@
 	<div id="formContainer">
         <div align="center" style="font-family: tahoma, serif;">
 
-{#            {% if election == "general" %}#}
-		<!-- These are subject to change -->
-            <h1 align="center">Hard Copy of Ballot</h1>
-            <br>
-            <h2 align="center"><strong>President: </strong>{{ president }}</h2>
-            <hr>
-            <h2 align="center"><strong>Vice President: </strong>{{ vice_president }}</h2>
-            <hr>
-            <h2 align="center"><strong>House of Representatives: </strong>{{ house_rep }}</h2>
-            <hr>  
-            <h2 align="center"><strong>Senator: </strong>{{ senator }}</h2>
-            <hr>
-{#            {% else if election == "primary" %}#}
-{#            <br>#}
-{#            <h2 align="center"><strong>President Nominee: </strong>{{ president_nominee }}</h2>#}
-{#            <hr>#}
-{#            {% endif %}#}
+                <h1 align="center">Hard Copy of Ballot</h1>
+                <br>
 
-            <h2 align="center"><strong>Time of Submission: </strong><h3 id="demo"></h3>
-            <script>
-                var d = new Date();
-                document.getElementById("demo").innerHTML = d;
-            </script>
-            </h2>
+            {% if election == "general" %}
+                <h2 align="center"><strong>Election: </strong>{{ election }}</h2>
+                <hr>
+                <br>
+                <h2 align="center"><strong>President: </strong>{{ president }}</h2>
+                <hr>
+                <h2 align="center"><strong>Vice President: </strong>{{ vice_president }}</h2>
+                <hr>
+                <h2 align="center"><strong>House of Representatives: </strong>{{ house_rep }}</h2>
+                <hr>
+                <h2 align="center"><strong>Senator: </strong>{{ senator }}</h2>
+                <hr>
+            {% elif election == "primary" %}
+                <br>
+                <h2 align="center"><strong>President Nominee: </strong>{{ president_nominee }}</h2>
+                <hr>
+            {% endif %}
+
+                <h2 align="center"><strong>Time of Submission: </strong><h3 id="demo"></h3>
+                <script>
+                    var d = new Date();
+                    document.getElementById("demo").innerHTML = d;
+                </script>
+                </h2>
             <hr>
             {% load static %}
             <img src="{% static "img/Logo_small.png" %}" alt="logo"/>

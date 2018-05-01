@@ -17,7 +17,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 import random, requests
 
-
 # Create your views here.
 
 # for swagger UI
@@ -63,7 +62,6 @@ def already_voted(request):
 def view_elections(request):
     query_results = Election.objects.all()
     return render(request, 'view_elections.html', {'query_results': query_results})
-
 
 # certain pages require a certain elevated user access
 # page to see the list of all registered and eligible voters
@@ -171,23 +169,23 @@ def inactive(request):
     return render(request, 'inactive.html', {})
 
 def vote(request):
+
     active_election = Election.objects.get(status="active").type
-    if request.method == 'POST' :
-        # create a form instance and populate it with data from the request:
-        if(active_election == 'general'):
+
+    if request.method == 'POST':
+        if active_election == 'general':
             form = GeneralVoteForm(request.POST)
-        elif(active_election == 'primary'):
+        elif active_election == 'primary':
             form = PrimaryVoteForm(request.POST)
 
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
+
             voter = Voter.objects.get(confirmation=request.session['input_key'])
 
             v_id = voter.id
-            if (active_election == 'general'):
+            if active_election == 'general':
                 exists = General_VoteRecord.objects.filter(voter_id=v_id).exists()
-            elif (active_election == 'primary'):
+            elif active_election == 'primary':
                 exists = Primary_VoteRecord.objects.filter(voter_id=v_id).exists()
 
             if exists:
@@ -203,27 +201,28 @@ def vote(request):
                     task.president_nominee = form.cleaned_data['president_nominee'].full_name
                 task.voter = voter
                 task.save()
-                # redirect to a new URL:
-                # return redirect(reverse('home'))
 
             print(active_election)
-            # if (active_election == 'general'):
-            return render(request, 'ballot_print.html',
-                              {'form': form, 'election':active_election, 'president': task.president, 'vice_president': task.vice_president,
-                               'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
-            # elif (active_election == 'primary'):
-            #     return render(request, 'ballot_print.html',
-            #                   {'form': form, 'election': active_election, 'president_nominee': task.president_nominee})
+            if active_election == 'general':
+                context = {'form': form,
+                           'election': active_election,
+                           'president': task.president,
+                           'vice_president': task.vice_president,
+                           'house_rep': task.house_rep,
+                           'senator': task.senator }
+            elif active_election == 'primary':
+                context = {'form': form,
+                           'election': active_election,
+                           'president_nominee': task.president_nominee }
 
+            return render(request, 'ballot_print.html', context)
 
-
-    # if a GET (or any other method) we'll create a blank form
     else:
-        if (active_election == 'general'):
+        if active_election == 'general':
             form = GeneralVoteForm()
-        elif (active_election == 'primary'):
+        elif active_election == 'primary':
             form = PrimaryVoteForm()
-
+    print(active_election)
     return render(request, 'vote.html', {'form': form})
 
 def vote_id_check(request):

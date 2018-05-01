@@ -28,9 +28,10 @@ class Position(models.Model):
     name = models.CharField(max_length=50)
     election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
 
-# model that contains the candidates on the ballots
+# # model that contains the candidates on the ballots
 class Candidate(models.Model):
-    full_name = models.CharField(max_length=100)
+    full_name = models.CharField(max_length=100, null=True)
+    political_party = models.CharField(max_length=10, null=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, default=None)
 
 # model that contains the list of all registerd voters
@@ -48,7 +49,7 @@ class Voter(models.Model):
     precinct = models.CharField(max_length=100, null=True)
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
     confirmation = models.CharField(max_length=6, null=True)
-    checkin_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
+    checkin_time_stamp = models.DateTimeField(null=True)
 
     def to_json(self):
         return {

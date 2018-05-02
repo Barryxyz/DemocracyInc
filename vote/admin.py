@@ -16,7 +16,7 @@ class positions(admin.ModelAdmin):
 
 class candidate_list(admin.ModelAdmin):
         model = Candidate
-        list_display = ['full name','position']
+        list_display = ['full_name','position']
 
 class registered_voters(admin.ModelAdmin):
         model = Voter

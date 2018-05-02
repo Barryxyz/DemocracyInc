@@ -6,16 +6,14 @@ from graphos.sources.simple import SimpleDataSource
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-from rest_framework import viewsets, generics, permissions
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.schemas import get_schema_view
-from rest_framework.views import APIView
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
-from .serializers import voteSerializer, electionSerializer
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from vote import models,forms
+from vote import models,forms, serializers
 import random, requests
 
 # Create your views here.
@@ -222,53 +220,23 @@ def generator():
         key += (''.join(''.join(random.choice(seq))))
     return key
 
-# def count_votes():
-#     models.VoteCount.objects.all().delete()
-#     primary_positions = ['president_nominee']
-#     general_positions = ['president', 'vice_president', 'house_rep', 'senator']
-#     primary_records = models.VoteRecord.objects.all()
-#     general_records = models.General_VoteRecord.objects.all()
-#
-#     primary_votes = [dict() for i in primary_positions]
-#     general_votes = [dict() for i in general_positions]
-#
-#     for vr in primary_records:
-#         for i in range(0, len(primary_positions)):
-#             pos = primary_positions[i]
-#             name = getattr(vr, pos)
-#             if name in primary_votes[i]:
-#                 primary_votes[i][name] += 1
-#             else:
-#                 primary_votes[i][name] = 1
-#
-#     for vr in general_records:
-#         for i in range(0,len(general_positions)):
-#             pos = general_positions[i]
-#             name = getattr(vr, pos)
-#             if name in general_votes[i]:
-#                 general_votes[i][name] += 1
-#             else:
-#                 general_votes[i][name] = 1
-#
-#     results = []
-#     for i in range(0, len(primary_positions)):
-#         for name in primary_votes[i].keys():
-#             results.append(
-#                 models.VoteCount(name=name, position=primary_positions[i], count=primary_votes[i][name], election='primary'))
-#
-#     for i in range(0, len(general_positions)):
-#         for name in general_votes[i].keys():
-#             results.append(
-#                 models.VoteCount(name=name, position=general_positions[i], count=general_votes[i][name], election='general'))
-#
-#     for r in results:
-#         r.save()
-#
-# @login_required
-# def vote_count(request):
-#     count_votes()
-#     results = models.VoteCount.objects.all()
-#     return render(request, 'vote_count.html', {'query_results': results})
+def count_votes(type):
+    models.VoteCount.objects.all().delete()
+    election = models.Election.objects.get(type=type)
+    positions = models.Position.objects.filter(election=election)
+    for position in positions:
+        candidates = models.Candidate.objects.filter(position=position)
+        for candidate in candidates:
+            count = models.VoteRecord.objects.filter(position=position,candidate=candidate).count()
+            models.VoteCount(election=election.type,
+                             position=position.name,
+                             candidate=candidate.full_name,
+                             count=count).save()
+
+@login_required
+def vote_count(request):
+    count_votes(models.Election.objects.get(status="active").type)
+    return render(request, 'vote_count.html', {'query_results': models.VoteCount.objects.all()})
 
 @login_required
 def results(request):
@@ -289,7 +257,7 @@ def results(request):
     return render(request, 'results.html', {'context': context, 'election': election.type.upper()})
 
 # external API to view general election results
-class voteViewSet(viewsets.ModelViewSet):
+class VoteCountViewSet(viewsets.ModelViewSet):
     """
         retrieve:
             Return an instance of a candidate.
@@ -309,37 +277,43 @@ class voteViewSet(viewsets.ModelViewSet):
         update:
             Update a candidate.
     """
-    queryset = models.VoteRecord.objects.all()
-    serializer_class = voteSerializer
+    queryset = models.VoteCount.objects.all()
+    serializer_class = serializers.VoteCountSerializer
 
-# external API to view general election results
-class primaryViewSet(viewsets.ModelViewSet):
-    """
-        retrieve:
-            Return an instance of a candidate.
+    def get_queryset(self):
+        election_id = self.kwargs['election_id']
+        election_type = models.Election.objects.get(election_id=election_id).type
+        count_votes(election_type)
+        return models.VoteCount.objects.filter(election=election_type)
 
-        list:
-            Returns result of the number of vote per candidate.
+# # external API to view general election results
+# class primaryViewSet(viewsets.ModelViewSet):
+#     """
+#         retrieve:
+#             Return an instance of a candidate.
+#
+#         list:
+#             Returns result of the number of vote per candidate.
+#
+#         create:
+#             Create an instance of a candidate result.
+#
+#         delete:
+#             Remove an instance of a candidate result.
+#
+#         partial_update:
+#             Update one or more fields of a candidate.
+#
+#         update:
+#             Update a candidate.
+#     """
+#
+#     queryset = models.VoteRecord.objects.filter(election=models.Election.objects.filter(type="primary"))
+#     serializer_class = voteSerializer
 
-        create:
-            Create an instance of a candidate result.
-
-        delete:
-            Remove an instance of a candidate result.
-
-        partial_update:
-            Update one or more fields of a candidate.
-
-        update:
-            Update a candidate.
-    """
-
-    # queryset = models.VoteRecord.objects.filter(election=models.Election.objects.filter(type="primary"))
-    # queryset = models.VoteRecord.objects.filter(election__election="primary")
-    serializer_class = voteSerializer
 
 # external API to view election types
-class electionViewSet(viewsets.ModelViewSet):
+class ElectionViewSet(viewsets.ModelViewSet):
     """
     retrieve:
         Return an instance of election type/date.
@@ -361,4 +335,5 @@ class electionViewSet(viewsets.ModelViewSet):
     """
 
     queryset = models.Election.objects.all()
-    serializer_class = electionSerializer
+    serializer_class = serializers.ElectionSerializer
+    lookup_field = 'election_id'

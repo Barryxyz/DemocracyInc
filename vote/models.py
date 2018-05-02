@@ -64,10 +64,10 @@ class Voter(models.Model):
 
 # model used to contain the results of ballots
 class VoteCount(models.Model):
-    name = models.CharField(max_length=50)
-    position = models.CharField(max_length=50)
-    count = models.CharField(max_length=50)
     election = models.CharField(max_length=50, null=True)
+    position = models.CharField(max_length=50)
+    candidate = models.CharField(max_length=50)
+    count = models.CharField(max_length=50)
 
     def to_json(self):
         return {

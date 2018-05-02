@@ -8,9 +8,21 @@
 	<div id="formContainer">
         <div align="center" style="font-family: tahoma, serif;">
 
-                <h1 align="center">Proof of Ballot Submission</h1>
+                <h1 align="center">Hard Copy of Ballot</h1>
                 <br>
 
+{% for item in positions %}
+                <br>
+                <h2 align="center"><strong>{{ item.name }}: </strong>({{ forloop.counter }})</h2>
+                <hr>
+{% endfor %}
+
+{% for candidate in names %}
+                <br>
+                <h2 align="center"><strong>({{ forloop.counter }}): </strong>{{ candidate.full_name }}</h2>
+                <hr>
+{% endfor %}
+<!--
             {% if election == "general" %}
                 <h2 align="center"><strong>Election: </strong>{{ election }}</h2>
                 <hr>
@@ -28,7 +40,7 @@
                 <h2 align="center"><strong>President Nominee: </strong>{{ president_nominee }}</h2>
                 <hr>
             {% endif %}
-
+-->
                 <h2 align="center"><strong>Time of Submission: </strong><h3 id="demo"></h3>
                 <script>
                     var d = new Date();

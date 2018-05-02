@@ -174,19 +174,15 @@ def vote(request):
         positions = models.Position.objects.filter(election=active_election.id)
         form = forms.VoteForm(request.POST or None, positions=positions)
         if form.is_valid():
+            names = []
             for p in positions:
                 candidate = form.cleaned_data['%s' % p.name]
+                names.append(candidate)
                 models.VoteRecord(election=active_election,
                            position=p,
                            candidate=candidate).save()
-		   
-            return render(request, 'ballot_print.html', {'form': form, 'election': active_election})#, 'president': task.president, 'vice_president': task.vice_president,
-				#'house_rep': task.house_rep, 'senator': form.cleaned_data['senator']})
+            return render(request, 'ballot_print.html', {'form': form, 'election': active_election, 'positions': positions, 'names': names})
         return render(request, 'vote.html', {'form': form})
-		
-        #isNotCheckedIn = False
-        #form = forms.VoteIdCheckForm()
-        #return render(request, 'vote_id_check.html', {'form': form, 'isNotCheckedIn':isNotCheckedIn})
 
 def vote_id_check(request):
     isNotCheckedIn = False

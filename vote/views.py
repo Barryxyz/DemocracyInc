@@ -286,7 +286,6 @@ class VoteCountViewSet(viewsets.ModelViewSet):
         count_votes(election_type)
         return models.VoteCount.objects.filter(election=election_type)
 
-
 # # external API to view general election results
 # class primaryViewSet(viewsets.ModelViewSet):
 #     """

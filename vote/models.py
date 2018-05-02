@@ -19,7 +19,7 @@ class Position(models.Model):
     name = models.CharField(max_length=50)
     election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
 
-# # model that contains the candidates on the ballots
+# model that contains the candidates on the ballots
 class Candidate(models.Model):
     full_name = models.CharField(max_length=100, null=True)
     political_party = models.CharField(max_length=10, null=True)
@@ -55,9 +55,22 @@ class PollWorker(models.Model):
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
     locality = models.CharField(max_length=20, null=True)
 
+
+# model used to store the data from ballots
 class VoteRecord(models.Model):
     election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, default=None)
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None)
     voter = models.ForeignKey(Voter, on_delete=models.CASCADE, default=None, null=True)
     time_stamp = models.DateTimeField(auto_now=True)
+
+    def to_json(self):
+        return {
+            'election': self.election,
+            'position': self.position,
+            'candidate': self.candidate,
+            'voter': self.voter
+        }
+
+    def __str__(self):
+        return self.election, self.position, self.candidate

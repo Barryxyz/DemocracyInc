@@ -21,7 +21,6 @@ class countvotes(admin.ModelAdmin):
 class voterecord(admin.ModelAdmin):
         model = VoteRecord
 
-
 # instantiating all the pages so that they exist in the admin page
 admin.site.register(Voter, registered_voters)
 admin.site.register(PollWorker, pollworkers)

@@ -14,15 +14,6 @@ class Election(models.Model):
     type = models.CharField(max_length=50)
     status = models.CharField(max_length=50, default='inactive')
 
-    def to_json(self):
-        return {
-            'id': self.election_id,
-            'type': self.type
-        }
-
-    def __str__(self):
-        return self.election_id, self.type
-
 # list of positions that an election may contain
 class Position(models.Model):
     name = models.CharField(max_length=50)
@@ -51,34 +42,12 @@ class Voter(models.Model):
     confirmation = models.CharField(max_length=6, null=True)
     checkin_time_stamp = models.DateTimeField(null=True)
 
-    def to_json(self):
-        return {
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'confirmation': self.confirmation,
-            'id': self.id,
-        }
-
-    def __str__(self):
-        return self.first_name
-
 # model used to contain the results of ballots
 class VoteCount(models.Model):
     election = models.CharField(max_length=50, null=True)
     position = models.CharField(max_length=50)
     candidate = models.CharField(max_length=50)
     count = models.CharField(max_length=50)
-
-    def to_json(self):
-        return {
-            'name': self.name,
-            'position': self.position,
-            'count': self.count,
-            'election': self.election
-        }
-
-    def __str__(self):
-        return self.name, self.position, self.count
 
 # model used to contain accounts for poll workers
 class PollWorker(models.Model):

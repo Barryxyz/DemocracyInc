@@ -19,6 +19,7 @@ class Position(models.Model):
     name = models.CharField(max_length=50)
     election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
 
+
 # model that contains the candidates on the ballots
 class Candidate(models.Model):
     full_name = models.CharField(max_length=100, null=True)

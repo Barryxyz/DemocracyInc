@@ -55,7 +55,6 @@ class PollWorker(models.Model):
     precinct_id = models.DecimalField(max_digits=4, decimal_places=0, null=True)
     locality = models.CharField(max_length=20, null=True)
 
-
 # model used to store the data from ballots
 class VoteRecord(models.Model):
     election = models.ForeignKey(Election, on_delete=models.CASCADE, default=None)
@@ -63,14 +62,3 @@ class VoteRecord(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=None)
     voter = models.ForeignKey(Voter, on_delete=models.CASCADE, default=None, null=True)
     time_stamp = models.DateTimeField(auto_now=True)
-
-    def to_json(self):
-        return {
-            'election': self.election,
-            'position': self.position,
-            'candidate': self.candidate,
-            'voter': self.voter
-        }
-
-    def __str__(self):
-        return self.election, self.position, self.candidate

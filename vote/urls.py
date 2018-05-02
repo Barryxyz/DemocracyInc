@@ -21,9 +21,8 @@ from vote import views
 
 # url links for API
 router = routers.DefaultRouter()
-router.register(r'2017-11', views.voteViewSet)
-router.register(r'2017-06', views.primaryViewSet)
-router.register(r'', views.electionViewSet)
+router.register(r'(?P<election_id>.+)', views.VoteCountViewSet)
+router.register(r'', views.ElectionViewSet)
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
@@ -37,7 +36,7 @@ urlpatterns = [
     url(r'^checkin/', views.checkin, name='checkin'),
     url(r'^view_voters/', views.view_voters, name='view_voters'),
     url(r'^view_election/', views.view_elections, name='view_elections'),
-    url(r'^vote_count/', views.home, name='vote_count'),
+    url(r'^vote_count/', views.vote_count, name='vote_count'),
     url(r'^results/', views.results, name='results'),
     url(r'^alreadyvoted/', views.already_voted, name='already_voted'),
     url(r'^inactive/', views.inactive, name='inactive')

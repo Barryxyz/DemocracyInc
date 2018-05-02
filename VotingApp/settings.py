@@ -27,8 +27,7 @@ DEBUG = True
 # enable this right before code freeze
 # DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','democracyinc.herokuapp.com']
-
+ALLOWED_HOSTS = ['0.0.0.0','localhost','democracyinc.herokuapp.com']
 
 # Application definition
 
@@ -62,11 +61,6 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
 }
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-#     ],
-# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

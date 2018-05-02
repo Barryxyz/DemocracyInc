@@ -334,7 +334,8 @@ class primaryViewSet(viewsets.ModelViewSet):
             Update a candidate.
     """
 
-    queryset = models.VoteRecord.objects.filter(election=models.Election.objects.filter(type="primary"))
+    # queryset = models.VoteRecord.objects.filter(election=models.Election.objects.filter(type="primary"))
+    # queryset = models.VoteRecord.objects.filter(election__election="primary")
     serializer_class = voteSerializer
 
 # external API to view election types

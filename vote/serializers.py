@@ -12,11 +12,10 @@ class electionSerializer(serializers.HyperlinkedModelSerializer):
 class voteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.VoteRecord
-        fields = "__all__"
+        fields = ('election', 'position', 'candidate', )
 
 # used to access the database for external api to return the election result statistics
 class CountSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.VoteCount
         fields = ('name', 'position', 'count',)
-

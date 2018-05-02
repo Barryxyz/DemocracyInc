@@ -39,9 +39,9 @@ function myFunction() {
 
 <table id="myTable">
   <tr class="header">
-	<th style="width:10%;">Voter #</th>
     <th style="width:10%;">First Name</th>
     <th style="width:10%;">Last Name</th>
+	<th style="width:10%;">Voter #</th>
 	<th style="width:10%;">Status</th>
     <th style="width:15%;">Street Address</th>
 	<th style="width:10%;">City</th>
@@ -53,9 +53,9 @@ function myFunction() {
   </tr>
   {% for item in query_results %}
   <tr>
-	<td>{{ item.voter_number }}</td>
     <td>{{ item.first_name }}</td>
     <td>{{ item.last_name }}</td>
+	<td>{{ item.voter_number }}</td>
 	<td>{{ item.voter_status }}</td>
 	<td>{{ item.street_address }}</td>
 	<td>{{ item.city }}</td>

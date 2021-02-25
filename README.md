@@ -1,2 +1,2 @@
 # DemocracyInc
-Lab 102 - TA: Danny Brown
+Mock online ballot web app that meets the Virginia's State standard for voting
